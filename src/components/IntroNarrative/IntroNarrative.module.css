@@ -1,0 +1,42 @@
+.section {
+  background: var(--bg);
+  padding: var(--section-gap) var(--gutter);
+}
+
+.inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  grid-column: 1 / -1;
+}
+
+.col {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.75;
+}
+
+.colSecondary {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
