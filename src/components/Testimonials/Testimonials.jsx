@@ -28,7 +28,7 @@ export default function Testimonials() {
         </motion.p>
 
         <div className={styles.split}>
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             <motion.div
               key={`quote-${index}`}
               className={styles.quoteCol}
@@ -44,7 +44,7 @@ export default function Testimonials() {
             </motion.div>
           </AnimatePresence>
 
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             <motion.div
               key={`service-${index}`}
               className={styles.serviceCol}
