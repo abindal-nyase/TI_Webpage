@@ -26,6 +26,17 @@ const SERVICE_ROWS = [
     imgAlt: 'Building owner reviewing lobby renovation plans with structural engineering team',
     imgLeft: true,
   },
+  {
+    label: 'For Property Managers',
+    headline: 'Your reputation is on the line. Ours too.',
+    body: "Property managers carry the risk when a contractor underperforms. We understand that. We've worked alongside building management teams for decades — we're the name they bring to architects because they know we won't create problems, we'll solve them.",
+    quote: "\u201cWith NYA, I know the project won\u2019t blow up in my face. That\u2019s not a small thing when you\u2019re managing 40 floors of active tenants.\u201d",
+    quoteBy: 'Senior Property Manager, Downtown Los Angeles',
+    bullets: ['Familiarity with your building systems and records', 'Competence that protects your standing with ownership', 'No logistics headwind — easy entry, clean execution'],
+    img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80',
+    imgAlt: 'Property manager coordinating tenant improvement work in occupied high-rise',
+    imgLeft: false,
+  },
 ]
 
 export default function TestimonialsService() {

@@ -113,3 +113,35 @@
   color: rgba(245,239,228,0.55);
   max-width: 44ch;
 }
+
+.hero {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(2rem, 10vw, 14rem);
+  max-width: 1400px;
+  margin: 0 auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+
+.heroHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #F5EFE4;
+  max-width: 16ch;
+}
+
+.heroSub {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: rgba(245,239,228,0.55);
+  margin-top: 1rem;
+}

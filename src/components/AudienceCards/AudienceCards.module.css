@@ -1,5 +1,5 @@
 .root {
-  background: var(--bg-alt);
+  background: var(--bg);
   padding: var(--section-py) var(--section-px);
 }
 

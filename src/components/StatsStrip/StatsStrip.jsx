@@ -142,7 +142,7 @@ export default function StatsStrip() {
           </div>
           <p className={s.breakdownNote}>
             Based on 400+ TI projects delivered since 1979.
-            Shift the narrative from "beautiful work" to "smart investment."
+            Every number above is a building we already know.
           </p>
         </div>
       </div>
