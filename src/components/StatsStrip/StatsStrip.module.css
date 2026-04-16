@@ -123,6 +123,110 @@
   font-style: italic;
 }
 
+/* Yearly chart */
+.chartSection {
+  margin-bottom: 0;
+}
+
+.chart {
+  padding-left: 28px;
+  padding-bottom: 24px;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.chartPlot {
+  position: relative;
+  height: 140px;
+  overflow: visible;
+}
+
+.yLabel {
+  position: absolute;
+  left: -28px;
+  font-size: 0.6rem;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  width: 24px;
+  text-align: right;
+  transform: translateY(50%);
+}
+
+.gridLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.chartBars {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  gap: 3px;
+}
+
+.chartBarWrap {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+
+.chartBar {
+  width: 100%;
+  background: var(--accent);
+  opacity: 0.55;
+  border-radius: 2px 2px 0 0;
+  will-change: transform;
+}
+
+.chartBarWrapPartial {
+  margin-left: 6px;
+}
+
+.chartBarPartial {
+  background: var(--accent);
+  opacity: 0.75;
+}
+
+.chartYearLabel {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.chartYearLabelPartial {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chartAxis {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.chartNote {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 768px) {
   .statsRow {
     grid-template-columns: 1fr;
