@@ -33,6 +33,13 @@
   gap: 0.75rem;
 }
 
+.logoImg {
+  height: 36px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
 .logoMark {
   font-family: var(--font-display);
   font-size: 1.25rem;

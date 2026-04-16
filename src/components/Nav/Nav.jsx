@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Nav.module.css'
+import nyaLogo from '/nya-logo.png'
 
 const NAV_LINKS = [
   { label: 'Work',    href: '#gallery' },
@@ -33,7 +34,11 @@ export default function Nav() {
       <div className={s.inner}>
         {/* Logo */}
         <a href="#" className={s.logo} aria-label="NYA Tenant Improvement home">
-          <span className={s.logoMark}>NYA</span>
+          <img
+            src={nyaLogo}
+            alt="Nabih Youssef Associates"
+            className={s.logoImg}
+          />
           <span className={s.logoDivider} aria-hidden="true" />
           <span className={s.logoSub}>Tenant Improvement</span>
         </a>
