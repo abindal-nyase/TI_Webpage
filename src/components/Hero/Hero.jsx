@@ -49,7 +49,7 @@ export default function Hero() {
 
       <div className={s.content}>
         <span className={`u-label ${s.label}`}>
-          Nabih Youssef &amp; Associates · Structural Engineering
+          Nabih Youssef &amp; Associates · Partners · Advisory · Service
         </span>
 
         <h1 className={s.headline}>
