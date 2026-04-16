@@ -1,34 +1,44 @@
-import { useLenis } from './hooks/useLenis'
-
-import Hero           from './components/Hero/Hero'
+import Nav from './components/Nav/Nav'
+import Hero from './components/Hero/Hero'
 import IntroNarrative from './components/IntroNarrative/IntroNarrative'
 import TrustStatement from './components/TrustStatement/TrustStatement'
-import StatsStrip     from './components/StatsStrip/StatsStrip'
-import ImageGallery   from './components/ImageGallery/ImageGallery'
-import MidCTA         from './components/MidCTA/MidCTA'
-import Charts         from './components/Charts/Charts'
-import Offerings      from './components/Offerings/Offerings'
-import Testimonials   from './components/Testimonials/Testimonials'
-import FinalCTA       from './components/FinalCTA/FinalCTA'
-
-import { galleryProjects, masonryProjects } from './data/projects'
+import ProjectGallery from './components/ProjectGallery/ProjectGallery'
+import MidCTA from './components/MidCTA/MidCTA'
+import StatsStrip from './components/StatsStrip/StatsStrip'
+import Offerings from './components/Offerings/Offerings'
+import TestimonialsService from './components/TestimonialsService/TestimonialsService'
+import Testimonials from './components/Testimonials/Testimonials'
+import MasonryGallery from './components/MasonryGallery/MasonryGallery'
+import FinalCTA from './components/FinalCTA/FinalCTA'
 
 export default function App() {
-  useLenis()
-
   return (
-    <main>
-      <Hero />
-      <IntroNarrative />
-      <TrustStatement />
-      <StatsStrip />
-      <ImageGallery variant="horizontal" projects={galleryProjects} sectionIndex={5} />
-      <MidCTA />
-      <Charts />
-      <Offerings />
-      <Testimonials />
-      <ImageGallery variant="masonry" projects={masonryProjects} sectionIndex={10} />
-      <FinalCTA />
-    </main>
+    <>
+      <Nav />
+      <main>
+        {/* §1 Hero */}
+        <Hero />
+        {/* §2 Introductory Narrative */}
+        <IntroNarrative />
+        {/* §3 Trust Statement */}
+        <TrustStatement />
+        {/* §4 Gallery */}
+        <ProjectGallery />
+        {/* §5 Mid CTA */}
+        <MidCTA />
+        {/* §6 Charts / Stats */}
+        <StatsStrip />
+        {/* §7 Offerings */}
+        <Offerings />
+        {/* §8 Testimonials + Service Detail */}
+        <TestimonialsService />
+        {/* §9 General Testimonials */}
+        <Testimonials />
+        {/* §10 Masonry Gallery */}
+        <MasonryGallery />
+        {/* §11 Final CTA */}
+        <FinalCTA />
+      </main>
+    </>
   )
 }

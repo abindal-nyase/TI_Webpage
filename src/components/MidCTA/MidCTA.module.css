@@ -1,45 +1,52 @@
-.section {
-  background: var(--bg);
-  padding: 80px var(--gutter);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+.root {
+  background: var(--surface);
+  padding: var(--section-py) var(--section-px);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .inner {
-  max-width: var(--container);
+  max-width: var(--max-w-text);
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
+  text-align: center;
 }
 
-.text {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  font-weight: 300;
+.label {
+  margin-bottom: 1.5rem;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
   color: var(--text);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin-bottom: 1.25rem;
 }
 
-.button {
+.sub {
+  font-size: var(--fs-subhead);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  background: var(--bg-dark);
-  color: var(--bg);
-  font-family: var(--font-sans);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--surface);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: opacity 0.2s;
+  padding: 0.875rem 2rem;
+  border-radius: 2px;
+  transition: background 0.22s, gap 0.22s;
 }
 
-.button:hover {
-  opacity: 0.8;
+.btn:hover {
+  background: var(--accent-hover);
+  gap: 0.85rem;
 }

@@ -1,0 +1,93 @@
+.root {
+  background: var(--bg);
+  padding: var(--section-py) var(--section-px);
+  border-top: 1px solid var(--border-light);
+}
+
+.inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.label {
+  margin-bottom: 2.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
+  margin: 0;
+}
+
+/* First card spans full width for visual weight */
+.card:first-child {
+  grid-column: 1 / -1;
+}
+
+.imgWrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-alt);
+  cursor: pointer;
+}
+
+.card:first-child .imgWrap {
+  aspect-ratio: 21 / 9;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.imgWrap:hover .img {
+  transform: scale(1.05);
+}
+
+/* Caption: revealed on hover */
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 1.25rem 1.25rem;
+  background: linear-gradient(to top, rgba(16, 15, 13, 0.72) 0%, transparent 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.imgWrap:hover .caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.capName {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+.capType {
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .card:first-child { grid-column: auto; }
+  .card:first-child .imgWrap { aspect-ratio: 16 / 9; }
+  .caption { opacity: 1; transform: none; }
+}

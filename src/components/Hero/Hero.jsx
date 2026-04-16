@@ -1,101 +1,81 @@
-import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger, SplitText } from '../../utils/gsap'
-import { events } from '../../utils/analytics'
-import styles from './Hero.module.css'
+import { useRef, useLayoutEffect } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
+import s from './Hero.module.css'
 
 export default function Hero() {
-  const sectionRef   = useRef(null)
-  const bgRef        = useRef(null)
-  const headlineRef  = useRef(null)
-  const eyebrowRef   = useRef(null)
-  const scrollRef    = useRef(null)
+  const rootRef   = useRef(null)
+  const bgRef     = useRef(null)
+  const line1Ref  = useRef(null)
+  const line2Ref  = useRef(null)
+  const metaRef   = useRef(null)
+  const scrollRef = useRef(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Word-by-word headline reveal
-      const split = new SplitText(headlineRef.current, { type: 'words' })
-      gsap.from(split.words, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.12,
-        ease: 'power3.out',
-        delay: 0.4,
-      })
+      // SplitText char reveals on load
+      const split1 = SplitText.create(line1Ref.current, { type: 'chars', mask: 'chars' })
+      const split2 = SplitText.create(line2Ref.current, { type: 'chars', mask: 'chars' })
 
-      // Eyebrow fade in after headline
-      gsap.from(eyebrowRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.8,
-        ease: 'power2.out',
-        delay: 1.2,
-      })
+      const tl = gsap.timeline({ delay: 0.25, defaults: { ease: 'power3.out' } })
 
-      // Scroll indicator fade in then pulse
-      gsap.from(scrollRef.current, {
-        opacity: 0,
-        duration: 0.6,
-        delay: 2,
-        onComplete: () => {
-          gsap.to(scrollRef.current, {
-            opacity: 0.4,
-            duration: 1,
-            repeat: -1,
-            yoyo: true,
-            ease: 'power1.inOut',
-          })
-        },
-      })
+      tl.from(split1.chars, { y: '110%', duration: 0.9, stagger: 0.022 })
+        .from(split2.chars, { y: '110%', duration: 0.9, stagger: 0.022 }, '-=0.65')
+        .from(metaRef.current, { autoAlpha: 0, y: 20, duration: 0.7 }, '-=0.4')
+        .from(scrollRef.current, { autoAlpha: 0, y: 10, duration: 0.6 }, '-=0.2')
 
-      // Parallax on background
+      // Parallax: bg moves slower than scroll
       gsap.to(bgRef.current, {
-        yPercent: 25,
+        yPercent: 22,
         ease: 'none',
         scrollTrigger: {
-          trigger: sectionRef.current,
+          trigger: rootRef.current,
           start: 'top top',
           end: 'bottom top',
           scrub: true,
         },
       })
-
-      // Hide scroll indicator when user starts scrolling
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top+=100 top',
-        onEnter: () => gsap.to(scrollRef.current, { opacity: 0, duration: 0.3 }),
-      })
-    }, sectionRef)
-
-    // Track section view
-    events.sectionView(1)
+    }, rootRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section ref={sectionRef} className={styles.section}>
-      <div ref={bgRef} className={styles.bg} aria-hidden="true" />
+    <section ref={rootRef} id="hero" className={s.hero}>
+      {/* Background image with overlay */}
+      <div ref={bgRef} className={s.bg} aria-hidden="true" />
+      <div className={s.overlay} aria-hidden="true" />
 
-      <img
-        src="/nya-logomark.png"
-        alt="Nabih Youssef & Associates"
-        className={styles.logo}
-      />
+      <div className={s.content}>
+        <span className={`u-label ${s.label}`}>
+          Nabih Youssef &amp; Associates · Structural Engineering
+        </span>
 
-      <div className={styles.content}>
-        <p ref={eyebrowRef} className={styles.eyebrow}>
-          Tenant Improvement Practice &nbsp;·&nbsp; Nabih Youssef Associates
-        </p>
-        <h1 ref={headlineRef} className={styles.headline}>
-          Tenant improvement.<br />Done right, every time.
+        <h1 className={s.headline}>
+          <span ref={line1Ref} className={s.line1}>TI Projects Don't Wait.</span>
+          <span ref={line2Ref} className={s.line2}>Neither Do We.</span>
         </h1>
+
+        <div ref={metaRef} className={s.meta}>
+          <p className={s.tagline}>
+            Speed. Precision. Structural expertise — from lobby to penthouse.
+          </p>
+          <a
+            href="mailto:ti@nyase.com"
+            className={s.cta}
+            aria-label="Contact NYA about your TI project"
+          >
+            Start the Conversation
+            <span className={s.ctaArrow} aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
 
-      <div ref={scrollRef} className={styles.scrollIndicator} aria-hidden="true">
-        <span>scroll</span>
-        <div className={styles.scrollArrow} />
+      {/* Scroll indicator */}
+      <div ref={scrollRef} className={s.scrollIndicator} aria-hidden="true">
+        <span className={s.scrollLine} />
+        <span className={s.scrollLabel}>Scroll</span>
       </div>
     </section>
   )

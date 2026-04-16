@@ -1,79 +1,145 @@
-.section {
-  background: var(--bg-dark);
-  padding: var(--section-gap) var(--gutter);
+.root {
+  overflow: hidden;
+  height: 100vh;
+  background: var(--bg);
 }
 
-.inner {
-  max-width: var(--container);
-  margin: 0 auto;
+.track {
+  display: flex;
+  height: 100%;
+  width: max-content;
+  will-change: transform;
 }
 
-.header {
-  margin-bottom: 64px;
-}
-
-.eyebrow {
-  font-family: var(--font-sans);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
-}
-
-.title {
-  font-family: var(--font-serif);
-  font-size: var(--text-2xl);
-  font-weight: 300;
-  color: var(--bg);
-  letter-spacing: -0.01em;
-}
-
-.grid {
+/* Each offering panel = 100vw */
+.panel {
+  width: 100vw;
+  height: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  border: 1px solid #2a2724;
+  grid-template-columns: 55% 45%;
+  flex-shrink: 0;
 }
 
-.card {
-  padding: 40px 32px;
-  border: 1px solid #2a2724;
-  cursor: default;
-  transition: background 0.3s;
+/* Featured panels (Stairs, Lobby): image is slightly larger */
+.panel.featured {
+  grid-template-columns: 58% 42%;
 }
 
-.card:hover {
-  background: #221f1c;
+/* Image half */
+.panelImg {
+  position: relative;
+  overflow: hidden;
 }
 
-.cardLabel {
-  font-family: var(--font-sans);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.numBadge {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 9rem);
+  color: rgba(255, 255, 255, 0.12);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Content half */
+.panelContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2.5rem, 5vw, 6rem) clamp(2rem, 4vw, 5rem);
+  background: var(--bg);
+  overflow-y: auto;
+}
+
+.panelLabel {
+  margin-bottom: 1.75rem;
+}
+
+.panelTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3.25rem);
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+}
+
+/* Featured: title uses accent */
+.featured .panelTitle {
+  color: var(--accent);
+}
+
+.panelHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.panelBody {
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+  line-height: 1.72;
+  margin-bottom: 1.75rem;
+  max-width: 52ch;
+}
+
+.bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.bullet {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: var(--fs-small);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.bulletDot {
   display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.45em;
 }
 
-.cardDesc {
-  font-family: var(--font-serif);
-  font-size: var(--text-base);
-  font-weight: 300;
-  color: var(--bg);
-  line-height: 1.65;
-  opacity: 0.8;
+.featuredNote {
+  font-size: 0.8125rem;
+  color: var(--text-light);
+  font-style: italic;
+  border-top: 1px solid var(--border-light);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
 }
 
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .grid {
+@media (max-width: 768px) {
+  .panel,
+  .panel.featured {
     grid-template-columns: 1fr;
+    grid-template-rows: 55% 45%;
+    width: 100vw;
+  }
+
+  .numBadge {
+    font-size: 5rem;
   }
 }

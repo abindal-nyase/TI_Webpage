@@ -1,75 +1,169 @@
-// [PLACEHOLDER] Replace src URLs with real project photography before launch
-// See assets/PHOTO-SWAP-GUIDE.md for slot descriptions and recommended image specs
-
 export const galleryProjects = [
   {
     id: 'p1',
-    src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
-    alt: 'Modern corporate office interior',
-    name: '[Project Name]',        // [PLACEHOLDER]
-    location: 'Los Angeles, CA',   // [PLACEHOLDER]
-    type: 'Office TI',
+    name: 'Herald Examiner Building',
+    location: 'Los Angeles, CA',
+    type: 'Historic Renovation',
+    src: 'https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=1200&q=80',
+    alt: 'Historic building facade with modern structural interior transformation',
   },
   {
     id: 'p2',
-    src: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
-    alt: 'Open plan office workspace',
-    name: '[Project Name]',
+    name: '1888 Century Park East',
     location: 'Century City, CA',
     type: 'Office TI',
+    src: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80',
+    alt: 'Open-plan corporate office with modern finishes and collaborative workspace',
   },
   {
     id: 'p3',
-    src: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80',
-    alt: 'Contemporary building lobby',
-    name: '[Project Name]',
-    location: 'San Francisco, CA',
-    type: 'Retail TI',
+    name: 'Mayer Brown LLP',
+    location: 'Los Angeles, CA',
+    type: 'Office TI',
+    src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+    alt: 'Law firm office transformation with contemporary structural design',
   },
   {
     id: 'p4',
+    name: 'City National Plaza',
+    location: 'Los Angeles, CA',
+    type: 'Lobby Renovation',
     src: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80',
-    alt: 'Glass curtain wall office tower',
-    name: '[Project Name]',
-    location: 'Irvine, CA',
-    type: 'Office TI',
+    alt: 'High-rise lobby renovation with glass curtain wall and modern entry',
   },
   {
     id: 'p5',
-    src: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80',
-    alt: 'Modern commercial building exterior',
-    name: '[Project Name]',
+    name: 'Walt Disney Studios',
     location: 'Burbank, CA',
     type: 'Media & Entertainment',
+    src: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80',
+    alt: 'Production studio facility with modern structural upgrades',
   },
   {
     id: 'p6',
-    src: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1200&q=80',
-    alt: 'Studio production space interior',
-    name: '[Project Name]',
-    location: 'Culver City, CA',
-    type: 'Media & Entertainment',
+    name: 'Apple Store Staircases',
+    location: 'Multiple Locations, CA',
+    type: 'Signature Staircases',
+    src: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=1200&q=80',
+    alt: 'Structural glass staircase with precision steel support',
   },
   {
     id: 'p7',
-    src: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80',
-    alt: 'High-end retail interior',
-    name: '[Project Name]',
+    name: 'The North Face Flagship',
     location: 'Beverly Hills, CA',
     type: 'Retail TI',
+    src: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80',
+    alt: 'High-end retail interior with luxury finishes and structural openings',
   },
   {
     id: 'p8',
-    src: 'https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=1200&q=80',
-    alt: 'Historic building renovation interior',
-    name: '[Project Name]',
-    location: 'Los Angeles, CA',
-    type: 'Historic Renovation',
+    name: 'Hercules Campus',
+    location: 'Playa Vista, CA',
+    type: 'Campus Renovation',
+    src: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&q=80',
+    alt: 'Multi-building campus tenant improvement at Google and YouTube HQ',
   },
 ]
 
-// Masonry gallery (§10) — subset with different crops
 export const masonryProjects = galleryProjects.slice(0, 4).map((p) => ({
   ...p,
   src: p.src.replace('w=1200', 'w=800'),
 }))
+
+export const testimonials = [
+  {
+    id: 't1',
+    quote:
+      'NYA is the team you want on speed dial. They move fast, communicate clearly, and never leave you guessing.',
+    name: 'Principal Architect',
+    company: 'Los Angeles, CA',
+    type: 'Architect',
+  },
+  {
+    id: 't2',
+    quote:
+      "We've brought NYA in on a dozen buildings. They know our systems, they know our tenants, and they know how to avoid surprises.",
+    name: 'VP of Property Operations',
+    company: 'Commercial Real Estate Firm',
+    type: 'Property Manager',
+  },
+  {
+    id: 't3',
+    quote:
+      'Other engineers slow things down. NYA is the exception. They understood the design intent immediately and helped us push what was possible.',
+    name: 'Senior Associate',
+    company: 'Interior Architecture Studio',
+    type: 'Architect',
+  },
+  {
+    id: 't4',
+    quote:
+      "When we need structural engineers who can keep up with our pace—and our clients' expectations—we call NYA.",
+    name: 'Project Director',
+    company: 'Corporate Real Estate Developer',
+    type: 'Owner',
+  },
+]
+
+export const offerings = [
+  {
+    id: 'o1',
+    num: '01',
+    title: 'Signature Staircases',
+    headline: 'When design asks for the impossible, we make it structural reality.',
+    body: "Things that drive a structural engineer onto a TI project are usually stairs. We've engineered glass treads for Apple retail, dramatic steel cantilevers in occupied towers, and code-compliant feature stairs that architects actually want to show clients.",
+    bullets: [
+      'Complex stair design in occupied high-rise towers',
+      'Structural glass treads and cantilevered steel',
+      'Fast feasibility feedback for in-field decisions',
+    ],
+    src: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=1400&q=80',
+    alt: 'Elegant curved architectural staircase with structural steel and natural light',
+    featured: true,
+  },
+  {
+    id: 'o2',
+    num: '02',
+    title: 'Lobby Renovations',
+    headline: 'Lobby work is where design ambition meets real-world constraints.',
+    body: "It's visible, high-stakes, and full of structural surprises. Building owners call us because we know their aging high-rise frames. We make bold ideas possible without disrupting operations—or triggering major structural upgrades.",
+    bullets: [
+      'Seamless structure for creative rebrands',
+      'Integration of new entries, stairs, and ceilings',
+      'Deep knowledge of aging high-rise structural frames',
+    ],
+    src: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1400&q=80',
+    alt: 'Grand corporate lobby with modern architectural elements and light-filled atrium',
+    featured: true,
+  },
+  {
+    id: 'o3',
+    num: '03',
+    title: 'High-Rise TI',
+    headline: "When the job's 30 stories up, you need an engineer who moves.",
+    body: "Active tenants, tight schedules, complex structural grids—this is where we thrive. We handle high-rise TI projects every week. From load transfer analysis to field RFI response in hours, not days.",
+    bullets: [
+      'Complex load transfer in constrained structural grids',
+      'Rapid field RFI response and design support',
+      'Multi-floor scope and rollout coordination',
+    ],
+    src: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80',
+    alt: 'High-rise office interior with open plan structural layout and modern finishes',
+    featured: false,
+  },
+  {
+    id: 'o4',
+    num: '04',
+    title: 'Fast-Turn Fit-Outs',
+    headline: "We know you don't get a month to think about it.",
+    body: "Our team is built for velocity. We produce clean, clear deliverables that let the build move forward—partition layouts, ceiling support, slab penetrations. Final picture and documents ready in a week.",
+    bullets: [
+      'Lightning-fast partition and ceiling structural support',
+      'Lean drawings that answer field questions directly',
+      'Flexibility to scale with multi-floor rollout',
+    ],
+    src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80',
+    alt: 'Modern fast-track office TI with efficient structural layout and clean finishes',
+    featured: false,
+  },
+]

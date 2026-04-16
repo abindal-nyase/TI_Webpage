@@ -1,88 +1,85 @@
-import { useRef, useState } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { testimonials } from '../../data/testimonials'
-import { events } from '../../utils/analytics'
-import styles from './Testimonials.module.css'
+import { useRef, useLayoutEffect, useState } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { testimonials } from '../../data/projects'
+import s from './Testimonials.module.css'
 
 export default function Testimonials() {
-  const [index, setIndex] = useState(0)
-  const ref    = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const rootRef   = useRef(null)
+  const quoteRef  = useRef(null)
+  const [active, setActive] = useState(0)
 
-  const prev = () => setIndex((i) => (i - 1 + testimonials.length) % testimonials.length)
-  const next = () => setIndex((i) => (i + 1) % testimonials.length)
+  // Switch testimonial with GSAP fade
+  const goTo = (idx) => {
+    if (idx === active) return
+    gsap.to(quoteRef.current, {
+      autoAlpha: 0,
+      y: -16,
+      duration: 0.3,
+      ease: 'power2.in',
+      onComplete: () => {
+        setActive(idx)
+        gsap.fromTo(
+          quoteRef.current,
+          { autoAlpha: 0, y: 20 },
+          { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+        )
+      },
+    })
+  }
 
-  const current = testimonials[index]
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(rootRef.current.querySelectorAll('.js-ts-reveal'), {
+        autoAlpha: 0,
+        y: 28,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: rootRef.current,
+          start: 'top 78%',
+          once: true,
+        },
+      })
+    }, rootRef)
+
+    return () => ctx.revert()
+  }, [])
+
+  const current = testimonials[active]
 
   return (
-    <section ref={ref} className={styles.section}>
-      <div className={styles.inner}>
-        <motion.p
-          className={styles.eyebrow}
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6 }}
-          onAnimationComplete={() => events.sectionView(9)}
-        >
-          § 09 &nbsp;—&nbsp; Client Voice
-        </motion.p>
+    <section ref={rootRef} id="testimonials" className={s.root}>
+      <div className={s.inner}>
+        <span className={`u-label js-ts-reveal ${s.label}`}>Client Voices</span>
 
-        <div className={styles.split}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`quote-${index}`}
-              className={styles.quoteCol}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              <blockquote className={styles.quote}>"{current.quote}"</blockquote>
-              <p className={styles.attribution}>
-                {current.author} &nbsp;·&nbsp; {current.firm}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`service-${index}`}
-              className={styles.serviceCol}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <p className={styles.serviceHeading}>{current.serviceDetail.heading}</p>
-              <p className={styles.serviceBody}>{current.serviceDetail.body}</p>
-            </motion.div>
-          </AnimatePresence>
+        <div ref={quoteRef} className={s.quoteWrap}>
+          <blockquote className={s.quote}>
+            <span className={s.openMark} aria-hidden="true">"</span>
+            <p className={s.quoteText}>{current.quote}</p>
+            <footer className={s.quoteFooter}>
+              <cite className={s.cite}>
+                <span className={s.citeName}>{current.name}</span>
+                <span className={s.citeCompany}>{current.company}</span>
+              </cite>
+              <span className={`u-label ${s.citeType}`}>{current.type}</span>
+            </footer>
+          </blockquote>
         </div>
 
-        <div className={styles.nav}>
-          <button
-            className={styles.navButton}
-            onClick={prev}
-            aria-label="Previous testimonial"
-          >
-            ←
-          </button>
-          <button
-            className={styles.navButton}
-            onClick={next}
-            aria-label="Next testimonial"
-          >
-            →
-          </button>
-          <div className={styles.navDots}>
-            {testimonials.map((_, i) => (
-              <div
-                key={i}
-                className={`${styles.dot} ${i === index ? styles.dotActive : ''}`}
-              />
-            ))}
-          </div>
-        </div>
+        {/* Dot navigation */}
+        <nav className={`js-ts-reveal ${s.dots}`} aria-label="Testimonial navigation">
+          {testimonials.map((t, i) => (
+            <button
+              key={t.id}
+              className={`${s.dot} ${i === active ? s.dotActive : ''}`}
+              onClick={() => goTo(i)}
+              aria-label={`Testimonial ${i + 1} from ${t.name}`}
+              aria-current={i === active ? 'true' : undefined}
+            />
+          ))}
+        </nav>
       </div>
     </section>
   )

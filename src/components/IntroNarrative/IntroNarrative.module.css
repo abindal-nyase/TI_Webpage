@@ -1,42 +1,93 @@
-.section {
+.root {
   background: var(--bg);
-  padding: var(--section-gap) var(--gutter);
+  padding: var(--section-py) var(--section-px);
+  border-top: 1px solid var(--border-light);
 }
 
 .inner {
-  max-width: var(--container);
+  max-width: var(--max-w);
   margin: 0 auto;
+}
+
+.label {
+  margin-bottom: 3rem;
+}
+
+.columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 5rem;
   align-items: start;
 }
 
-.eyebrow {
-  font-family: var(--font-sans);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 32px;
-  grid-column: 1 / -1;
-}
-
-.col {
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
-  font-weight: 300;
+/* Left column */
+.dropCap {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.5vw, 1.3125rem);
+  line-height: 1.62;
   color: var(--text);
+  margin-bottom: 1.75rem;
+}
+
+/* Drop cap initial */
+.dropCap::first-letter {
+  float: left;
+  font-size: 4.5em;
+  line-height: 0.78;
+  margin-right: 0.1em;
+  margin-top: 0.05em;
+  font-family: var(--font-display);
+  color: var(--accent);
+}
+
+.body {
+  font-size: var(--fs-body);
+  color: var(--text-muted);
   line-height: 1.75;
+  margin-bottom: 1.25rem;
 }
 
-.colSecondary {
-  color: var(--text-secondary);
+.body:last-child {
+  margin-bottom: 0;
 }
 
-@media (max-width: 768px) {
-  .inner {
+/* Right column */
+.pillarIntro {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.75vw, 1.625rem);
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 2.5rem;
+}
+
+.pillars {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pillar {
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--border-light);
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.pillar:last-child {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.pillarLead {
+  font-weight: 600;
+  color: var(--text);
+  font-style: normal;
+}
+
+@media (max-width: 900px) {
+  .columns {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 3rem;
   }
 }

@@ -1,119 +1,108 @@
-.section {
-  background: var(--bg);
-  padding: var(--section-gap) var(--gutter);
+.root {
+  background: var(--bg-alt);
+  padding: var(--section-py) var(--section-px);
+  overflow: hidden;
 }
 
 .inner {
-  max-width: var(--container);
+  max-width: 860px;
   margin: 0 auto;
+  text-align: center;
 }
 
-.eyebrow {
-  font-family: var(--font-sans);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 64px;
+.label {
+  margin-bottom: 3rem;
 }
 
-.split {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 80px;
-  align-items: start;
-  min-height: 260px;
-}
-
-.quoteCol {
-  border-left: 3px solid var(--text);
-  padding-left: 32px;
-}
-
-.quote {
-  font-family: var(--font-serif);
-  font-size: var(--text-xl);
-  font-weight: 300;
-  color: var(--text);
-  line-height: 1.6;
-  font-style: italic;
-  margin-bottom: 24px;
-}
-
-.attribution {
-  font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-}
-
-.serviceCol {
-  padding-top: 8px;
-}
-
-.serviceHeading {
-  font-family: var(--font-sans);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
-}
-
-.serviceBody {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 300;
-  color: var(--text);
-  line-height: 1.7;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 48px;
-}
-
-.navButton {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border);
-  background: none;
-  cursor: pointer;
+.quoteWrap {
+  min-height: 14rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 2.5rem;
 }
 
-.navButton:hover {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--bg);
+.quote {
+  position: relative;
 }
 
-.navDots {
+.openMark {
+  position: absolute;
+  top: -0.5em;
+  left: -0.15em;
+  font-family: var(--font-display);
+  font-size: 6em;
+  color: var(--border);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.quoteText {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.2vw, 1.875rem);
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.48;
+  letter-spacing: -0.01em;
+  margin-bottom: 2rem;
+  max-width: 62ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quoteFooter {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-style: normal;
+  text-align: center;
+}
+
+.citeName {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.citeCompany {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.citeType {
+  color: var(--accent);
+}
+
+/* Dot navigation */
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-top: 1rem;
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--border);
-  transition: background 0.2s;
+  transition: background 0.25s, transform 0.25s;
+  cursor: pointer;
+}
+
+.dot:hover {
+  background: var(--text-muted);
 }
 
 .dotActive {
-  background: var(--text);
-}
-
-@media (max-width: 768px) {
-  .split {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
+  background: var(--accent);
+  transform: scale(1.3);
 }

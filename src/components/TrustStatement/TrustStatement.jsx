@@ -1,49 +1,47 @@
-import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger } from '../../utils/gsap'
-import { events } from '../../utils/analytics'
-import styles from './TrustStatement.module.css'
+import { useRef, useLayoutEffect } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import s from './TrustStatement.module.css'
 
 export default function TrustStatement() {
-  const sectionRef = useRef(null)
-  const quoteRef   = useRef(null)
+  const rootRef  = useRef(null)
+  const quoteRef = useRef(null)
+  const metaRef  = useRef(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Pin section for dramatic pause
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: '+=80%',
-        pin: true,
-        pinSpacing: true,
-      })
-
-      // Fade in quote on scroll into view
-      gsap.from(quoteRef.current, {
-        opacity: 0,
-        y: 40,
-        duration: 1.2,
-        ease: 'power2.out',
+      // Upward emergence — Pattern 4
+      const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-          toggleActions: 'play none none reverse',
+          trigger: rootRef.current,
+          start: 'top 72%',
+          end: 'center center',
+          scrub: 0.7,
         },
       })
-    }, sectionRef)
 
-    events.sectionView(3)
+      tl.from(quoteRef.current, { yPercent: 22, autoAlpha: 0, ease: 'power3.out' })
+        .from(metaRef.current,  { yPercent: 14, autoAlpha: 0, ease: 'power2.out' }, '-=0.3')
+    }, rootRef)
+
     return () => ctx.revert()
   }, [])
 
   return (
-    <section ref={sectionRef} className={styles.section}>
-      <div className={styles.inner}>
-        <p className={styles.eyebrow}>§ 03 &nbsp;—&nbsp; Our Promise</p>
-        <blockquote ref={quoteRef} className={styles.quote}>
-          "We don't slow architects down.<br />We keep them moving."
+    <section ref={rootRef} id="trust" className={s.root}>
+      <div className={s.inner}>
+        <blockquote ref={quoteRef} className={s.quote}>
+          <span className={s.quoteMark} aria-hidden="true">"</span>
+          Over 95% of our work is repeat business.
+          <br />
+          <em>For a reason.</em>
         </blockquote>
-        <div className={styles.rule} />
+
+        <div ref={metaRef} className={s.meta}>
+          <span className={s.attribution}>Nabih Youssef &amp; Associates</span>
+          <span className={s.divider} aria-hidden="true" />
+          <span className={`u-label ${s.stat}`}>400+ TI projects across California</span>
+        </div>
       </div>
     </section>
   )

@@ -1,53 +1,94 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { events } from '../../utils/analytics'
-import styles from './IntroNarrative.module.css'
+import { useRef, useLayoutEffect } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import s from './IntroNarrative.module.css'
 
-const fadeUp = {
-  hidden:  { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] } },
-}
+const PILLARS = [
+  {
+    lead: "We don\u2019t stall.",
+    body: "We pick up the phone, clear roadblocks, and move. We know TI work isn\u2019t linear and we thrive in the swirl of decisions, deadlines, and drawings.",
+  },
+  {
+    lead: "We speak architect.",
+    body: "Our clients say we feel like part of their office. That\u2019s because we collaborate like design partners, not just consultants.",
+  },
+  {
+    lead: "We build trust.",
+    body: "Project managers bring us in because they\u2019ve worked with us before and know we\u2019ll protect their reputation.",
+  },
+  {
+    lead: "We reduce friction.",
+    body: "Owners call us back because we\u2019ve been in their buildings, we know their systems, and we know how to avoid rework.",
+  },
+]
 
 export default function IntroNarrative() {
-  const ref    = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const rootRef = useRef(null)
 
-  const handleView = () => events.sectionView(2)
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Batch-reveal all paragraphs + pillar items
+      ScrollTrigger.batch('.js-reveal-up', {
+        onEnter: (els) =>
+          gsap.from(els, {
+            autoAlpha: 0,
+            y: 36,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+          }),
+        start: 'top 88%',
+        once: true,
+      })
+    }, rootRef)
+
+    return () => ctx.revert()
+  }, [])
 
   return (
-    <section className={styles.section} ref={ref} onMouseEnter={handleView}>
-      <div className={styles.inner}>
-        <motion.p
-          className={styles.eyebrow}
-          variants={fadeUp}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-        >
-          § 02 &nbsp;—&nbsp; Who We Are
-        </motion.p>
+    <section ref={rootRef} id="intro" className={s.root}>
+      <div className={s.inner}>
+        {/* Label */}
+        <span className={`u-label js-reveal-up ${s.label}`}>Who We Are</span>
 
-        <motion.p
-          data-col="1"
-          className={styles.col}
-          variants={fadeUp}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          transition={{ delay: 0.15 }}
-        >
-          Every occupied building tells a story of transformation. We are the structural engineers who make that transformation possible — working at the intersection of ambition, regulation, and the relentless pace of construction.
-        </motion.p>
+        {/* Two-column layout */}
+        <div className={s.columns}>
+          {/* Left: literary narrative */}
+          <div className={s.left}>
+            <p className={`js-reveal-up ${s.dropCap}`}>
+              There is a kind of structural engineering that stays in the background. Invisible.
+              Efficient. Correct. And then there is ours — the kind that moves at the pace of
+              construction, speaks the language of architects, and treats a tight deadline not as
+              an obstacle but as the natural condition of the work.
+            </p>
+            <p className={`js-reveal-up ${s.body}`}>
+              Nabih Youssef &amp; Associates has been delivering tenant improvement engineering
+              across California for over forty years. From Apple Store glass staircases to
+              high-rise lobby transformations in Century City, from Disney studio retrofits to
+              fast-turn office fit-outs in San Francisco — we have built a practice around the
+              projects that demand the most from a structural engineer.
+            </p>
+            <p className={`js-reveal-up ${s.body}`}>
+              We were not hired once and retired. Over 95% of our work is repeat business.
+              That is not a marketing claim. It is a description of how this practice works.
+            </p>
+          </div>
 
-        <motion.p
-          data-col="2"
-          className={`${styles.col} ${styles.colSecondary}`}
-          variants={fadeUp}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          transition={{ delay: 0.3 }}
-        >
-          {/* [PLACEHOLDER] Replace with NYA-approved copy that speaks directly to architects */}
-          NYA's tenant improvement practice has delivered hundreds of projects across California — from Fortune 500 headquarters to landmark historic renovations. We don't add friction. We remove it.
-        </motion.p>
+          {/* Right: four pillars */}
+          <div className={s.right}>
+            <p className={`js-reveal-up ${s.pillarIntro}`}>
+              We're not just engineers. We're the team that gets it done.
+            </p>
+            <ul className={s.pillars} role="list">
+              {PILLARS.map(({ lead, body }) => (
+                <li key={lead} className={`js-reveal-up ${s.pillar}`}>
+                  <strong className={s.pillarLead}>{lead}</strong>{' '}
+                  <span className={s.pillarBody}>{body}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   )
