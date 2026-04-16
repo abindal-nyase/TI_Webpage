@@ -60,15 +60,15 @@ function YearlyChart() {
         scrollTrigger: {
           trigger: chartRef.current,
           start: "top 82%",
-          end: "bottom 5%",
-          toggleActions: "play reverse play reverse",
+          end: "top 50%",
+          scrub: 1,
         },
       });
       tl.from(bars, {
         scaleY: 0,
         transformOrigin: "bottom center",
         duration: 1.4,
-        ease: "power3.out",
+        ease: "none",
         stagger: 0.028,
       });
     }, chartRef);
@@ -215,11 +215,12 @@ export default function StatsStrip() {
           scaleX: 0,
           transformOrigin: "left center",
           duration: 1.1,
-          ease: "power3.out",
+          ease: "none",
           scrollTrigger: {
             trigger: bar,
             start: "top 85%",
-            toggleActions: "play reverse play reverse",
+            end: "top 50%",
+            scrub: 1,
           },
         });
       })
@@ -229,11 +230,12 @@ export default function StatsStrip() {
         autoAlpha: 0,
         y: 24,
         duration: 0.8,
-        ease: "power2.out",
+        ease: "none",
         scrollTrigger: {
           trigger: `.${s.breakdownSection}`,
           start: "top 82%",
-          toggleActions: "play reverse play reverse",
+          end: "top 50%",
+          scrub: 1,
         },
       });
     }, rootRef)
