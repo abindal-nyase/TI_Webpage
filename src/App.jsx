@@ -6,6 +6,7 @@ import TrustStatement from './components/TrustStatement/TrustStatement'
 import ProjectGallery from './components/ProjectGallery/ProjectGallery'
 import MidCTA from './components/MidCTA/MidCTA'
 import StatsStrip from './components/StatsStrip/StatsStrip'
+import AudienceCards from './components/AudienceCards/AudienceCards'
 import Offerings from './components/Offerings/Offerings'
 import TestimonialsService from './components/TestimonialsService/TestimonialsService'
 import Testimonials from './components/Testimonials/Testimonials'
@@ -31,15 +32,17 @@ export default function App() {
         <MidCTA />
         {/* §7 Charts / Stats */}
         <StatsStrip />
-        {/* §8 Offerings */}
+        {/* §8 Audience Cards */}
+        <AudienceCards />
+        {/* §9 Offerings */}
         <Offerings />
-        {/* §9 Testimonials + Service Detail */}
+        {/* §10 Testimonials + Service Detail */}
         <TestimonialsService />
-        {/* §10 General Testimonials */}
+        {/* §11 General Testimonials */}
         <Testimonials />
-        {/* §11 Masonry Gallery */}
+        {/* §12 Masonry Gallery */}
         <MasonryGallery />
-        {/* §12 Final CTA */}
+        {/* §13 Final CTA */}
         <FinalCTA />
       </main>
     </>
