@@ -1,6 +1,5 @@
 import { useRef, useLayoutEffect } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './IntroNarrative.module.css'
 
 export default function IntroNarrative() {
@@ -36,7 +35,7 @@ export default function IntroNarrative() {
     <section ref={rootRef} id="what-ti-is" className={s.root}>
       <div className={s.inner}>
         <div ref={textRef} className={s.textBlock}>
-          <span className={`u-label ${s.label}`}>What Makes TI Work</span>
+          <span className={`u-label ${s.label}`}>What Makes TI Hard</span>
           <p className={s.body}>
             Tenant improvement is detail-driven work. You're not touching the primary structure — you're adapting to it. Every decision lives at the connection level: anchors, edge-of-slab conditions, hidden supports that aren't on any drawing.
           </p>

@@ -12,10 +12,6 @@
   align-items: center;
 }
 
-.label {
-  margin-bottom: 1.75rem;
-}
-
 .textBlock {
   display: flex;
   flex-direction: column;
