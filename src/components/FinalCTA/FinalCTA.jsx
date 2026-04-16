@@ -45,16 +45,10 @@ export default function FinalCTA() {
           </span>
 
           <h2 className={s.heading}>Let's build something.</h2>
-          <h2 className={s.headingItalic}>Fast, beautiful, and smart.</h2>
+          <h2 className={s.headingItalic}>Fast, beautiful, and smart. Together.</h2>
           <p className={s.sub}>
-            If you're an architect juggling a demanding client and a stacked
-            schedule, we're the engineers you want on speed dial.
-            <br />
-            Bring us your tight timelines, your tangled gridlines, your
-            last-minute stair.
-            <br />
-            We'll bring the clarity, commitment, and structural know-how to get
-            it done right.
+            Bring us your tight timelines, your tangled gridlines, your last-minute stair.
+            We'll bring the clarity, commitment, and structural know-how to get it done right.
           </p>
         </div>
 
