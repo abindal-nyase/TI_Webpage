@@ -1,6 +1,6 @@
 import Nav from './components/Nav/Nav'
 import Hero from './components/Hero/Hero'
-import IntroNarrative from './components/IntroNarrative/IntroNarrative'
+import ScrollyNarrative from './components/ScrollyNarrative/ScrollyNarrative'
 import TrustStatement from './components/TrustStatement/TrustStatement'
 import ProjectGallery from './components/ProjectGallery/ProjectGallery'
 import MidCTA from './components/MidCTA/MidCTA'
@@ -18,8 +18,8 @@ export default function App() {
       <main>
         {/* §1 Hero */}
         <Hero />
-        {/* §2 Introductory Narrative */}
-        <IntroNarrative />
+        {/* §2 Scrollytelling Narrative */}
+        <ScrollyNarrative />
         {/* §3 Trust Statement */}
         <TrustStatement />
         {/* §4 Gallery */}

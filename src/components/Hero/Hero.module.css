@@ -10,7 +10,7 @@
 .bg {
   position: absolute;
   inset: -20% 0 -20% 0; /* extra height for parallax travel */
-  background-image: url('https://images.unsplash.com/photo-1444723121867-7a241cacace9?w=1920&q=85');
+  background-image: url('/Hero.jpg');
   background-size: cover;
   background-position: center 40%;
   will-change: transform;
@@ -22,9 +22,9 @@
   inset: 0;
   background: linear-gradient(
     160deg,
-    rgba(246, 244, 240, 0.78) 0%,
-    rgba(240, 238, 232, 0.72) 50%,
-    rgba(235, 232, 225, 0.65) 100%
+    rgba(246, 244, 240, 0.35) 0%,
+    rgba(240, 238, 232, 0.30) 50%,
+    rgba(235, 232, 225, 0.25) 100%
   );
 }
 
@@ -59,7 +59,7 @@
   font-size: var(--fs-hero);
   color: var(--text);
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
 }
 
 .line2 {

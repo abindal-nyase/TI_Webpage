@@ -44,29 +44,27 @@ export default function FinalCTA() {
             For Those Who Have to Deliver: Fast, Clean, and Confidently
           </span>
 
-          <h2 className={s.heading}>
-            Let's build something.
-          </h2>
-          <h2 className={s.headingItalic}>
-            Fast, beautiful, and smart.
-          </h2>
+          <h2 className={s.heading}>Let's build something.</h2>
+          <h2 className={s.headingItalic}>Fast, beautiful, and smart.</h2>
           <p className={s.sub}>
-            If you're an architect juggling a demanding client and a stacked schedule,
-            we're the engineers you want on speed dial.
+            If you're an architect juggling a demanding client and a stacked
+            schedule, we're the engineers you want on speed dial.
             <br />
-            Bring us your tight timelines, your tangled gridlines, your last-minute stair.
+            Bring us your tight timelines, your tangled gridlines, your
+            last-minute stair.
             <br />
-            We'll bring the clarity, commitment, and structural know-how to get it done right.
+            We'll bring the clarity, commitment, and structural know-how to get
+            it done right.
           </p>
         </div>
 
         <div ref={btnRef} className={s.actions}>
           <a
-            href="mailto:ti@nyase.com"
+            href="mailto:info@nyase.com"
             className={s.btn}
             aria-label="Email NYA Tenant Improvement practice"
           >
-            ti@nyase.com
+            info@nyase.com
           </a>
           <a
             href="https://www.nyase.com"
@@ -81,7 +79,8 @@ export default function FinalCTA() {
         {/* Footer bar */}
         <div className={s.footerBar}>
           <p className={s.copyright}>
-            © {new Date().getFullYear()} Nabih Youssef &amp; Associates. Structural Engineers.
+            © {new Date().getFullYear()} Nabih Youssef &amp; Associates.
+            Structural Engineers.
           </p>
           <p className={s.offices}>
             Los Angeles · San Francisco · New York · Chicago · Dallas
@@ -89,5 +88,5 @@ export default function FinalCTA() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

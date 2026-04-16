@@ -27,23 +27,28 @@ export default function IntroNarrative() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Batch-reveal all paragraphs + pillar items
-      ScrollTrigger.batch('.js-reveal-up', {
-        onEnter: (els) =>
-          gsap.from(els, {
-            autoAlpha: 0,
-            y: 36,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'power3.out',
-          }),
-        start: 'top 88%',
-        once: true,
-      })
-    }, rootRef)
+      // Set initial hidden state for ALL elements
+      gsap.set(".js-reveal-up", { autoAlpha: 0, y: 24 });
 
-    return () => ctx.revert()
-  }, [])
+      ScrollTrigger.batch(".js-reveal-up", {
+        onEnter: (els) =>
+          gsap.to(els, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: "power2.out",
+          }),
+
+        // Critical fix: ensures elements already in view animate
+        start: "top 95%",
+
+        once: true,
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section ref={rootRef} id="intro" className={s.root}>

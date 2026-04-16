@@ -53,8 +53,12 @@ export default function Hero() {
         </span>
 
         <h1 className={s.headline}>
-          <span ref={line1Ref} className={s.line1}>TI Projects Don't Wait.</span>
-          <span ref={line2Ref} className={s.line2}>Neither Do We.</span>
+          <span ref={line1Ref} className={s.line1}>
+            TI Projects Don't Wait.
+          </span>
+          <span ref={line2Ref} className={s.line2}>
+            Neither Do We.
+          </span>
         </h1>
 
         <div ref={metaRef} className={s.meta}>
@@ -62,12 +66,14 @@ export default function Hero() {
             Speed. Precision. Structural expertise — from lobby to penthouse.
           </p>
           <a
-            href="mailto:ti@nyase.com"
+            href="mailto:info@nyase.com"
             className={s.cta}
             aria-label="Contact NYA about your TI project"
           >
             Start the Conversation
-            <span className={s.ctaArrow} aria-hidden="true">→</span>
+            <span className={s.ctaArrow} aria-hidden="true">
+              →
+            </span>
           </a>
         </div>
       </div>
@@ -78,5 +84,5 @@ export default function Hero() {
         <span className={s.scrollLabel}>Scroll</span>
       </div>
     </section>
-  )
+  );
 }

@@ -29,16 +29,15 @@ export default function MidCTA() {
     <section ref={rootRef} id="connect" className={s.root}>
       <div className={s.inner}>
         <span className={`u-label js-fade ${s.label}`}>Work With Us</span>
-        <h2 className={`js-fade ${s.heading}`}>
-          Working on a TI project?
-        </h2>
+        <h2 className={`js-fade ${s.heading}`}>Working on a TI project?</h2>
         <p className={`js-fade ${s.sub}`}>
           We're typically available to kick off within the week.
           <br />
-          Bring us your tight timelines, tangled gridlines, your last-minute stair.
+          Bring us your tight timelines, tangled gridlines, your last-minute
+          stair.
         </p>
         <a
-          href="mailto:ti@nyase.com"
+          href="mailto:info@nyase.com"
           className={`js-fade ${s.btn}`}
           aria-label="Email NYA about your tenant improvement project"
         >
@@ -47,5 +46,5 @@ export default function MidCTA() {
         </a>
       </div>
     </section>
-  )
+  );
 }

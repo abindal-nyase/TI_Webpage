@@ -7,3 +7,7 @@ dist
 coverage
 .vite
 *.local
+.claude/
+.playwright-mcp/
+.superpowers/
+try1/

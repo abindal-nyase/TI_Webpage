@@ -70,15 +70,15 @@ export default function StatsStrip() {
       gsap.utils.toArray(`.${s.barFill}`).forEach((bar) => {
         gsap.from(bar, {
           scaleX: 0,
-          transformOrigin: 'left center',
+          transformOrigin: "left center",
           duration: 1.1,
-          ease: 'power3.out',
+          ease: "power3.out",
           scrollTrigger: {
             trigger: bar,
-            start: 'top 85%',
-            once: true,
+            start: "top 85%",
+            toggleActions: "play reverse play reverse",
           },
-        })
+        });
       })
 
       // Label for breakdown
@@ -86,13 +86,13 @@ export default function StatsStrip() {
         autoAlpha: 0,
         y: 24,
         duration: 0.8,
-        ease: 'power2.out',
+        ease: "power2.out",
         scrollTrigger: {
           trigger: `.${s.breakdownSection}`,
-          start: 'top 82%',
-          once: true,
+          start: "top 82%",
+          toggleActions: "play reverse play reverse",
         },
-      })
+      });
     }, rootRef)
 
     return () => ctx.revert()
