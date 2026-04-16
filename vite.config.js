@@ -5,9 +5,10 @@ export default defineConfig({
   plugins: [react()],
   // Restrict dep scanning to project entry only — prevents try1 folder interference
   optimizeDeps: {
-    entries: ['index.html'],
+    entries: ["index.html"],
   },
   build: {
-    outDir: 'dist',
+    outDir: "dist",
   },
-})
+  base: "/TI_Webpage/",
+});
