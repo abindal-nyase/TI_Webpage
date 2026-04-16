@@ -166,4 +166,19 @@ export const offerings = [
     alt: 'Modern fast-track office TI with efficient structural layout and clean finishes',
     featured: false,
   },
+  {
+    id: 'o5',
+    num: '05',
+    title: 'The Invisible Details',
+    headline: "In TI, the devil isn't in the structure. It's in the connections.",
+    body: "TI work lives at the detail level — anchors, edge conditions, hidden supports that architects can't see and GCs can't invent. We've built our reputation on catching what others miss before it becomes a field problem.",
+    bullets: [
+      'Anchors, edge-of-slab conditions, and hidden structural supports',
+      'Retrofit strategies that avoid triggering major code upgrades',
+      'Coordination with architectural intent at every connection point',
+    ],
+    src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80',
+    alt: 'Close-up structural connection detail with precision hardware and steel',
+    featured: false,
+  },
 ]

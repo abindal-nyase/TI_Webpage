@@ -91,7 +91,7 @@ export default function Offerings() {
             {/* Right: content */}
             <div className={s.panelContent}>
               <span className={`u-label ${s.panelLabel}`}>
-                What We Do Best · {item.num} / 04
+                What We Do Best · {item.num} / 05
               </span>
               <h2 className={s.panelTitle}>{item.title}</h2>
               <p className={s.panelHeadline}>{item.headline}</p>
