@@ -1,0 +1,38 @@
+.section {
+  background: var(--bg-dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--section-gap) var(--gutter);
+}
+
+.inner {
+  max-width: 760px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+}
+
+.quote {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 300;
+  color: var(--bg);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.rule {
+  width: 60px;
+  height: 1px;
+  background: var(--text-secondary);
+  margin: 48px auto 0;
+}
