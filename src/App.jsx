@@ -1,5 +1,6 @@
 import Nav from './components/Nav/Nav'
 import Hero from './components/Hero/Hero'
+import IntroNarrative from './components/IntroNarrative/IntroNarrative'
 import ScrollyNarrative from './components/ScrollyNarrative/ScrollyNarrative'
 import TrustStatement from './components/TrustStatement/TrustStatement'
 import ProjectGallery from './components/ProjectGallery/ProjectGallery'
@@ -18,25 +19,27 @@ export default function App() {
       <main>
         {/* §1 Hero */}
         <Hero />
-        {/* §2 Scrollytelling Narrative */}
+        {/* §2 Intro Narrative */}
+        <IntroNarrative />
+        {/* §3 Scrollytelling Narrative */}
         <ScrollyNarrative />
-        {/* §3 Trust Statement */}
+        {/* §4 Trust Statement */}
         <TrustStatement />
-        {/* §4 Gallery */}
+        {/* §5 Gallery */}
         <ProjectGallery />
-        {/* §5 Mid CTA */}
+        {/* §6 Mid CTA */}
         <MidCTA />
-        {/* §6 Charts / Stats */}
+        {/* §7 Charts / Stats */}
         <StatsStrip />
-        {/* §7 Offerings */}
+        {/* §8 Offerings */}
         <Offerings />
-        {/* §8 Testimonials + Service Detail */}
+        {/* §9 Testimonials + Service Detail */}
         <TestimonialsService />
-        {/* §9 General Testimonials */}
+        {/* §10 General Testimonials */}
         <Testimonials />
-        {/* §10 Masonry Gallery */}
+        {/* §11 Masonry Gallery */}
         <MasonryGallery />
-        {/* §11 Final CTA */}
+        {/* §12 Final CTA */}
         <FinalCTA />
       </main>
     </>
