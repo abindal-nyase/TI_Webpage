@@ -49,7 +49,7 @@ export default function AudienceCards() {
         <div className={s.grid}>
           {AUDIENCES.map(({ label, priority, answer }) => (
             <div key={label} className={s.card}>
-              <span className={s.cardLabel}>{label}</span>
+              <span className={`u-label ${s.cardLabel}`}>{label}</span>
               <p className={s.priority}>{priority}</p>
               <p className={s.answer}>{answer}</p>
             </div>
