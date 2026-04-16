@@ -1,4 +1,5 @@
-// Full implementation added in Task 16
+import Hero from './components/Hero/Hero'
+
 export default function App() {
-  return <div id="app" />
+  return <main><Hero /></main>
 }
