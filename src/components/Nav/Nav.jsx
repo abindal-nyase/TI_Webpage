@@ -17,6 +17,7 @@ export default function Nav() {
     // Transparent → solid on scroll
     ScrollTrigger.create({
       start: '80px top',
+      invalidateOnRefresh: true,
       onEnter:     () => navRef.current?.classList.add(s.scrolled),
       onLeaveBack: () => navRef.current?.classList.remove(s.scrolled),
     })
