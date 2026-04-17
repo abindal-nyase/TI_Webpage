@@ -13,3 +13,4 @@ coverage
 try1/
 test-results/
 .worktrees/
+.astro/
