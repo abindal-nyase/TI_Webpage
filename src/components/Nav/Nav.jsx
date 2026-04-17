@@ -34,7 +34,7 @@ export default function Nav() {
     <nav ref={navRef} className={s.nav} role="navigation" aria-label="Main navigation">
       <div className={s.inner}>
         {/* Logo */}
-        <a href="#" className={s.logo} aria-label="NYA Tenant Improvement home">
+        <a href="/" className={s.logo} aria-label="NYA Tenant Improvement home">
           <img
             src={nyaLogo}
             alt="Nabih Youssef Associates"

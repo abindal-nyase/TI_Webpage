@@ -124,7 +124,7 @@ export default function ScrollyNarrative() {
               >
                 {/* Back — NYA logo; CSS scaleX(-1) on img corrects mirror from rotateY */}
                 <div className={s.cardBack} aria-hidden="true">
-                  <img src="/nya-blue.png" alt="" />
+                  <img src="/nya-blue.png" alt="" loading="lazy" />
                 </div>
                 {/* Front — chapter content */}
                 <div className={s.cardFront}>
