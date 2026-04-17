@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useState } from 'react'
+import { useRef, useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './ScrollyNarrative.module.css'
@@ -6,7 +6,7 @@ import s from './ScrollyNarrative.module.css'
 const HERO = {
   headline: "WE'RE NOT JUST ENGINEERS.",
   sub: "WE GET IT DONE.",
-};
+}
 
 const CHAPTERS = [
   {
@@ -29,89 +29,61 @@ const CHAPTERS = [
     lead: "We reduce friction.",
     body: "We've been in your buildings, we know your systems, and we know how to avoid rework. Owners call us back.",
   },
-];
+]
+
+// Even horizontal spread — 240px center-to-center
+const SPREAD_X = [-360, -120, 120, 360]
+const Z_INDICES = [1, 3, 4, 2]
 
 export default function ScrollyNarrative() {
-  const heroRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const progressRef = useRef(null);
-  const slideRefs = useRef([]);
-  const [activeIdx, setActiveIdx] = useState(-1);
+  const wrapperRef = useRef(null)
+  const bgRef      = useRef(null)
+  const heroRef    = useRef(null)
+  const slotRefs   = useRef([])
+  const faceRefs   = useRef([])
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const slides = slideRefs.current;
-      const n = CHAPTERS.length + 1;
+      // Cards start stacked at center, invisible, back-facing (NYA logo)
+      gsap.set(slotRefs.current, { x: 0, autoAlpha: 0 })
+      gsap.set(faceRefs.current, { rotateY: 180 })
 
-      // Timeline scrubs across entire 600vh wrapper
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: wrapperRef.current,
-          start: "top top",
-          end: "bottom bottom",
+          start: 'top top',
+          end: 'bottom bottom',
           scrub: 1.2,
-          onUpdate: (self) => {
-            // Update active dot
-            const raw = Math.floor(self.progress * n);
-            const idx = raw - 1;
-            setActiveIdx(idx);
-            // Drive progress bar
-            if (progressRef.current) {
-              progressRef.current.style.width = `${self.progress * 100}%`;
-            }
-          },
         },
-      });
+      })
 
-      // Divide timeline into n equal segments (0.25 each for n=4)
-      // Each chapter owns one segment: i/n → (i+1)/n
-      // Crossfade at each boundary
-      const segLen = 1 / n; // 0.25 per chapter
-      const fadeLen = 0.04; // crossfade half-width
+      // t=0→1 (first quarter): hero fades out
+      tl.to(heroRef.current, { autoAlpha: 0, ease: 'power2.in', duration: 1 }, 0)
 
-      // HERO entry
-      tl.fromTo(
-        heroRef.current,
-        { autoAlpha: 0, y: 40 },
-        { autoAlpha: 1, y: 0, duration: 0.08, ease: "power2.out" },
-        0,
-      );
+      // t=1→3 (middle half): bg disappears + cards spread + flip
+      tl.to(bgRef.current, { autoAlpha: 0, ease: 'power1.in', duration: 2 }, 1)
 
-      // HERO exit (into first chapter)
-      tl.to(
-        heroRef.current,
-        { autoAlpha: 0, y: -40, duration: 0.06, ease: "power2.in" },
-        segLen - 0.06,
-      );
+      slotRefs.current.forEach((slot, i) => {
+        tl.to(slot, {
+          x: SPREAD_X[i],
+          autoAlpha: 1,
+          ease: 'power2.inOut',
+          duration: 2,
+        }, 1)
+      })
 
-      slides.forEach((slide, i) => {
-        const segStart = (i + 1) * segLen; // 0, 0.25, 0.5, 0.75
-        const segEnd = (i + 2) * segLen; // 0.25, 0.5, 0.75, 1.0
+      // Flip NYA-logo back → chapter front (slight stagger, completes before t=3)
+      faceRefs.current.forEach((face, i) => {
+        tl.to(face, {
+          rotateY: 0,
+          ease: 'power2.inOut',
+          duration: 1.4,
+        }, 1.3 + i * 0.07)
+      })
 
-        if (true) {
-          // Fade in at segment start
-          tl.fromTo(
-            slide,
-            { autoAlpha: 0, y: 50 },
-            { autoAlpha: 1, y: 0, ease: "power2.out", duration: fadeLen },
-            segStart - fadeLen,
-          );
-        }
+      // t=3→4 (last quarter): hold final state
+      tl.set(bgRef.current, {}, 4)
 
-        if (i < n - 1) {
-          // Fade out at segment end
-          tl.to(
-            slide,
-            {
-              autoAlpha: 0,
-              y: -50,
-              ease: "power2.in",
-              duration: fadeLen,
-            },
-            segEnd - fadeLen,
-          );
-        }
-      });
     }, wrapperRef)
 
     return () => ctx.revert()
@@ -125,45 +97,46 @@ export default function ScrollyNarrative() {
       aria-label="Who we are"
     >
       <div className={s.sticky}>
+        {/* Dark bg — fades out at scroll ¼ */}
+        <div ref={bgRef} className={s.bg} aria-hidden="true" />
         <div className={s.ambient} aria-hidden="true" />
-        <div ref={heroRef} className={s.hero} aria-hidden={activeIdx !== -1}>
+
+        {/* Hero text — fades before cards appear */}
+        <div ref={heroRef} className={s.hero}>
           <h1 className={s.heroHeadline}>{HERO.headline}</h1>
           <h1 className={s.heroSub}>{HERO.sub}</h1>
         </div>
 
-        {/* Chapter slides */}
-        {CHAPTERS.map((ch, i) => (
-          <div
-            key={ch.number}
-            ref={(el) => {
-              slideRefs.current[i] = el;
-            }}
-            className={s.slide}
-            aria-hidden={i !== activeIdx}
-          >
-            <span className={s.chapterNum}>
-              {ch.number} / {String(CHAPTERS.length).padStart(2, "0")}
-            </span>
-            <h2 className={s.lead}>{ch.lead}</h2>
-            <p className={s.body}>{ch.body}</p>
-          </div>
-        ))}
-
-        {/* Chapter dots */}
-        <div className={s.dots} aria-hidden="true">
-          {CHAPTERS.map((_, i) => (
-            <span
-              key={i}
-              className={`${s.dot} ${i === activeIdx ? s.active : ""}`}
-            />
+        {/* Card stage */}
+        <div className={s.stage} aria-label="Our principles">
+          {CHAPTERS.map((ch, i) => (
+            <div
+              key={ch.number}
+              ref={el => { slotRefs.current[i] = el }}
+              className={s.slot}
+              style={{ zIndex: Z_INDICES[i] }}
+            >
+              <div
+                ref={el => { faceRefs.current[i] = el }}
+                className={s.card3d}
+              >
+                {/* Back — NYA logo; CSS scaleX(-1) on img corrects mirror from rotateY */}
+                <div className={s.cardBack} aria-hidden="true">
+                  <img src="/TI_Webpage/nya-blue.png" alt="" />
+                </div>
+                {/* Front — chapter content */}
+                <div className={s.cardFront}>
+                  <span className={s.chapterNum}>
+                    {ch.number} / {String(CHAPTERS.length).padStart(2, '0')}
+                  </span>
+                  <h2 className={s.lead}>{ch.lead}</h2>
+                  <p className={s.body}>{ch.body}</p>
+                </div>
+              </div>
+            </div>
           ))}
-        </div>
-
-        {/* Progress bar */}
-        <div className={s.progress} aria-hidden="true">
-          <div ref={progressRef} className={s.progressFill} />
         </div>
       </div>
     </section>
-  );
+  )
 }
