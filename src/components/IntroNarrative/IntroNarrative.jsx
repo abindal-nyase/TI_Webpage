@@ -14,6 +14,7 @@ export default function IntroNarrative() {
           trigger: rootRef.current,
           start: 'top 75%',
           once: true,
+          invalidateOnRefresh: true,
         },
         defaults: { ease: 'power3.out' },
       })
