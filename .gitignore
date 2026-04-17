@@ -12,3 +12,4 @@ coverage
 .superpowers/
 try1/
 test-results/
+.worktrees/
