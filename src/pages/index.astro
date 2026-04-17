@@ -1,0 +1,81 @@
+---
+import '../index.css'
+import GlobalSetup from '../components/GlobalSetup/GlobalSetup'
+import Nav from '../components/Nav/Nav'
+import Hero from '../components/Hero/Hero'
+import IntroNarrative from '../components/IntroNarrative/IntroNarrative'
+import ScrollyNarrative from '../components/ScrollyNarrative/ScrollyNarrative'
+import TrustStatement from '../components/TrustStatement/TrustStatement'
+import ProjectGallery from '../components/ProjectGallery/ProjectGallery'
+import MidCTA from '../components/MidCTA/MidCTA'
+import StatsStrip from '../components/StatsStrip/StatsStrip'
+import AudienceCards from '../components/AudienceCards/AudienceCards'
+import Offerings from '../components/Offerings/Offerings'
+import TestimonialsService from '../components/TestimonialsService/TestimonialsService'
+import Testimonials from '../components/Testimonials/Testimonials'
+import MasonryGallery from '../components/MasonryGallery/MasonryGallery'
+import FinalCTA from '../components/FinalCTA/FinalCTA'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+
+    <title>Tenant Improvement Engineering — Nabih Youssef &amp; Associates</title>
+    <meta
+      name="description"
+      content="NYA brings speed, precision, and structural expertise to every tenant improvement project. High-rise TI, lobby renovations, signature staircases, and fast-turn fit-outs across California."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Tenant Improvement Engineering — Nabih Youssef & Associates" />
+    <meta
+      property="og:description"
+      content="NYA brings speed, precision, and structural expertise to every tenant improvement project. High-rise TI, lobby renovations, signature staircases, and fast-turn fit-outs across California."
+    />
+    <meta property="og:image" content="/Hero.jpg" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tenant Improvement Engineering — Nabih Youssef & Associates" />
+    <meta
+      name="twitter:description"
+      content="NYA brings speed, precision, and structural expertise to every tenant improvement project."
+    />
+    <meta name="twitter:image" content="/Hero.jpg" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Global init: Lenis smooth scroll + GSAP plugins. Must be client:load and first. -->
+    <GlobalSetup client:load />
+
+    <Nav client:load />
+
+    <main>
+      <Hero client:load />
+      <IntroNarrative client:visible />
+      <ScrollyNarrative client:visible />
+      <TrustStatement client:visible />
+      <ProjectGallery client:visible />
+      <MidCTA client:visible />
+      <StatsStrip client:visible />
+      <AudienceCards client:visible />
+      <Offerings client:visible />
+      <TestimonialsService client:visible />
+      <Testimonials client:visible />
+      <MasonryGallery client:visible />
+      <FinalCTA client:visible />
+    </main>
+  </body>
+</html>
