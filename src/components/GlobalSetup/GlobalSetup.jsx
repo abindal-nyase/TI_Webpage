@@ -4,10 +4,11 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
+// Register at module level so plugins are available before any component effect runs
+gsap.registerPlugin(ScrollTrigger, SplitText)
+
 export default function GlobalSetup() {
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, SplitText)
-
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => { lenis.raf(time * 1000) })

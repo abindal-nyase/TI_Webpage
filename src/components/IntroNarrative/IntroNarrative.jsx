@@ -1,4 +1,5 @@
-import { useRef, useLayoutEffect } from 'react'
+import { useRef } from 'react'
+import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import s from './IntroNarrative.module.css'
 

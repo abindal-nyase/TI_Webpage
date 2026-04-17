@@ -1,4 +1,5 @@
-import { useRef, useLayoutEffect, useState } from 'react'
+import { useRef, useState } from 'react'
+import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { testimonials } from '../../data/projects'
