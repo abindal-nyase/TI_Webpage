@@ -28,14 +28,14 @@ Find FTP credentials in GoDaddy cPanel → FTP Accounts.
 
 In GoDaddy cPanel → Subdomains:
 - Create subdomain: `tenantimprovements`
-- Points to folder: `public_html/tenantimprovements`
+- Points to folder: `public_html/tenantimprovements.nyase.com`
 
 ---
 
 ## Manual Deployment (if needed)
 
 1. Run `npm run build` — produces `dist/`
-2. In GoDaddy cPanel → File Manager → navigate to `public_html/tenantimprovements`
+2. In GoDaddy cPanel → File Manager → navigate to `public_html/tenantimprovements.nyase.com`
 3. Upload the **contents** of `dist/` (not the folder itself)
 
 ---
