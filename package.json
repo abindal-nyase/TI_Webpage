@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:godaddy": "astro build",
     "preview": "astro preview",
     "predeploy": "astro build --config astro.config.ghpages.mjs",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@astrojs/react": "^4.0.0",
+    "@astrojs/sitemap": "^3.7.2",
     "@gsap/react": "^2.1.1",
     "astro": "^5.0.0",
     "gsap": "^3.12.5",
