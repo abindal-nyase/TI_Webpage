@@ -6,7 +6,7 @@ import s from './ScrollyNarrative.module.css'
 
 const HERO = {
   headline: "WE'RE NOT JUST ENGINEERS.",
-  sub: "WE GET IT DONE.",
+  sub: "WE GET IT DONE. EVERY TIME.",
 }
 
 const CHAPTERS = [
