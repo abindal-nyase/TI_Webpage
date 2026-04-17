@@ -62,6 +62,7 @@ function YearlyChart() {
           start: "top 82%",
           end: "top 50%",
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
       tl.from(bars, {
@@ -177,6 +178,7 @@ function AnimatedCounter({ value, suffix, duration = 1.8 }) {
           trigger: ref.current,
           start: 'top 82%',
           once: true,
+          invalidateOnRefresh: true,
         },
       })
     })
@@ -207,6 +209,7 @@ export default function StatsStrip() {
           }),
         start: 'top 85%',
         once: true,
+        invalidateOnRefresh: true,
       })
 
       // Bar fill animations
@@ -221,6 +224,7 @@ export default function StatsStrip() {
             start: "top 85%",
             end: "top 50%",
             scrub: 1,
+            invalidateOnRefresh: true,
           },
         });
       })
@@ -236,6 +240,7 @@ export default function StatsStrip() {
           start: "top 82%",
           end: "top 50%",
           scrub: 1,
+          invalidateOnRefresh: true,
         },
       });
     }, rootRef)
