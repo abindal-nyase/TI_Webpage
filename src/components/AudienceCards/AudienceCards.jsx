@@ -37,6 +37,7 @@ export default function AudienceCards() {
           }),
         start: 'top 85%',
         once: true,
+        invalidateOnRefresh: true,
       })
     }, rootRef)
     return () => ctx.revert()
