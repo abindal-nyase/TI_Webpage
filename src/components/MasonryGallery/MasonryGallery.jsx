@@ -22,6 +22,7 @@ export default function MasonryGallery() {
           trigger: rootRef.current,
           start: 'top 78%',
           once: true,
+          invalidateOnRefresh: true,
         },
       })
     }, rootRef)

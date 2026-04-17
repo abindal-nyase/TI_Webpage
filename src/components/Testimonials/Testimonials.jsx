@@ -40,6 +40,7 @@ export default function Testimonials() {
           trigger: rootRef.current,
           start: 'top 78%',
           once: true,
+          invalidateOnRefresh: true,
         },
       })
     }, rootRef)

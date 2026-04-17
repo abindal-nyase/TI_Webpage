@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Nav.module.css'
-import nyaLogo from '/nya-logo.png'
+const nyaLogo = '/nya-logo.png'
 
 const NAV_LINKS = [
   { label: 'Work',    href: '#gallery' },
@@ -17,6 +17,7 @@ export default function Nav() {
     // Transparent → solid on scroll
     ScrollTrigger.create({
       start: '80px top',
+      invalidateOnRefresh: true,
       onEnter:     () => navRef.current?.classList.add(s.scrolled),
       onLeaveBack: () => navRef.current?.classList.remove(s.scrolled),
     })

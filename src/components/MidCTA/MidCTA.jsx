@@ -18,6 +18,7 @@ export default function MidCTA() {
           trigger: rootRef.current,
           start: 'top 80%',
           once: true,
+          invalidateOnRefresh: true,
         },
       })
     }, rootRef)

@@ -55,6 +55,7 @@ export default function TestimonialsService() {
           }),
         start: 'top 80%',
         once: true,
+        invalidateOnRefresh: true,
       })
     }, rootRef)
 

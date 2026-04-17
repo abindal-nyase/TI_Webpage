@@ -17,6 +17,7 @@ export default function TrustStatement() {
           start: 'top 72%',
           end: 'center center',
           scrub: 0.7,
+          invalidateOnRefresh: true,
         },
       })
 

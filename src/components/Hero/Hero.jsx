@@ -34,6 +34,7 @@ export default function Hero() {
           start: 'top top',
           end: 'bottom top',
           scrub: true,
+          invalidateOnRefresh: true,
         },
       })
     }, rootRef)
