@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './ScrollyNarrative.module.css'
 
 const HERO = {
-  headline: "WE'RE NOT JUST ENGINEERS.",
+  headline: "WE'RE NOT JUST.",
   sub: "WE GET IT DONE. EVERY TIME.",
 }
 
