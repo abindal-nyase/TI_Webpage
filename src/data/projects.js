@@ -109,7 +109,7 @@ export const offerings = [
   {
     id: 'o1',
     num: '01',
-    title: 'Fantastic Staircases',
+    title: 'Signature Staircases',
     headline: 'When design asks for the impossible, we make it structural reality.',
     body: "Things that drive a structural engineer onto a TI project are usually stairs. We've engineered glass treads for Apple retail, dramatic steel cantilevers in occupied towers, and code-compliant feature stairs that architects actually want to show clients.",
     bullets: [
