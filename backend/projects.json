@@ -1,0 +1,16 @@
+[
+  {
+    "name": "555 West 5th Street, Los Angeles, California 90013, United States",
+    "address": "555 W 5th St Los Angeles CA",
+    "lat": 34.049981,
+    "lng": -118.253161,
+    "location": "The Financial District"
+  },
+  {
+    "name": "East 3rd Street and South Santa Fe Avenue, Los Angeles, California 90013, United States",
+    "address": "3RD & SANTA FE",
+    "lat": 34.045996,
+    "lng": -118.232648,
+    "location": "The Arts District"
+  }
+]

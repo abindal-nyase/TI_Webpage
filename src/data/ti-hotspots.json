@@ -1,0 +1,62 @@
+[
+  {
+    "id": "stair",
+    "label": "Stair Addition",
+    "position": { "top": "28%", "left": "42%" },
+    "photo": "/option2/hotspots/stair.jpg",
+    "stat": "Delivered in 6 days",
+    "description": "Complex stair design in occupied towers. Structural glass treads, cantilevered steel, code-compliant feature stairs that architects want to show clients.",
+    "offeringId": "o1",
+    "isPlaceholder": false
+  },
+  {
+    "id": "lobby",
+    "label": "Lobby Renovation",
+    "position": { "top": "55%", "left": "38%" },
+    "photo": "/option2/hotspots/lobby.jpg",
+    "stat": "Zero operational disruption",
+    "description": "Visible, high-stakes, full of structural surprises. We make bold lobby ideas possible without disrupting operations or triggering major structural upgrades.",
+    "offeringId": "o2",
+    "isPlaceholder": false
+  },
+  {
+    "id": "slab-opening",
+    "label": "Slab Opening",
+    "position": { "top": "40%", "left": "60%" },
+    "photo": "/option2/hotspots/slab-opening.jpg",
+    "stat": "Load transfer in days",
+    "description": "Load transfer in constrained structural grids. We handle complex slab penetrations for stairs, voids, and mechanical penetrations in occupied high-rise floors.",
+    "offeringId": "o3",
+    "isPlaceholder": true
+  },
+  {
+    "id": "slab-infill",
+    "label": "Slab Infill",
+    "position": { "top": "62%", "left": "55%" },
+    "photo": "/option2/hotspots/slab-infill.jpg",
+    "stat": "Retrofit without upgrades",
+    "description": "Retrofit strategies that avoid triggering major code upgrades. We've closed thousands of slab openings across downtown LA high-rises.",
+    "offeringId": "o3",
+    "isPlaceholder": true
+  },
+  {
+    "id": "partition",
+    "label": "Partition Systems",
+    "position": { "top": "45%", "left": "28%" },
+    "photo": "/option2/hotspots/partition.jpg",
+    "stat": "Full drawings in 5 days",
+    "description": "Lightning-fast partition and ceiling structural support. Lean drawings that answer field questions directly, ready before the GC needs them.",
+    "offeringId": "o4",
+    "isPlaceholder": true
+  },
+  {
+    "id": "connections",
+    "label": "Connection Details",
+    "position": { "top": "70%", "left": "45%" },
+    "photo": "/option2/hotspots/connections.jpg",
+    "stat": "Caught before they became field problems",
+    "description": "Anchors, edge-of-slab, hidden supports that architects can't see and GCs can't invent. We've built our reputation on catching what others miss.",
+    "offeringId": "o5",
+    "isPlaceholder": true
+  }
+]
