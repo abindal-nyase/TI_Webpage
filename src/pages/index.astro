@@ -1,21 +1,4 @@
 ---
-import '../index.css'
-import GlobalSetup from '../components/GlobalSetup/GlobalSetup'
-import Nav from '../components/Nav/Nav'
-import Hero from '../components/Hero/Hero'
-import IntroNarrative from '../components/IntroNarrative/IntroNarrative'
-import ScrollyNarrative from '../components/ScrollyNarrative/ScrollyNarrative'
-import TrustStatement from '../components/TrustStatement/TrustStatement'
-import ProjectGallery from '../components/ProjectGallery/ProjectGallery'
-import MidCTA from '../components/MidCTA/MidCTA'
-import StatsStrip from '../components/StatsStrip/StatsStrip'
-import AudienceCards from '../components/AudienceCards/AudienceCards'
-import Offerings from '../components/Offerings/Offerings'
-import TestimonialsService from '../components/TestimonialsService/TestimonialsService'
-import Testimonials from '../components/Testimonials/Testimonials'
-import MasonryGallery from '../components/MasonryGallery/MasonryGallery'
-import FinalCTA from '../components/FinalCTA/FinalCTA'
-import TIExplorer from '../components/TIExplorer/TIExplorer'
 ---
 
 <!DOCTYPE html>
@@ -24,92 +7,178 @@ import TIExplorer from '../components/TIExplorer/TIExplorer'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <title>NYA TI — Dev Hub</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <title>Tenant Improvement Structural Engineers — Los Angeles &amp; San Francisco | NYA</title>
-    <meta
-      name="description"
-      content="NYA's structural engineers specialize in tenant improvement projects across Los Angeles and San Francisco — high-rise TI, lobby renovations, fast-turn fit-outs, and signature staircases."
-    />
-    <link rel="canonical" href="https://tenantimprovements.nyase.com/" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://tenantimprovements.nyase.com/" />
-    <meta property="og:title" content="Tenant Improvement Structural Engineers — Los Angeles & San Francisco | NYA" />
-    <meta
-      property="og:description"
-      content="NYA's structural engineers specialize in tenant improvement projects across Los Angeles and San Francisco — high-rise TI, lobby renovations, fast-turn fit-outs, and signature staircases."
-    />
-    <meta property="og:image" content="https://tenantimprovements.nyase.com/Hero.jpg" />
-
-    <!-- Twitter / X Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tenant Improvement Structural Engineers — Los Angeles & San Francisco | NYA" />
-    <meta
-      name="twitter:description"
-      content="NYA's structural engineers specialize in tenant improvement projects across Los Angeles and San Francisco — high-rise TI, lobby renovations, fast-turn fit-outs, and signature staircases."
-    />
-    <meta name="twitter:image" content="https://tenantimprovements.nyase.com/Hero.jpg" />
-
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "Nabih Youssef & Associates",
-        "url": "https://tenantimprovements.nyase.com",
-        "description": "Structural engineering firm specializing in tenant improvement projects — high-rise TI, lobby renovations, fast-turn fit-outs, and signature staircases.",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "350 S Grand Ave #1600",
-          "addressLocality": "Los Angeles",
-          "addressRegion": "CA",
-          "postalCode": "90071",
-          "addressCountry": "US"
-        },
-        "areaServed": [
-          "Los Angeles, CA",
-          "San Francisco, CA",
-          "Orange County, CA",
-          "San Diego, CA",
-          "Phoenix, AZ",
-          "Dallas, TX",
-          "Charleston, SC",
-          "Hawaii"
-        ],
-        "serviceType": "Tenant Improvement Structural Engineering"
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #0d0d0d;
+        color: #e5e5e5;
+        min-height: 100vh;
+        padding: 48px 32px;
       }
-    </script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
-      rel="stylesheet"
-    />
+      header {
+        max-width: 900px;
+        margin: 0 auto 48px;
+        border-bottom: 1px solid #2a2a2a;
+        padding-bottom: 24px;
+      }
+
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      h1 span {
+        color: #4a7fe0;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #888;
+        line-height: 1.5;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+      }
+
+      section h2 {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #555;
+        margin-bottom: 16px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      a.card {
+        display: block;
+        padding: 20px 24px;
+        border: 1px solid #222;
+        border-radius: 8px;
+        background: #141414;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.15s, background 0.15s;
+      }
+
+      a.card:hover {
+        border-color: #4a7fe0;
+        background: #161d2e;
+      }
+
+      a.card .label {
+        font-size: 15px;
+        font-weight: 500;
+        color: #e5e5e5;
+        margin-bottom: 4px;
+      }
+
+      a.card .meta {
+        font-size: 12px;
+        color: #555;
+      }
+
+      a.card.primary {
+        border-color: #2a3a5e;
+        background: #0f1829;
+      }
+
+      a.card.primary .label {
+        color: #7ba7f0;
+      }
+
+      a.card.primary:hover {
+        border-color: #4a7fe0;
+        background: #121e36;
+      }
+
+      footer {
+        max-width: 900px;
+        margin: 64px auto 0;
+        padding-top: 24px;
+        border-top: 1px solid #1a1a1a;
+        font-size: 12px;
+        color: #444;
+      }
+    </style>
   </head>
   <body>
-    <!-- Global init: Lenis smooth scroll + GSAP plugins. Must be client:load and first. -->
-    <GlobalSetup client:load />
-
-    <Nav client:load />
+    <header>
+      <p class="eyebrow">Nabih Youssef Associates — Internal</p>
+      <h1>NYA TI <span>Dev Hub</span></h1>
+      <p class="subtitle">
+        Assembled page options and individual component showcases.<br />
+        This page is not deployed to production.
+      </p>
+    </header>
 
     <main>
-      <Hero client:load />
-      <IntroNarrative client:visible />
-      <ScrollyNarrative client:visible />
-      <TrustStatement client:visible />
-      <ProjectGallery client:visible />
-      <MidCTA client:visible />
-      <StatsStrip client:visible />
-      <AudienceCards client:visible />
-      <Offerings client:visible />
-      <TestimonialsService client:visible />
-      <Testimonials client:visible />
-      <MasonryGallery client:visible />
-      <FinalCTA client:visible />
-      <TIExplorer client:visible contactHref="/contact" />
+      <section>
+        <h2>Assembled Pages</h2>
+        <div class="grid">
+          <a class="card primary" href="/option1">
+            <div class="label">Option 1</div>
+            <div class="meta">Current build — production baseline</div>
+          </a>
+          <a class="card primary" href="/option2">
+            <div class="label">Option 2</div>
+            <div class="meta">New development — work in progress</div>
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <h2>Component Showcases</h2>
+        <div class="grid">
+          <a class="card" href="/hero">
+            <div class="label">Hero</div>
+            <div class="meta">Hero · HeroZoom</div>
+          </a>
+          <a class="card" href="/cta">
+            <div class="label">CTA</div>
+            <div class="meta">MidCTA · FinalCTA · FinalCTAOption2</div>
+          </a>
+          <a class="card" href="/audience">
+            <div class="label">Audience</div>
+            <div class="meta">AudienceCards · AudienceSwitcher</div>
+          </a>
+          <a class="card" href="/stats">
+            <div class="label">Stats</div>
+            <div class="meta">StatsStrip · StatsSection</div>
+          </a>
+          <a class="card" href="/offerings">
+            <div class="label">Offerings</div>
+            <div class="meta">Offerings</div>
+          </a>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      Dev hub — retire this page and move chosen components to root before launch.
+    </footer>
   </body>
 </html>

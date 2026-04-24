@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NYA Structural Engineering — Project Locations</title>
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      background: #141616;
+      overflow: hidden;
+    }
+
+    /* ── Map ──────────────────────────────────────────────────────────── */
+    #map {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* ── Top overlay: act label + headline + counter ─────────────────── */
+    .act2-header {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 52px 68px 80px;
+      background: linear-gradient(
+        to bottom,
+        rgba(20, 22, 22, 0.96) 0%,
+        rgba(20, 22, 22, 0.60) 55%,
+        rgba(20, 22, 22, 0.00) 100%
+      );
+      pointer-events: none;
+    }
+
+    .act2-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.20em;
+      color: #585049;
+      margin-bottom: 18px;
+    }
+
+    .act2-headline {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      color: #AFBEB9;
+      margin-bottom: 14px;
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    .act2-counter {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: #585049;
+    }
+
+    .act2-counter strong {
+      color: #8CB0BE;
+      font-weight: 500;
+    }
+
+    /* ── Legend ──────────────────────────────────────────────────────── */
+    .act2-legend {
+      position: absolute;
+      bottom: 36px;
+      left: 36px;
+      z-index: 500;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: #585049;
+      line-height: 2.2;
+      pointer-events: none;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-divider {
+      border: none;
+      border-top: 1px solid #232726;
+      margin: 6px 0;
+      width: 160px;
+    }
+
+    .legend-total {
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      color: #2E3332;
+    }
+
+    /* ── Leaflet overrides ───────────────────────────────────────────── */
+    .leaflet-control-zoom         { display: none !important; }
+    .leaflet-control-attribution  {
+      background: transparent !important;
+      font-family: 'IBM Plex Mono', monospace !important;
+      font-size: 8px !important;
+      color: #2E3332 !important;
+    }
+    .leaflet-control-attribution a { color: #3A3F3E !important; }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <div class="act2-header">
+    <div class="act2-label">02 &mdash; PRESENCE</div>
+    <div class="act2-headline">We may already know your building.</div>
+    <div class="act2-counter">
+      <strong>273</strong> tenant improvement projects &nbsp;&middot;&nbsp; Los Angeles
+    </div>
+  </div>
+
+  <div class="act2-legend">
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#B4A08B"></div>
+      <span>TENANT IMPROVEMENT</span>
+    </div>
+    <div class="legend-row" style="color:#2E3332">
+      <div class="legend-dot" style="background:#2E3332"></div>
+      <span>OTHER WORK</span>
+    </div>
+    <hr class="legend-divider" />
+    <div class="legend-total">457 PROJECTS TOTAL</div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map', {
+      center: [34.0522, -118.2437],
+      zoom: 12,
+      zoomControl:       false,
+      attributionControl: true,
+      scrollWheelZoom:   true,
+      dragging:          true,
+    });
+
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+      {
+        attribution: '&copy; <a href="https://carto.com">CARTO</a>',
+        maxZoom: 19,
+      }
+    ).addTo(map);
+
+    var markers = [{"lat": 34.049222, "lng": -118.247961, "ti": false}, {"lat": 34.0408, "lng": -118.254652, "ti": false}, {"lat": 34.147256, "lng": -118.152325, "ti": false}, {"lat": 34.147256, "lng": -118.152325, "ti": true}, {"lat": 34.052452, "lng": -118.251375, "ti": true}, {"lat": 34.073784, "lng": -118.382577, "ti": false}, {"lat": 34.064164, "lng": -118.284806, "ti": false}, {"lat": 34.064164, "lng": -118.284806, "ti": false}, {"lat": 34.053089, "lng": -118.257237, "ti": true}, {"lat": 34.07464, "lng": -118.376255, "ti": false}, {"lat": 33.984166, "lng": -118.38965, "ti": false}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.06234, "lng": -118.12224, "ti": false}, {"lat": 34.072944, "lng": -118.240471, "ti": true}, {"lat": 34.051938, "lng": -118.244514, "ti": false}, {"lat": 34.046873, "lng": -118.209542, "ti": true}, {"lat": 34.046873, "lng": -118.209542, "ti": true}, {"lat": 33.983543, "lng": -118.224932, "ti": false}, {"lat": 33.983543, "lng": -118.224932, "ti": false}, {"lat": 34.072944, "lng": -118.240471, "ti": false}, {"lat": 34.049981, "lng": -118.253161, "ti": false}, {"lat": 34.048399, "lng": -118.261306, "ti": true}, {"lat": 34.048399, "lng": -118.261306, "ti": true}, {"lat": 33.99331, "lng": -118.278305, "ti": false}, {"lat": 33.974432, "lng": -118.191358, "ti": false}, {"lat": 33.974432, "lng": -118.191358, "ti": false}, {"lat": 34.061444, "lng": -118.354882, "ti": false}, {"lat": 33.96157, "lng": -118.353735, "ti": true}, {"lat": 33.96157, "lng": -118.353735, "ti": false}, {"lat": 34.07054, "lng": -118.334998, "ti": false}, {"lat": 34.061705, "lng": -118.416479, "ti": true}, {"lat": 34.051149, "lng": -118.254395, "ti": true}, {"lat": 34.128626, "lng": -118.111898, "ti": false}, {"lat": 34.15084, "lng": -118.14859, "ti": true}, {"lat": 34.108978, "lng": -118.193655, "ti": false}, {"lat": 34.055177, "lng": -118.206374, "ti": false}, {"lat": 34.075955, "lng": -118.248475, "ti": false}, {"lat": 34.147599, "lng": -118.143721, "ti": false}, {"lat": 34.014051, "lng": -118.286495, "ti": true}, {"lat": 34.052927, "lng": -118.251782, "ti": false}, {"lat": 34.052927, "lng": -118.251782, "ti": false}, {"lat": 34.146255, "lng": -118.142095, "ti": true}, {"lat": 34.028201, "lng": -118.2242, "ti": false}, {"lat": 33.98885, "lng": -118.329057, "ti": true}, {"lat": 33.976066, "lng": -118.390908, "ti": false}, {"lat": 33.976877, "lng": -118.391636, "ti": false}, {"lat": 33.977175, "lng": -118.392326, "ti": false}, {"lat": 34.049981, "lng": -118.253161, "ti": true}, {"lat": 34.049981, "lng": -118.253161, "ti": false}, {"lat": 34.044316, "lng": -118.413473, "ti": true}, {"lat": 34.044316, "lng": -118.413473, "ti": true}, {"lat": 34.044316, "lng": -118.413473, "ti": true}, {"lat": 34.044316, "lng": -118.413473, "ti": true}, {"lat": 34.044316, "lng": -118.413473, "ti": true}, {"lat": 34.055284, "lng": -118.413175, "ti": false}, {"lat": 34.055284, "lng": -118.413175, "ti": true}, {"lat": 34.055284, "lng": -118.413175, "ti": true}, {"lat": 34.055284, "lng": -118.413175, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": false}, {"lat": 34.053485, "lng": -118.245325, "ti": false}, {"lat": 34.061329, "lng": -118.413682, "ti": false}, {"lat": 34.058883, "lng": -118.417021, "ti": true}, {"lat": 34.058883, "lng": -118.417021, "ti": true}, {"lat": 34.058883, "lng": -118.417021, "ti": true}, {"lat": 34.058883, "lng": -118.417021, "ti": true}, {"lat": 34.058883, "lng": -118.417021, "ti": true}, {"lat": 34.066866, "lng": -118.399583, "ti": false}, {"lat": 34.068677, "lng": -118.398472, "ti": true}, {"lat": 34.068677, "lng": -118.398472, "ti": true}, {"lat": 34.068677, "lng": -118.398472, "ti": true}, {"lat": 34.033587, "lng": -118.230325, "ti": true}, {"lat": 34.023852, "lng": -118.286158, "ti": false}, {"lat": 34.033801, "lng": -118.241436, "ti": false}, {"lat": 34.072944, "lng": -118.240471, "ti": true}, {"lat": 34.098328, "lng": -118.323201, "ti": false}, {"lat": 34.052452, "lng": -118.251375, "ti": false}, {"lat": 34.022753, "lng": -118.286035, "ti": true}, {"lat": 34.022753, "lng": -118.286035, "ti": true}, {"lat": 34.141153, "lng": -118.226161, "ti": false}, {"lat": 34.050869, "lng": -118.257526, "ti": true}, {"lat": 34.072944, "lng": -118.240471, "ti": true}, {"lat": 34.072944, "lng": -118.240471, "ti": false}, {"lat": 34.072944, "lng": -118.240471, "ti": false}, {"lat": 34.072944, "lng": -118.240471, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.048247, "lng": -118.249226, "ti": true}, {"lat": 34.048247, "lng": -118.249226, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": false}, {"lat": 34.053562, "lng": -118.253204, "ti": false}, {"lat": 34.0107, "lng": -118.336727, "ti": false}, {"lat": 34.059261, "lng": -118.412708, "ti": false}, {"lat": 34.10138, "lng": -118.340483, "ti": false}, {"lat": 34.152469, "lng": -118.347383, "ti": false}, {"lat": 34.152469, "lng": -118.347383, "ti": false}, {"lat": 34.026738, "lng": -118.388512, "ti": true}, {"lat": 34.05978, "lng": -118.205045, "ti": false}, {"lat": 34.05978, "lng": -118.205045, "ti": false}, {"lat": 34.06093, "lng": -118.20528, "ti": false}, {"lat": 34.06093, "lng": -118.20528, "ti": false}, {"lat": 34.03926, "lng": -118.259664, "ti": true}, {"lat": 34.146673, "lng": -118.255562, "ti": false}, {"lat": 34.045397, "lng": -118.263148, "ti": true}, {"lat": 34.061705, "lng": -118.416479, "ti": true}, {"lat": 34.101121, "lng": -118.34367, "ti": false}, {"lat": 34.051474, "lng": -118.251558, "ti": true}, {"lat": 34.01987, "lng": -118.285326, "ti": true}, {"lat": 33.956717, "lng": -118.229827, "ti": false}, {"lat": 34.148082, "lng": -118.24818, "ti": false}, {"lat": 34.148082, "lng": -118.24818, "ti": false}, {"lat": 34.066713, "lng": -118.411435, "ti": true}, {"lat": 34.066713, "lng": -118.411435, "ti": true}, {"lat": 34.10524, "lng": -118.31205, "ti": false}, {"lat": 34.05948, "lng": -118.30255, "ti": false}, {"lat": 34.05948, "lng": -118.30255, "ti": false}, {"lat": 34.05948, "lng": -118.30255, "ti": false}, {"lat": 33.94327, "lng": -118.234, "ti": false}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.05425, "lng": -118.412274, "ti": true}, {"lat": 34.05425, "lng": -118.412274, "ti": true}, {"lat": 34.05425, "lng": -118.412274, "ti": true}, {"lat": 34.05425, "lng": -118.412274, "ti": true}, {"lat": 34.05425, "lng": -118.412274, "ti": true}, {"lat": 34.053289, "lng": -118.250623, "ti": true}, {"lat": 34.053289, "lng": -118.250623, "ti": true}, {"lat": 34.053289, "lng": -118.250623, "ti": true}, {"lat": 34.053289, "lng": -118.250623, "ti": true}, {"lat": 34.053289, "lng": -118.250623, "ti": true}, {"lat": 34.051474, "lng": -118.251558, "ti": true}, {"lat": 34.052125, "lng": -118.252687, "ti": true}, {"lat": 34.052125, "lng": -118.252687, "ti": true}, {"lat": 34.05143, "lng": -118.258435, "ti": false}, {"lat": 34.05143, "lng": -118.258435, "ti": false}, {"lat": 34.05143, "lng": -118.258435, "ti": false}, {"lat": 34.05143, "lng": -118.258435, "ti": false}, {"lat": 34.05143, "lng": -118.258435, "ti": true}, {"lat": 34.051592, "lng": -118.256081, "ti": true}, {"lat": 34.010386, "lng": -118.335756, "ti": false}, {"lat": 34.010386, "lng": -118.335756, "ti": true}, {"lat": 34.010386, "lng": -118.335756, "ti": true}, {"lat": 34.010386, "lng": -118.335756, "ti": false}, {"lat": 33.978948, "lng": -118.393709, "ti": true}, {"lat": 33.993357, "lng": -118.331219, "ti": false}, {"lat": 34.117075, "lng": -118.240695, "ti": false}, {"lat": 34.02181, "lng": -118.38042, "ti": true}, {"lat": 34.12552, "lng": -118.11928, "ti": true}, {"lat": 34.12552, "lng": -118.11928, "ti": true}, {"lat": 34.12552, "lng": -118.11928, "ti": true}, {"lat": 34.158092, "lng": -118.25446, "ti": false}, {"lat": 34.049772, "lng": -118.255675, "ti": false}, {"lat": 34.049772, "lng": -118.255675, "ti": true}, {"lat": 34.182848, "lng": -118.308113, "ti": true}, {"lat": 34.027997, "lng": -118.235381, "ti": true}, {"lat": 34.027997, "lng": -118.235381, "ti": true}, {"lat": 34.054502, "lng": -118.250576, "ti": false}, {"lat": 34.054502, "lng": -118.250576, "ti": false}, {"lat": 34.054502, "lng": -118.250576, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.05815, "lng": -118.246468, "ti": true}, {"lat": 34.056601, "lng": -118.248927, "ti": false}, {"lat": 34.056601, "lng": -118.248927, "ti": false}, {"lat": 34.056601, "lng": -118.248927, "ti": true}, {"lat": 34.056601, "lng": -118.248927, "ti": true}, {"lat": 34.158092, "lng": -118.25446, "ti": true}, {"lat": 34.158092, "lng": -118.25446, "ti": false}, {"lat": 34.04902, "lng": -118.260934, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.048016, "lng": -118.258097, "ti": true}, {"lat": 34.048016, "lng": -118.258097, "ti": true}, {"lat": 34.048016, "lng": -118.258097, "ti": true}, {"lat": 34.094489, "lng": -118.374337, "ti": true}, {"lat": 34.094489, "lng": -118.374337, "ti": true}, {"lat": 34.094489, "lng": -118.374337, "ti": true}, {"lat": 34.07642, "lng": -118.22232, "ti": false}, {"lat": 34.049772, "lng": -118.255675, "ti": false}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": true}, {"lat": 34.0311, "lng": -118.281571, "ti": true}, {"lat": 34.0311, "lng": -118.281571, "ti": false}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": true}, {"lat": 34.057063, "lng": -118.417525, "ti": false}, {"lat": 34.057063, "lng": -118.417525, "ti": false}, {"lat": 34.059565, "lng": -118.416182, "ti": true}, {"lat": 34.059565, "lng": -118.416182, "ti": false}, {"lat": 34.048815, "lng": -118.255735, "ti": true}, {"lat": 34.048815, "lng": -118.255735, "ti": true}, {"lat": 34.049178, "lng": -118.255469, "ti": false}, {"lat": 34.055284, "lng": -118.413175, "ti": true}, {"lat": 34.055284, "lng": -118.413175, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": true}, {"lat": 34.063651, "lng": -118.364805, "ti": true}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.05643, "lng": -118.28099, "ti": true}, {"lat": 34.052927, "lng": -118.251782, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.051592, "lng": -118.256081, "ti": false}, {"lat": 34.052452, "lng": -118.251375, "ti": true}, {"lat": 34.124381, "lng": -118.336888, "ti": false}, {"lat": 34.124381, "lng": -118.336888, "ti": false}, {"lat": 34.072944, "lng": -118.240471, "ti": false}, {"lat": 34.020681, "lng": -118.333881, "ti": false}, {"lat": 34.146673, "lng": -118.255562, "ti": false}, {"lat": 34.044053, "lng": -118.254076, "ti": true}, {"lat": 34.07293, "lng": -118.291692, "ti": false}, {"lat": 33.916723, "lng": -118.291577, "ti": false}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.051552, "lng": -118.25684, "ti": true}, {"lat": 34.061705, "lng": -118.416479, "ti": false}, {"lat": 34.0408, "lng": -118.254652, "ti": true}, {"lat": 34.051474, "lng": -118.251558, "ti": true}, {"lat": 34.061444, "lng": -118.354882, "ti": true}, {"lat": 34.061444, "lng": -118.354882, "ti": true}, {"lat": 34.061444, "lng": -118.354882, "ti": true}, {"lat": 34.04869, "lng": -118.25666, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.05143, "lng": -118.258435, "ti": false}, {"lat": 34.05143, "lng": -118.258435, "ti": true}, {"lat": 34.063473, "lng": -118.359396, "ti": true}, {"lat": 34.056601, "lng": -118.248927, "ti": true}, {"lat": 34.056601, "lng": -118.248927, "ti": true}, {"lat": 34.056601, "lng": -118.248927, "ti": true}, {"lat": 34.056601, "lng": -118.248927, "ti": true}, {"lat": 34.048247, "lng": -118.249226, "ti": true}, {"lat": 34.048247, "lng": -118.249226, "ti": true}, {"lat": 34.048247, "lng": -118.249226, "ti": true}, {"lat": 34.041002, "lng": -118.284334, "ti": true}, {"lat": 34.155643, "lng": -118.258505, "ti": false}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.039734, "lng": -118.258571, "ti": true}, {"lat": 34.039734, "lng": -118.258571, "ti": false}, {"lat": 34.022206, "lng": -118.291213, "ti": true}, {"lat": 34.075385, "lng": -118.381835, "ti": false}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": true}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.047972, "lng": -118.255562, "ti": false}, {"lat": 34.049981, "lng": -118.253161, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.049323, "lng": -118.258524, "ti": true}, {"lat": 34.161883, "lng": -118.329388, "ti": true}, {"lat": 34.058225, "lng": -118.307512, "ti": true}, {"lat": 34.052449, "lng": -118.2536, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 33.969981, "lng": -118.35719, "ti": false}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.048399, "lng": -118.261306, "ti": true}, {"lat": 33.961287, "lng": -118.348133, "ti": false}, {"lat": 34.04567, "lng": -118.24672, "ti": true}, {"lat": 34.150985, "lng": -118.164754, "ti": false}, {"lat": 34.150985, "lng": -118.164754, "ti": false}, {"lat": 33.954738, "lng": -118.2782, "ti": false}, {"lat": 34.049377, "lng": -118.252357, "ti": false}, {"lat": 34.049377, "lng": -118.252357, "ti": false}, {"lat": 34.049377, "lng": -118.252357, "ti": false}, {"lat": 34.049377, "lng": -118.252357, "ti": false}, {"lat": 34.020762, "lng": -118.397765, "ti": true}, {"lat": 34.020762, "lng": -118.397765, "ti": true}, {"lat": 34.020762, "lng": -118.397765, "ti": true}, {"lat": 34.020762, "lng": -118.397765, "ti": true}, {"lat": 34.020762, "lng": -118.397765, "ti": true}, {"lat": 34.0738, "lng": -118.380493, "ti": true}, {"lat": 34.084394, "lng": -118.325852, "ti": false}, {"lat": 34.084394, "lng": -118.325852, "ti": false}, {"lat": 34.084394, "lng": -118.325852, "ti": false}, {"lat": 34.084394, "lng": -118.325852, "ti": false}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": false}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": false}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.031348, "lng": -118.229737, "ti": true}, {"lat": 34.172904, "lng": -118.314925, "ti": true}, {"lat": 34.051971, "lng": -118.255724, "ti": false}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.052452, "lng": -118.251375, "ti": true}, {"lat": 34.052452, "lng": -118.251375, "ti": true}, {"lat": 34.052452, "lng": -118.251375, "ti": true}, {"lat": 34.046986, "lng": -118.255371, "ti": false}, {"lat": 34.157029, "lng": -118.256384, "ti": true}, {"lat": 34.043284, "lng": -118.245196, "ti": true}, {"lat": 34.063473, "lng": -118.359396, "ti": true}, {"lat": 34.056207, "lng": -118.266044, "ti": true}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": true}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.063651, "lng": -118.364805, "ti": false}, {"lat": 34.048926, "lng": -118.247912, "ti": false}, {"lat": 34.089768, "lng": -118.347455, "ti": true}, {"lat": 34.04668, "lng": -118.255065, "ti": true}, {"lat": 34.04668, "lng": -118.255065, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.050061, "lng": -118.259253, "ti": true}, {"lat": 34.049197, "lng": -118.257098, "ti": true}, {"lat": 34.065768, "lng": -118.197216, "ti": true}, {"lat": 34.065768, "lng": -118.197216, "ti": false}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.047883, "lng": -118.257193, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.061329, "lng": -118.413682, "ti": true}, {"lat": 34.061329, "lng": -118.413682, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": true}, {"lat": 34.089766, "lng": -118.385186, "ti": false}, {"lat": 34.089766, "lng": -118.385186, "ti": false}, {"lat": 34.050758, "lng": -118.259203, "ti": false}, {"lat": 34.062235, "lng": -118.358578, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": true}, {"lat": 34.025992, "lng": -118.284624, "ti": true}, {"lat": 34.059087, "lng": -118.41167, "ti": false}, {"lat": 34.059087, "lng": -118.41167, "ti": false}, {"lat": 34.047256, "lng": -118.262367, "ti": true}, {"lat": 34.047256, "lng": -118.262367, "ti": true}, {"lat": 34.047256, "lng": -118.262367, "ti": true}, {"lat": 34.05085, "lng": -118.25744, "ti": false}, {"lat": 34.048884, "lng": -118.254685, "ti": true}, {"lat": 34.148888, "lng": -118.159571, "ti": false}, {"lat": 34.148888, "lng": -118.159571, "ti": false}, {"lat": 34.098328, "lng": -118.323201, "ti": false}, {"lat": 34.098328, "lng": -118.323201, "ti": true}, {"lat": 34.098328, "lng": -118.323201, "ti": true}, {"lat": 34.098328, "lng": -118.323201, "ti": true}, {"lat": 34.098328, "lng": -118.323201, "ti": true}, {"lat": 34.098328, "lng": -118.323201, "ti": false}, {"lat": 34.061705, "lng": -118.416479, "ti": false}, {"lat": 34.061705, "lng": -118.416479, "ti": false}, {"lat": 34.063473, "lng": -118.359396, "ti": true}, {"lat": 34.049323, "lng": -118.258524, "ti": true}, {"lat": 34.062026, "lng": -118.352137, "ti": true}, {"lat": 34.061705, "lng": -118.416479, "ti": true}, {"lat": 34.077399, "lng": -118.386416, "ti": false}, {"lat": 34.063228, "lng": -118.285211, "ti": true}, {"lat": 34.14868, "lng": -118.338636, "ti": false}, {"lat": 34.061705, "lng": -118.416479, "ti": false}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.051592, "lng": -118.256081, "ti": true}, {"lat": 34.142, "lng": -118.1516, "ti": true}, {"lat": 34.04946, "lng": -118.25094, "ti": true}, {"lat": 34.04946, "lng": -118.25094, "ti": true}, {"lat": 34.06062, "lng": -118.24341, "ti": false}, {"lat": 33.941347, "lng": -118.178621, "ti": false}, {"lat": 34.046986, "lng": -118.255371, "ti": false}, {"lat": 34.050061, "lng": -118.259253, "ti": false}, {"lat": 34.056206, "lng": -118.416641, "ti": false}, {"lat": 34.053804, "lng": -118.25488, "ti": false}, {"lat": 34.061705, "lng": -118.416479, "ti": true}, {"lat": 34.06178, "lng": -118.28199, "ti": true}, {"lat": 34.06178, "lng": -118.28199, "ti": true}, {"lat": 34.06178, "lng": -118.28199, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.051592, "lng": -118.256081, "ti": true}, {"lat": 34.076, "lng": -118.379672, "ti": true}, {"lat": 34.076, "lng": -118.379672, "ti": true}, {"lat": 34.02857, "lng": -118.27379, "ti": false}, {"lat": 34.032916, "lng": -118.269745, "ti": false}, {"lat": 34.051699, "lng": -118.255352, "ti": false}, {"lat": 34.045614, "lng": -118.258585, "ti": false}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.055459, "lng": -118.233392, "ti": false}, {"lat": 34.082238, "lng": -118.382386, "ti": false}, {"lat": 34.061329, "lng": -118.413682, "ti": false}, {"lat": 34.157151, "lng": -118.253953, "ti": true}, {"lat": 34.060279, "lng": -118.280917, "ti": false}, {"lat": 34.081744, "lng": -118.377184, "ti": false}, {"lat": 34.053562, "lng": -118.253204, "ti": false}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": false}, {"lat": 34.053562, "lng": -118.253204, "ti": false}, {"lat": 34.02857, "lng": -118.27379, "ti": false}, {"lat": 34.02857, "lng": -118.27379, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.053562, "lng": -118.253204, "ti": true}, {"lat": 34.110893, "lng": -118.287253, "ti": false}];
+
+    markers.forEach(function (m) {
+      L.circleMarker([m.lat, m.lng], {
+        radius:      m.ti ? 5 : 3,
+        fillColor:   m.ti ? '#B4A08B' : '#323735',
+        fillOpacity: m.ti ? 0.88 : 0.45,
+        color:       'none',
+        weight:      0,
+        interactive: false,
+      }).addTo(map);
+    });
+  </script>
+
+</body>
+</html>

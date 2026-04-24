@@ -17,3 +17,4 @@ test-results/
 *.zip
 .venv/
 assets/Option2Assets/
+*.xlsx
