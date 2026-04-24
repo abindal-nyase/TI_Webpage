@@ -110,27 +110,11 @@ If you already have Node installed, check your version first — if it is v18 or
 node -v
 ```
 
-If you need to install Node, the recommended way is via a version manager — it avoids permission issues and lets you switch versions later.
+If you need to install Node, download the official installer from **[nodejs.org](https://nodejs.org)**. Click the **LTS** button (the left one — it says "Recommended For Most Users") and run the downloaded installer. Accept all defaults.
 
-**Windows — use nvm-windows:**
-1. Go to **[github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)**
-2. Click the **latest release** at the top of the list
-3. Under **Assets**, download **`nvm-setup.exe`**
-4. Run the installer (accept all defaults)
-5. Open a new terminal and run:
+After install, open a new terminal and verify:
 ```bash
-nvm install 22
-nvm use 22
-node -v    # should print v22.x.x
-```
-
-**macOS — use nvm:**
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-# Restart your terminal, then:
-nvm install 22
-nvm use 22
-node -v
+node -v    # should print v22.x.x or similar
 ```
 
 ---
