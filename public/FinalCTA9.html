@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NYA — Tenant Improvement</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy:   #10172B;
+      --orange: #F2744D;
+      --white:  #ffffff;
+    }
+
+    html { scroll-behavior: auto; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ══ Section ══ */
+    #nya-cta {
+      position: relative;
+      height: 300vh;
+      background: var(--navy);
+    }
+
+    #cta-canvas {
+      position: sticky;
+      top: 0;
+      display: block;
+      width: 100%;
+      height: 100vh;
+      z-index: 0;
+    }
+
+    .cta-ui {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      margin-top: -100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: 48px 24px;
+      pointer-events: none;
+    }
+
+    .cta-actions { pointer-events: auto; }
+
+    /* ── Headline ── */
+    .cta-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(68px, 10.5vw, 130px);
+      line-height: .96;
+      letter-spacing: .018em;
+      text-align: center;
+      margin: 0 0 28px;
+    }
+    .hl-line { display: block; }
+    .hw {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .hw.vis { opacity: 1; transform: translateY(0); }
+    .hw.orange { color: var(--orange); }
+    .hw.ghost  { color: rgba(255,255,255,.12); transition: opacity .7s ease, transform .7s ease, color .55s ease; }
+    .hw.ghost.lit { color: rgba(255,255,255,.84); }
+
+    /* ── Sub-copy & note — word-by-word reveal ── */
+    .cta-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(14px, 1.35vw, 17px);
+      font-weight: 300;
+      line-height: 1.85;
+      text-align: center;
+      max-width: 520px;
+      margin: 0 0 52px;
+    }
+
+    /* Individual word spans — start dim, scroll drives to white */
+    .sw {
+      display: inline;
+      color: rgba(255,255,255,.12);
+      transition: color .4s ease;
+    }
+    .sw.lit { color: #ffffff; }
+
+    /* ── Actions ── */
+    .cta-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .8s ease .28s, transform .8s ease .28s;
+    }
+    .cta-actions.vis { opacity: 1; transform: translateY(0); }
+
+    /* ── Button ── */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      padding: 18px 38px;
+      border: 1px solid rgba(242,116,77,.4);
+      color: var(--white);
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      letter-spacing: .045em;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .25s, color .25s;
+    }
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--orange);
+      transform: translateX(-101%);
+      transition: transform .38s cubic-bezier(.76,0,.24,1);
+      z-index: 0;
+    }
+    .cta-btn:hover::before  { transform: translateX(0); }
+    .cta-btn:hover          { border-color: var(--orange); color: var(--navy); }
+    .cta-btn:focus-visible  { outline: 2px solid var(--orange); outline-offset: 3px; }
+    .btn-inner {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .btn-icon  { width: 17px; height: 17px; flex-shrink: 0; }
+    .btn-arrow {
+      position: relative; z-index: 1;
+      font-size: 18px;
+      transition: transform .25s ease;
+    }
+    .cta-btn:hover .btn-arrow { transform: translateX(5px); }
+
+    .cta-note {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11.5px;
+      font-style: italic;
+      letter-spacing: .06em;
+      text-align: center;
+    }
+
+    /* ── Progress ring ── */
+    .prog-ring {
+      position: fixed;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      width: 38px; height: 38px;
+      opacity: .45;
+      transition: opacity .5s ease;
+      z-index: 20;
+      pointer-events: none;
+    }
+    .prog-ring.done { opacity: 0; }
+    .pr-track { fill: none; stroke: rgba(255,255,255,.1); stroke-width: 2; }
+    .pr-fill  {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 2;
+      stroke-dasharray: 100.5;
+      stroke-dashoffset: 100.5;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: 19px 19px;
+    }
+
+    .scroll-hint {
+      position: fixed;
+      bottom: 32px; right: 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.2);
+      z-index: 20;
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+    .scroll-hint.hidden { opacity: 0; }
+
+    /* Interactive cursor on the canvas layer */
+    #cta-canvas { cursor: crosshair; }
+
+    @media (max-width: 640px) {
+      .cta-ui { padding: 36px 20px; }
+      .cta-btn { padding: 16px 26px; font-size: 14px; }
+      .cta-sub { margin-bottom: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section id="nya-cta" aria-label="Contact NYA Structural Engineering">
+    <canvas id="cta-canvas" aria-hidden="true"></canvas>
+
+    <div class="cta-ui" role="main">
+      <h2 class="cta-headline" aria-label="TI projects don't wait. Neither do we.">
+        <span class="hl-line" aria-hidden="true">
+          <span class="hw" id="w1">TI&nbsp;projects&nbsp;</span><span class="hw orange" id="w2">don't&nbsp;wait.</span>
+        </span>
+        <span class="hl-line" aria-hidden="true">
+          <span class="hw ghost" id="w3">Neither&nbsp;</span><span class="hw ghost" id="w4">do&nbsp;we.</span>
+        </span>
+      </h2>
+
+      <p class="cta-sub" id="sub" aria-label="When a project breaks, you need an engineer who already knows the building. We're faster because we've been here before.">
+        <span class="sw" id="s0">When</span> <span class="sw" id="s1">a</span> <span class="sw" id="s2">project</span> <span class="sw" id="s3">breaks,</span> <span class="sw" id="s4">you</span> <span class="sw" id="s5">need</span> <span class="sw" id="s6">an</span> <span class="sw" id="s7">engineer</span> <span class="sw" id="s8">who</span> <span class="sw" id="s9">already</span><br>
+        <span class="sw" id="s10">knows</span> <span class="sw" id="s11">the</span> <span class="sw" id="s12">building.</span><br>
+        <span class="sw" id="s13">We're</span> <span class="sw" id="s14">faster</span> <span class="sw" id="s15">because</span> <span class="sw" id="s16">we've</span> <span class="sw" id="s17">been</span> <span class="sw" id="s18">here</span> <span class="sw" id="s19">before.</span>
+      </p>
+
+      <div class="cta-actions" id="acts">
+        <a href="mailto:info@nyase.com" class="cta-btn" aria-label="Email NYA at info@nyase.com">
+          <span class="btn-inner">
+            <svg class="btn-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <rect x="2" y="5" width="16" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M2 6.5l8 6 8-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            info@nyase.com
+          </span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <p class="cta-note" aria-label="No intake forms. No queues. Direct line to the engineer.">
+          <span class="sw" id="n0">No</span> <span class="sw" id="n1">intake</span> <span class="sw" id="n2">forms.</span> <span class="sw" id="n3">No</span> <span class="sw" id="n4">queues.</span> <span class="sw" id="n5">Direct</span> <span class="sw" id="n6">line</span> <span class="sw" id="n7">to</span> <span class="sw" id="n8">the</span> <span class="sw" id="n9">engineer.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="prog-ring" id="prog-ring" aria-hidden="true">
+    <svg viewBox="0 0 38 38">
+      <circle class="pr-track" cx="19" cy="19" r="16"/>
+      <circle class="pr-fill"  cx="19" cy="19" r="16" id="pr-fill"/>
+    </svg>
+  </div>
+  <div class="scroll-hint" id="scroll-hint">Scroll ↓</div>
+
+  <script>
+  /* ═══════════════════════════════════════════════════════
+     SELF-CONTAINED WebGL — no external dependencies
+     Works on file://, localhost, and production equally.
+  ═══════════════════════════════════════════════════════ */
+  (function () {
+
+    /* ── Canvas & GL ── */
+    const canvas = document.getElementById('cta-canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) return;
+
+    /* ── Resize ── */
+    function syncSize() {
+      canvas.width  = window.innerWidth  * Math.min(devicePixelRatio, 2);
+      canvas.height = window.innerHeight * Math.min(devicePixelRatio, 2);
+      canvas.style.width  = window.innerWidth  + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    syncSize();
+
+    /* ════════════════════════════════════════════════════
+       MATH HELPERS
+    ════════════════════════════════════════════════════ */
+    function mat4() { return new Float32Array(16); }
+    function identity(m) {
+      m[0]=m[5]=m[10]=m[15]=1;
+      m[1]=m[2]=m[3]=m[4]=m[6]=m[7]=m[8]=m[9]=m[11]=m[12]=m[13]=m[14]=0;
+      return m;
+    }
+    function perspective(m, fov, aspect, near, far) {
+      const f = 1.0 / Math.tan(fov / 2);
+      m[0]=f/aspect; m[1]=0; m[2]=0; m[3]=0;
+      m[4]=0; m[5]=f; m[6]=0; m[7]=0;
+      m[8]=0; m[9]=0; m[10]=(far+near)/(near-far); m[11]=-1;
+      m[12]=0; m[13]=0; m[14]=(2*far*near)/(near-far); m[15]=0;
+      return m;
+    }
+    function lookAt(m, ex,ey,ez, cx,cy,cz, ux,uy,uz) {
+      let fx=cx-ex, fy=cy-ey, fz=cz-ez;
+      let fl=Math.sqrt(fx*fx+fy*fy+fz*fz); fx/=fl; fy/=fl; fz/=fl;
+      let sx=fy*uz-fz*uy, sy=fz*ux-fx*uz, sz=fx*uy-fy*ux;
+      let sl=Math.sqrt(sx*sx+sy*sy+sz*sz); sx/=sl; sy/=sl; sz/=sl;
+      let tx=sy*fz-sz*fy, ty=sz*fx-sx*fz, tz=sx*fy-sy*fx;
+      m[0]=sx; m[1]=tx; m[2]=-fx; m[3]=0;
+      m[4]=sy; m[5]=ty; m[6]=-fy; m[7]=0;
+      m[8]=sz; m[9]=tz; m[10]=-fz; m[11]=0;
+      m[12]=-(sx*ex+sy*ey+sz*ez); m[13]=-(tx*ex+ty*ey+tz*ez); m[14]=(fx*ex+fy*ey+fz*ez); m[15]=1;
+      return m;
+    }
+    function mulMat4(out, a, b) {
+      for (let r=0;r<4;r++) for (let c=0;c<4;c++) {
+        out[c*4+r]=a[0*4+r]*b[c*4+0]+a[1*4+r]*b[c*4+1]+a[2*4+r]*b[c*4+2]+a[3*4+r]*b[c*4+3];
+      }
+      return out;
+    }
+    function rotY(m, angle) {
+      const c=Math.cos(angle), s=Math.sin(angle);
+      identity(m); m[0]=c; m[2]=s; m[8]=-s; m[10]=c;
+      return m;
+    }
+    function lerpV3(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
+
+    /* ════════════════════════════════════════════════════
+       SHADERS
+    ════════════════════════════════════════════════════ */
+    function makeProgram(vs, fs) {
+      const p = gl.createProgram();
+      function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src); gl.compileShader(s); gl.attachShader(p, s);
+      }
+      compile(gl.VERTEX_SHADER, vs);
+      compile(gl.FRAGMENT_SHADER, fs);
+      gl.linkProgram(p);
+      return p;
+    }
+
+    /* Line shader — position + color + opacity uniform */
+    const lineProg = makeProgram(
+      `attribute vec3 aPos; attribute vec3 aCol;
+       uniform mat4 uMVP; uniform float uAlpha;
+       varying vec3 vCol; varying float vA;
+       void main(){ gl_Position=uMVP*vec4(aPos,1.0); vCol=aCol; vA=uAlpha; }`,
+      `precision mediump float;
+       varying vec3 vCol; varying float vA;
+       void main(){ gl_FragColor=vec4(vCol,vA); }`
+    );
+
+    /* Point shader — position + color + point size */
+    const ptProg = makeProgram(
+      `attribute vec3 aPos; attribute vec3 aCol;
+       uniform mat4 uMVP; uniform float uSize; uniform float uAlpha;
+       varying vec3 vCol; varying float vA;
+       void main(){ gl_Position=uMVP*vec4(aPos,1.0); gl_PointSize=uSize; vCol=aCol; vA=uAlpha; }`,
+      `precision mediump float;
+       varying vec3 vCol; varying float vA;
+       void main(){
+         vec2 c=gl_PointCoord-0.5;
+         if(dot(c,c)>0.25) discard;
+         gl_FragColor=vec4(vCol,vA);
+       }`
+    );
+
+    const uMVP_L  = gl.getUniformLocation(lineProg, 'uMVP');
+    const uA_L    = gl.getUniformLocation(lineProg, 'uAlpha');
+    const uMVP_P  = gl.getUniformLocation(ptProg,   'uMVP');
+    const uSz_P   = gl.getUniformLocation(ptProg,   'uSize');
+    const uA_P    = gl.getUniformLocation(ptProg,   'uAlpha');
+
+    /* ════════════════════════════════════════════════════
+       BUFFER HELPERS
+    ════════════════════════════════════════════════════ */
+    function makeLineBuffer(verts) { /* verts: flat [x,y,z, x,y,z ...] */
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+      return buf;
+    }
+    function makeDynBuffer(count) { /* will be updated each frame */
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, count * 4, gl.DYNAMIC_DRAW);
+      return buf;
+    }
+
+    function drawLines(buf, count, col, alpha, mvp) {
+      if (alpha <= 0.001) return;
+      gl.useProgram(lineProg);
+      gl.uniformMatrix4fv(uMVP_L, false, mvp);
+      gl.uniform1f(uA_L, alpha);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      const aPos = gl.getAttribLocation(lineProg, 'aPos');
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
+      /* solid color — use a tiny inline color buffer approach via uniform trick:
+         we set col as a constant attrib */
+      const aCol = gl.getAttribLocation(lineProg, 'aCol');
+      gl.disableVertexAttribArray(aCol);
+      gl.vertexAttrib3f(aCol, col[0], col[1], col[2]);
+      gl.drawArrays(gl.LINE_STRIP, 0, count);
+    }
+
+    function drawPoints(buf, count, alpha, size, mvp) {
+      if (alpha <= 0.001 || count === 0) return;
+      gl.useProgram(ptProg);
+      gl.uniformMatrix4fv(uMVP_P, false, mvp);
+      gl.uniform1f(uA_P, alpha);
+      gl.uniform1f(uSz_P, size * Math.min(devicePixelRatio, 2));
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      const stride = 6 * 4; /* 6 floats per vertex: xyz + rgb */
+      const aPos = gl.getAttribLocation(ptProg, 'aPos');
+      const aCol = gl.getAttribLocation(ptProg, 'aCol');
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, stride, 0);
+      gl.enableVertexAttribArray(aCol);
+      gl.vertexAttribPointer(aCol, 3, gl.FLOAT, false, stride, 3*4);
+      gl.drawArrays(gl.POINTS, 0, count);
+    }
+
+    /* ════════════════════════════════════════════════════
+       HIGH-RISE GEOMETRY
+       Footprint 22×14 | 28 floors | FFH 2.2 | centered Y
+       Wide footprint + close camera fills the full viewport.
+    ════════════════════════════════════════════════════ */
+    const BW=22, BD=14, FFH=2.2, FLOORS=28;
+    const TOTAL_H = FLOORS*FFH, BASE_Y = -TOTAL_H/2;
+    const COL_X = [-BW/2, -BW/6, BW/6, BW/2];
+    const COL_Z = [-BD/2, 0, BD/2];
+
+    /* Columns: array of {buf, vCount, perim} */
+    const colBufs = [];
+    for (let xi=0;xi<COL_X.length;xi++) {
+      for (let zi=0;zi<COL_Z.length;zi++) {
+        const x=COL_X[xi], z=COL_Z[zi];
+        const perim=(xi===0||xi===3)&&(zi===0||zi===2);
+        const buf = makeLineBuffer([x,BASE_Y,z, x,BASE_Y+TOTAL_H,z]);
+        colBufs.push({buf, perim});
+      }
+    }
+
+    /* Floor plates: array of {perimBuf, beamBufs[], isA, f, ripple} */
+    const floors = [];
+    for (let f=0;f<=FLOORS;f++) {
+      const y=BASE_Y+f*FFH, isA=f%5===0;
+      const perimBuf = makeLineBuffer([
+        -BW/2,y,-BD/2, BW/2,y,-BD/2, BW/2,y,BD/2, -BW/2,y,BD/2, -BW/2,y,-BD/2
+      ]);
+      const beamBufs = [];
+      for (const cz of COL_Z) beamBufs.push(makeLineBuffer([-BW/2,y,cz, BW/2,y,cz]));
+      for (const cx of COL_X) beamBufs.push(makeLineBuffer([cx,y,-BD/2, cx,y,BD/2]));
+      floors.push({perimBuf, beamBufs, isA, f, ripple:0,
+        bPO:isA?0.32:0.08, bBO:isA?0.18:0.05 });
+    }
+
+    /* Mullions — 2-unit spacing on wider facade */
+    const mullBufs = [];
+    for (const fz of [-BD/2,BD/2]) {
+      let mx=-BW/2+2;
+      while(mx<BW/2-0.01){
+        mullBufs.push(makeLineBuffer([mx,BASE_Y,fz, mx,BASE_Y+TOTAL_H,fz]));
+        mx+=2;
+      }
+    }
+    for (const fx of [-BW/2,BW/2]) {
+      let mz=-BD/2+2;
+      while(mz<BD/2-0.01){
+        mullBufs.push(makeLineBuffer([fx,BASE_Y,mz, fx,BASE_Y+TOTAL_H,mz]));
+        mz+=2;
+      }
+    }
+
+    /* ── Static debris particles — scattered wide around the building ── */
+    const PARTS=600;
+    const pd=[];
+    for(let i=0;i<PARTS;i++){
+      const x=(Math.random()-.5)*120, y=BASE_Y+Math.random()*TOTAL_H*1.4, z=(Math.random()-.5)*80;
+      const isO=Math.random()<.12;
+      pd.push({ox:x,oy:y,oz:z, spd:.2+Math.random()*.8,
+               r:isO?.95:.55, g:isO?.45:.55, b:isO?.30:.55});
+    }
+    const debrisBuf = makeDynBuffer(PARTS*6*4);
+
+    /* ── Spark particles ── */
+    const MAX_S=200;
+    const sData=[];
+    for(let i=0;i<MAX_S;i++) sData.push({life:0,maxLife:0,vx:0,vy:0,vz:0,x:0,y:0,z:0});
+    const sparkBuf = makeDynBuffer(MAX_S*6*4);
+    let sHead=0;
+
+    function emitSparks(wx,wy,wz,count,spd){
+      for(let k=0;k<count;k++){
+        const s=sData[sHead];
+        s.x=wx+(Math.random()-.5)*.5; s.y=wy+(Math.random()-.5)*.5; s.z=wz+(Math.random()-.5)*.5;
+        const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+        s.vx=Math.sin(ph)*Math.cos(th)*spd*(0.4+Math.random());
+        s.vy=Math.sin(ph)*Math.sin(th)*spd*(0.4+Math.random());
+        s.vz=Math.cos(ph)*spd*(0.4+Math.random());
+        s.maxLife=0.35+Math.random()*.55; s.life=s.maxLife;
+        sHead=(sHead+1)%MAX_S;
+      }
+    }
+
+    /* ── Ripples ── */
+    const ripples=[];
+    function spawnRipple(from){ ripples.push({t:0,spd:.5+Math.random()*.4,from:from||0}); }
+
+    /* ════════════════════════════════════════════════════
+       MOUSE / TOUCH
+    ════════════════════════════════════════════════════ */
+    const mouse={nx:0,ny:0}, mouseLast={nx:0,ny:0};
+    let mouseVel=0;
+    let leanX=0,leanY=0,leanTX=0,leanTY=0;
+
+    function onPointerMove(e){
+      const px=e.clientX??(e.touches&&e.touches[0]?e.touches[0].clientX:0);
+      const py=e.clientY??(e.touches&&e.touches[0]?e.touches[0].clientY:0);
+      mouse.nx=(px/window.innerWidth)*2-1;
+      mouse.ny=(py/window.innerHeight)*2-1;
+      const dx=mouse.nx-mouseLast.nx, dy=mouse.ny-mouseLast.ny;
+      mouseVel=Math.sqrt(dx*dx+dy*dy)*60;
+      mouseLast.nx=mouse.nx; mouseLast.ny=mouse.ny;
+      if(mouseVel>0.25){
+        emitSparks(mouse.nx*16, -mouse.ny*22, 8+Math.random()*6,
+          Math.min(8,Math.floor(mouseVel*4)), 1.4);
+      }
+    }
+    function onPointerClick(e){
+      const px=e.clientX??(e.changedTouches&&e.changedTouches[0]?e.changedTouches[0].clientX:window.innerWidth/2);
+      const py=e.clientY??(e.changedTouches&&e.changedTouches[0]?e.changedTouches[0].clientY:window.innerHeight/2);
+      const ny=1-(py/window.innerHeight);
+      spawnRipple(Math.max(0,Math.min(FLOORS,Math.floor(ny*FLOORS))));
+      emitSparks((px/window.innerWidth*2-1)*18, -(py/window.innerHeight*2-1)*24,
+        8+Math.random()*5, 22, 2.8);
+    }
+    canvas.addEventListener('mousemove', onPointerMove, {passive:true});
+    canvas.addEventListener('touchmove', onPointerMove, {passive:true});
+    canvas.addEventListener('click',    onPointerClick);
+    canvas.addEventListener('touchend', onPointerClick);
+
+    /* ════════════════════════════════════════════════════
+       SCROLL PROGRESS
+    ════════════════════════════════════════════════════ */
+    let prog=0;
+    function getProgress(){
+      const sec=document.getElementById('nya-cta');
+      const rect=sec.getBoundingClientRect();
+      const trav=sec.offsetHeight-window.innerHeight;
+      if(trav<=0) return 0;
+      return Math.min(1,Math.max(0,-rect.top/trav));
+    }
+
+    /* ════════════════════════════════════════════════════
+       CONTENT REVEAL
+    ════════════════════════════════════════════════════ */
+    const w1=document.getElementById('w1'),w2=document.getElementById('w2');
+    const w3=document.getElementById('w3'),w4=document.getElementById('w4');
+    const acts=document.getElementById('acts');
+    const prFill=document.getElementById('pr-fill');
+    const prRing=document.getElementById('prog-ring');
+    const hint=document.getElementById('scroll-hint');
+    const subSpans =Array.from({length:20},(_,i)=>document.getElementById('s'+i));
+    const noteSpans=Array.from({length:10},(_,i)=>document.getElementById('n'+i));
+
+    function revealWords(spans,p,start,end){
+      const local=Math.min(1,Math.max(0,(p-start)/(end-start)));
+      spans.forEach((sp,i)=>{ if(!sp)return; sp.classList.toggle('lit',local>=(i+1)/(spans.length+1)); });
+    }
+    let rev={w:false,a:false};
+    function updateContent(p){
+      prFill.style.strokeDashoffset=String(100.5*(1-p));
+      if(p>0.97)prRing.classList.add('done'); else prRing.classList.remove('done');
+      if(p>0.08)hint.classList.add('hidden'); else hint.classList.remove('hidden');
+      if(p>0.15&&!rev.w){ rev.w=true; [w1,w2,w3,w4].forEach((el,i)=>setTimeout(()=>el.classList.add('vis'),i*95)); }
+      if(p>0.30){ const gp=Math.min(1,(p-0.30)/0.25); w3.classList.toggle('lit',gp>0.5); w4.classList.toggle('lit',gp>0.5); }
+      revealWords(subSpans, p,0.55,0.73);
+      revealWords(noteSpans,p,0.75,0.92);
+      if(p>0.54&&!rev.a){ rev.a=true; acts.classList.add('vis'); }
+    }
+
+    /* ════════════════════════════════════════════════════
+       RENDER LOOP
+    ════════════════════════════════════════════════════ */
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.DEPTH_TEST);
+
+    const proj = mat4(), view = mat4(), rot = mat4(), mvp = mat4(), tmp = mat4();
+    /* CAM_S: wide diagonal — pulled back to see the full silhouette
+       CAM_E: extremely close front-on — building fills viewport edge to edge */
+    const CAM_S=[26, 8, 32], CAM_E=[0, 0, 7];
+    let elapsed=0, lastTs=0, rafId;
+
+    /* Colour triplets */
+    const WHITE=[1,1,1], ORANGE=[0.949,0.455,0.302];
+    function lerp3(a,b,t){ return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
+
+    function tick(ts){
+      rafId=requestAnimationFrame(tick);
+      const dt=Math.min((ts-lastTs)/1000,0.05); lastTs=ts; elapsed+=dt;
+      const p=prog;
+
+      /* Clear */
+      gl.clearColor(16/255,23/255,43/255,1);
+      gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+
+      /* Projection — FOV widens from 72° → 90° as camera closes in,
+         so the building fills edge-to-edge without distortion            */
+      const fov = (72 + p * 18) * Math.PI / 180;
+      perspective(proj, fov, canvas.width/canvas.height, 0.1, 1000);
+
+      /* Camera — easeInOut arc, sway fades out completely by p=0.7 */
+      const ease = p < .5 ? 2*p*p : 1 - Math.pow(-2*p+2,2)/2;
+      const cam  = lerpV3(CAM_S, CAM_E, ease);
+      const swayAmt = Math.max(0, 1 - p / 0.7);
+      cam[0] += Math.sin(elapsed*.06) * (1.5 * swayAmt);
+      cam[1] += Math.cos(elapsed*.04) * (0.8 * swayAmt);
+
+      /* Mouse lean — fades out as camera locks into the facade */
+      leanTX = mouse.nx * 8 * (1 - p * 0.95);
+      leanTY = -mouse.ny * 6 * (1 - p * 0.95);
+      leanX += (leanTX - leanX) * Math.min(1, dt * 4.5);
+      leanY += (leanTY - leanY) * Math.min(1, dt * 4.5);
+
+      lookAt(view, cam[0],cam[1],cam[2], leanX,leanY,0, 0,1,0);
+
+      /* Scene Y-rotation — stops entirely by p=0.85, building square-on at end */
+      rotY(rot, elapsed * 0.025 * Math.max(0, 1 - p / 0.85));
+
+      /* MVP = proj * view * rot */
+      mulMat4(tmp,  view, rot);
+      mulMat4(mvp,  proj, tmp);
+
+      /* ── Ripple decay ── */
+      floors.forEach(fg=>{ fg.ripple=Math.max(0,fg.ripple-dt*3.2); });
+      for(let ri=ripples.length-1;ri>=0;ri--){
+        const r=ripples[ri]; r.t+=dt*r.spd;
+        const front=r.from+r.t*FLOORS;
+        floors.forEach(fg=>{ const d=Math.abs(fg.f-front); if(d<2.2) fg.ripple=Math.max(fg.ripple,1-d/2.2); });
+        if(r.t>1.2) ripples.splice(ri,1);
+      }
+
+      /* ── Draw columns ── */
+      const cP=Math.min(1,p*2.2);
+      colBufs.forEach(({buf,perim})=>{
+        const alpha=(perim?.28:.10)+p*(perim?.22:.08);
+        drawLines(buf,2,WHITE,alpha,mvp);
+      });
+
+      /* ── Draw floor plates ── */
+      floors.forEach(({perimBuf,beamBufs,isA,f,bPO,bBO,ripple})=>{
+        const alpha=f/FLOORS<=cP?1:0;
+        if(!alpha)return;
+        const flare=ripple;
+        const col=lerp3(isA?ORANGE:WHITE, ORANGE, flare);
+        const pOp=(bPO+p*(isA?.28:0))*alpha+flare*.68*alpha;
+        const bOp=(bBO+p*.08)*alpha+flare*.42*alpha;
+        drawLines(perimBuf,5,col,pOp,mvp);
+        beamBufs.forEach(b=>drawLines(b,2,col,bOp,mvp));
+      });
+
+      /* ── Draw mullions ── */
+      const mOp=Math.min(0.14,0.055+p*.085);
+      mullBufs.forEach(b=>drawLines(b,2,WHITE,mOp,mvp));
+
+      /* ── Update & draw debris particles ── */
+      const debrisVerts=new Float32Array(PARTS*6);
+      for(let i=0;i<PARTS;i++){
+        const d=pd[i], pull=Math.pow(p,1.6)*d.spd*.85;
+        const x=d.ox*(1-pull)+Math.sin(elapsed*.18+i*.9)*.06;
+        const y=d.oy*(1-pull)+Math.cos(elapsed*.14+i*.7)*.06;
+        const z=d.oz*(1-pull);
+        debrisVerts[i*6]=x; debrisVerts[i*6+1]=y; debrisVerts[i*6+2]=z;
+        debrisVerts[i*6+3]=d.r; debrisVerts[i*6+4]=d.g; debrisVerts[i*6+5]=d.b;
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER,debrisBuf);
+      gl.bufferData(gl.ARRAY_BUFFER,debrisVerts,gl.DYNAMIC_DRAW);
+      const debrisAlpha=Math.max(0,.4-p*.32);
+      drawPoints(debrisBuf,PARTS,debrisAlpha,3,mvp);
+
+      /* ── Update & draw spark particles ── */
+      const sparkVerts=new Float32Array(MAX_S*6);
+      let liveCount=0;
+      for(let i=0;i<MAX_S;i++){
+        const s=sData[i];
+        if(s.life<=0) continue;
+        s.life-=dt;
+        s.x+=s.vx*dt; s.y+=s.vy*dt; s.z+=s.vz*dt;
+        s.vy-=3*dt; s.vx*=.95; s.vy*=.95; s.vz*=.95;
+        const t=Math.max(0,s.life/s.maxLife);
+        /* Pack alive sparks contiguously at front of array */
+        sparkVerts[liveCount*6]  =s.x; sparkVerts[liveCount*6+1]=s.y; sparkVerts[liveCount*6+2]=s.z;
+        sparkVerts[liveCount*6+3]=.95*t+.05; sparkVerts[liveCount*6+4]=.45*t; sparkVerts[liveCount*6+5]=.30*t;
+        liveCount++;
+      }
+      if(liveCount>0){
+        gl.bindBuffer(gl.ARRAY_BUFFER,sparkBuf);
+        gl.bufferSubData(gl.ARRAY_BUFFER,0,sparkVerts.subarray(0,liveCount*6));
+        drawPoints(sparkBuf,liveCount,.92,6,mvp);
+      }
+    }
+
+    /* ── IntersectionObserver ── */
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){lastTs=performance.now();rafId=requestAnimationFrame(tick);}
+        else cancelAnimationFrame(rafId);
+      });
+    },{threshold:0.01});
+    obs.observe(document.getElementById('nya-cta'));
+
+    window.addEventListener('scroll',()=>{ prog=getProgress(); updateContent(prog); },{passive:true});
+    window.addEventListener('resize',()=>{ syncSize(); });
+
+    setTimeout(()=>spawnRipple(0),900);
+    prog=getProgress(); updateContent(prog);
+
+  })();
+  </script>
+</body>
+</html>
