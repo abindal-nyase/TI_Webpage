@@ -20,7 +20,8 @@
     "lenis": "^1.1.14",
     "mapbox-gl": "^3.22.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",
