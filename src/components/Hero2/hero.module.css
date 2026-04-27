@@ -1,0 +1,397 @@
+/* ─── Hero Module CSS ───────────────────────────────────────────────────────── */
+/* Design: Dark Navy Immersive 3D Scrollytelling                                 */
+/* Background: #10172B | Text: White + Italic Blue                               */
+
+/* ── Variables ──────────────────────────────────────────────────────────────── */
+:root {
+  --bg: #10172b;
+  --bg-2: #0a1020;
+  --blue-bright: #4488ff;
+  --blue-mid: #2255cc;
+  --blue-dark: #1a3399;
+  --teal: #44ccff;
+  --white: #f0f4ff;
+  --white-dim: rgba(240, 244, 255, 0.72);
+  --italic-blue: #8ab4ff;
+  --gold: #ffcc44;
+  --font-display: "Cormorant Garamond", "Didot", "Georgia", serif;
+  --font-body: "DM Sans", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+/* ── Google Fonts import ──────────────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap");
+
+/* ── Wrapper ─────────────────────────────────────────────────────────────────── */
+.heroWrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: var(--bg);
+  scroll-behavior: smooth;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.heroWrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Fixed Canvas ────────────────────────────────────────────────────────────── */
+.canvasMount {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background: var(--bg);
+}
+
+.canvasMount canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Scroll Content ──────────────────────────────────────────────────────────── */
+.scrollContent {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.scrollSection {
+  height: 100vh;
+  width: 100%;
+}
+
+/* ── Text Overlay ────────────────────────────────────────────────────────────── */
+.textOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 5vw 10vh;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.textVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 1vw, 0.85rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--blue-bright);
+  margin-bottom: 0.75rem;
+  opacity: 0.85;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 7rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.05;
+  color: var(--white);
+  margin: 0 0 1.25rem 0;
+  max-width: 18ch;
+  /* Text shadow depth */
+  text-shadow:
+    0 0 60px rgba(68, 136, 255, 0.3),
+    0 2px 20px rgba(0, 0, 0, 0.8);
+
+  animation: titleReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) skewY(1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) skewY(0);
+  }
+}
+
+.heroSub {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+  font-weight: 300;
+  color: var(--italic-blue);
+  font-style: italic;
+  letter-spacing: 0.03em;
+  margin: 0;
+  max-width: 52ch;
+  opacity: 0.9;
+  animation: subReveal 0.9s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes subReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateX(0);
+  }
+}
+
+/* ── Progress Bar ────────────────────────────────────────────────────────────── */
+.progressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(68, 136, 255, 0.12);
+  z-index: 100;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-dark), var(--blue-bright), var(--teal));
+  transition: width 0.1s linear;
+  box-shadow: 0 0 12px var(--blue-bright);
+  position: relative;
+}
+
+.progressFill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal), 0 0 16px var(--teal);
+}
+
+/* ── Section Dots ────────────────────────────────────────────────────────────── */
+.sectionDots {
+  position: fixed;
+  right: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(68, 136, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.dot:hover {
+  border-color: var(--teal);
+  background: rgba(68, 204, 255, 0.3);
+}
+
+.dotActive {
+  background: var(--blue-bright);
+  border-color: var(--blue-bright);
+  box-shadow: 0 0 10px var(--blue-bright);
+  width: 8px;
+  height: 8px;
+}
+
+/* ── Scroll Indicator ────────────────────────────────────────────────────────── */
+.scrollIndicator {
+  position: fixed;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  animation: fadeIn 1.5s 2s both;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.scrollIndicator span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--blue-bright);
+  opacity: 0.7;
+}
+
+.scrollChevrons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.chevron {
+  width: 12px;
+  height: 12px;
+  border-right: 1.5px solid var(--blue-bright);
+  border-bottom: 1.5px solid var(--blue-bright);
+  transform: rotate(45deg);
+  opacity: 0;
+  animation: chevronDrop 1.5s 2.5s infinite;
+}
+
+.chevron:nth-child(2) { animation-delay: 2.7s; }
+.chevron:nth-child(3) { animation-delay: 2.9s; }
+
+@keyframes chevronDrop {
+  0%   { opacity: 0; transform: rotate(45deg) translateY(-4px); }
+  40%  { opacity: 0.8; }
+  100% { opacity: 0; transform: rotate(45deg) translateY(4px); }
+}
+
+/* ── Stats Bar ───────────────────────────────────────────────────────────────── */
+.statsBar {
+  position: fixed;
+  top: 2.5rem;
+  right: 5vw;
+  z-index: 100;
+  display: flex;
+  gap: 2rem;
+  animation: slideInRight 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+}
+
+.statNum {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(68, 136, 255, 0.4);
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--italic-blue);
+  opacity: 0.7;
+}
+
+/* ── Logo / Nav top-left ─────────────────────────────────────────────────────── */
+.logoMark {
+  position: fixed;
+  top: 2.2rem;
+  left: 5vw;
+  z-index: 100;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.logoMark span {
+  color: var(--blue-bright);
+}
+
+/* ── Vignette overlay on sides ────────────────────────────────────────────────── */
+.canvasMount::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 40%, rgba(16, 23, 43, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .textOverlay {
+    padding: 0 6vw 12vh;
+  }
+
+  .sectionDots {
+    right: 1.2rem;
+  }
+
+  .statsBar {
+    top: auto;
+    bottom: 6rem;
+    right: 5vw;
+    gap: 1.5rem;
+  }
+
+  .heroTitle {
+    font-size: clamp(2.2rem, 10vw, 4rem);
+  }
+
+  .heroSub {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsBar {
+    gap: 1rem;
+  }
+
+  .statNum {
+    font-size: 1rem;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .heroTitle,
+  .heroSub,
+  .statsBar,
+  .scrollIndicator {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
