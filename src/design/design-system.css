@@ -1,0 +1,405 @@
+/* NYA Tenant Improvement — Design System
+   Blueprint: NYA_Tenant_Improvement_Figma_File_Blueprint.md
+   --------------------------------------------------------- */
+
+/* ── Tokens ── */
+:root {
+  /* Brand Colors */
+  --color-primary:        #0B1F3B;
+  --color-primary-light:  #1E3A5F;
+  --color-accent:         #2F80ED;
+  --color-accent-hover:   #1C6ED5;
+
+  /* Refined Neutrals (B2B Professional palette) */
+  --color-black:          #0F172A;
+  --color-gray-900:       #1E293B;
+  --color-gray-700:       #475569;
+  --color-gray-500:       #64748B;
+  --color-gray-300:       #E2E8F0;
+  --color-gray-200:       #EEF2F7;
+  --color-gray-100:       #F8FAFC;
+  --color-white:          #FFFFFF;
+  --color-value:          #059669;
+
+  /* Semantic Surfaces */
+  --surface-page:         #F8FAFC;
+  --surface-card:         #FFFFFF;
+  --surface-subtle:       #EEF2F7;
+  --surface-dark:         #0B1F3B;
+  --surface-dark-mid:     #1E3A5F;
+
+  /* Border */
+  --border-default:       #E2E8F0;
+  --border-strong:        #CBD5E1;
+  --border-accent:        rgba(47, 128, 237, 0.3);
+
+  /* Layout */
+  --container:            1200px;
+  --container-narrow:     780px;
+  --section-padding:      120px;
+  --section-padding-mob:  64px;
+  --gutter:               32px;
+  --margin-desktop:       120px;
+
+  /* Radius */
+  --radius-xs:            4px;
+  --radius-sm:            8px;
+  --radius-md:            12px;
+  --radius-lg:            16px;
+  --radius-xl:            24px;
+  --radius-2xl:           32px;
+
+  /* Elevation — 5-step shadow scale */
+  --shadow-1:             0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-2:             0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-3:             0 8px 24px rgba(15, 23, 42, 0.1),  0 4px 8px  rgba(15, 23, 42, 0.06);
+  --shadow-4:             0 16px 40px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.08);
+  --shadow-5:             0 24px 64px rgba(15, 23, 42, 0.16), 0 12px 24px rgba(15, 23, 42, 0.10);
+  --shadow-accent:        0 8px 28px rgba(47, 128, 237, 0.28);
+  --shadow-glass:         0 20px 48px rgba(15, 23, 42, 0.12);
+
+  /* Typography — Font families */
+  --font-display:         'Playfair Display', Georgia, serif;
+  --font-body:            'Inter', system-ui, sans-serif;
+  --font-mono:            'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+
+  /* Typography — Sizes */
+  --text-xs:              11px;
+  --text-sm:              13px;
+  --text-base:            16px;
+  --text-lg:              18px;
+  --text-xl:              20px;
+  --text-2xl:             24px;
+  --text-3xl:             32px;
+  --text-4xl:             44px;
+  --text-5xl:             56px;
+  --text-6xl:             72px;
+
+  /* Blueprint type scale */
+  --text-h1:              64px;
+  --text-h2:              44px;
+  --text-h3:              20px;
+  --text-body-lg:         18px;
+  --text-body:            16px;
+  --text-label:           14px;
+  --text-eyebrow:         11px;
+
+  /* Line heights */
+  --lh-tight:             1.1;
+  --lh-snug:              1.25;
+  --lh-normal:            1.5;
+  --lh-relaxed:           1.65;
+  --lh-h1:                72px;
+  --lh-h2:                52px;
+  --lh-h3:                28px;
+  --lh-body-lg:           28px;
+  --lh-body:              26px;
+  --lh-label:             22px;
+  --lh-eyebrow:           16px;
+
+  /* Font weights */
+  --fw-light:             300;
+  --fw-regular:           400;
+  --fw-medium:            500;
+  --fw-semibold:          600;
+  --fw-bold:              700;
+
+  /* Spacing scale (4px base) */
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:   12px;
+  --sp-4:   16px;
+  --sp-5:   20px;
+  --sp-6:   24px;
+  --sp-7:   28px;
+  --sp-8:   32px;
+  --sp-9:   36px;
+  --sp-10:  40px;
+  --sp-12:  48px;
+  --sp-14:  56px;
+  --sp-16:  64px;
+  --sp-18:  72px;
+  --sp-20:  80px;
+  --sp-24:  96px;
+  --sp-30:  120px;
+
+  /* Transitions */
+  --ease-out:             cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:              cubic-bezier(0.4, 0, 1, 1);
+  --ease-inout:           cubic-bezier(0.45, 0, 0.55, 1);
+  --duration-fast:        150ms;
+  --duration-base:        220ms;
+  --duration-slow:        350ms;
+}
+
+/* ── Base Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Typography System ── */
+
+.ds-display {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: var(--lh-tight);
+  font-weight: var(--fw-bold);
+  color: var(--color-black);
+  letter-spacing: -0.02em;
+}
+
+.ds-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: var(--lh-h1);
+  font-weight: var(--fw-bold);
+  color: var(--color-black);
+  letter-spacing: -0.02em;
+}
+
+.ds-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  line-height: var(--lh-h2);
+  font-weight: var(--fw-semibold);
+  color: var(--color-black);
+  letter-spacing: -0.01em;
+}
+
+.ds-h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-h3);
+  line-height: var(--lh-h3);
+  font-weight: var(--fw-semibold);
+  color: var(--color-black);
+  letter-spacing: -0.01em;
+}
+
+.ds-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-relaxed);
+  font-weight: var(--fw-regular);
+  color: var(--color-gray-700);
+}
+
+.ds-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  font-weight: var(--fw-regular);
+  color: var(--color-gray-700);
+}
+
+.ds-label {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  line-height: var(--lh-label);
+  font-weight: var(--fw-medium);
+  color: var(--color-gray-500);
+}
+
+.ds-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  line-height: var(--lh-eyebrow);
+  font-weight: var(--fw-bold);
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Eyebrow Label Component ── */
+.ds-eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ds-eyebrow-label::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1.5px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ── */
+
+.ds-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+.ds-btn-primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-accent);
+}
+
+.ds-btn-primary:active {
+  transform: translateY(0);
+}
+
+.ds-btn-primary:focus-visible {
+  outline: 3px solid rgba(47, 128, 237, 0.4);
+  outline-offset: 3px;
+}
+
+.ds-btn-primary:disabled,
+.ds-btn-primary.disabled {
+  background: var(--color-gray-300);
+  color: var(--color-gray-500);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ds-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
+  border: 1.5px solid rgba(11, 31, 59, 0.18);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    background var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.ds-btn-secondary:hover {
+  border-color: var(--color-primary);
+  background: rgba(11, 31, 59, 0.04);
+  transform: translateY(-1px);
+}
+
+.ds-btn-secondary:focus-visible {
+  outline: 3px solid rgba(11, 31, 59, 0.2);
+  outline-offset: 3px;
+}
+
+/* ── Cards ── */
+
+.ds-card-feature {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-8);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform var(--duration-slow) var(--ease-out),
+    box-shadow var(--duration-slow) var(--ease-out),
+    border-color var(--duration-slow) var(--ease-out);
+  cursor: default;
+}
+
+.ds-card-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-4);
+  border-color: var(--border-accent);
+}
+
+.ds-card-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(47, 128, 237, 0.08);
+  color: var(--color-accent);
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.ds-card-process {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--sp-3);
+  padding: var(--sp-8) var(--sp-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform var(--duration-slow) var(--ease-out),
+    box-shadow var(--duration-slow) var(--ease-out);
+}
+
+.ds-card-process:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-3);
+}
+
+.ds-step-number {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: var(--fw-semibold);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+.ds-card-glass {
+  padding: 24px 28px;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-glass);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* ── Layout Container ── */
+.ds-container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop);
+}
