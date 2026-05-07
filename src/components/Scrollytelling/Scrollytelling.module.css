@@ -1,0 +1,681 @@
+/* ── Root ─────────────────────────────────────────────────────────────────── */
+.root {
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── Educational badge (fixed, top-right) ─────────────────────────────────── */
+.badge {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(16, 15, 13, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  opacity: 0;
+}
+
+.badgeDot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px #4ade80;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.badgeLabel {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(246,244,240,0.85);
+  white-space: nowrap;
+}
+
+/* ── Utility: SplitText word wrapper ─────────────────────────────────────── */
+/* Applied via SplitText wordsClass — clips chars that animate from below */
+:global(.splitWord) {
+  display: inline-block !important;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* 1 · INTRO                                                                  */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.intro {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--section-py) var(--section-px);
+  background: var(--text);
+  color: var(--bg);
+  text-align: center;
+  position: relative;
+}
+
+.introInner {
+  max-width: 800px;
+}
+
+.introEyebrow {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(246,244,240,0.38);
+  margin-bottom: 1.75rem;
+}
+
+.introTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  line-height: 1.1;
+  color: var(--bg);
+  /* Chars animate up — parent clips them */
+  overflow: visible; /* SplitText word wrappers handle clipping */
+}
+
+.introSub {
+  margin-top: 2rem;
+  font-size: var(--fs-subhead);
+  color: rgba(246,244,240,0.55);
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.65;
+}
+
+.scrollInd {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scrollMouse {
+  width: 22px;
+  height: 36px;
+  border: 1.5px solid rgba(246,244,240,0.25);
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.scrollDot {
+  width: 3px;
+  height: 8px;
+  background: rgba(246,244,240,0.5);
+  border-radius: 999px;
+  animation: scrollBob 1.4s ease-in-out infinite;
+}
+
+@keyframes scrollBob {
+  0%, 100% { transform: translateY(0);    opacity: 1; }
+  50%       { transform: translateY(8px); opacity: 0.3; }
+}
+
+.scrollLabel {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(246,244,240,0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* 2 · CHAPTERS (sticky panel)                                                */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.chapters {
+  background: var(--bg);
+}
+
+.chaptersLayout {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--section-px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* Left col: normal scroll */
+.chaptersLeft {}
+
+.chapterItem {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 5rem 0;
+}
+
+.chapterContent {
+  max-width: 460px;
+}
+
+.chapterEyebrow {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.chapterHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 2.8vw, 2.5rem);
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+
+.chapterBody {
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+  line-height: 1.78;
+}
+
+/* Right col: sticky */
+.chaptersRight {
+  position: sticky;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.panelWrap {
+  position: relative;
+  height: 440px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.panel {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  will-change: opacity, transform;
+}
+
+.panelInner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  gap: 1rem;
+  color: white;
+}
+
+.panelNum {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 9vw, 7.5rem);
+  line-height: 1;
+  color: white;
+}
+
+.panelStatLabel {
+  font-size: var(--fs-body);
+  color: rgba(255,255,255,0.65);
+  max-width: 220px;
+  line-height: 1.5;
+}
+
+.panelCount {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.75rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* 3 · STATS                                                                  */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.stats {
+  padding: var(--section-py) var(--section-px);
+  background: var(--text);
+  color: var(--bg);
+}
+
+.statsInner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.statsHeader {
+  margin-bottom: 4rem;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(246,244,240,0.35);
+  margin-bottom: 1rem;
+}
+
+.statsHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 3vw, 2.75rem);
+  color: var(--bg);
+  max-width: 520px;
+  line-height: 1.25;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(246,244,240,0.06);
+  border: 1px solid rgba(246,244,240,0.06);
+}
+
+.statCard {
+  padding: 2.5rem 2rem;
+  background: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.statNum {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1;
+  color: var(--bg);
+  font-variant-numeric: tabular-nums;
+}
+
+.statCardLabel {
+  font-size: var(--fs-small);
+  color: rgba(246,244,240,0.42);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* 4 · TIMELINE                                                               */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.timeline {
+  padding: var(--section-py) var(--section-px);
+  background: var(--bg);
+}
+
+.timelineInner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.timelineHeader {
+  margin-bottom: 4rem;
+}
+
+/* Override sectionLabel color for light bg */
+.timelineHeader .sectionLabel,
+.timelineInner .sectionLabel {
+  color: var(--accent);
+}
+
+.timelineHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 3vw, 2.75rem);
+  max-width: 520px;
+  line-height: 1.25;
+}
+
+.timelineBody {
+  display: grid;
+  grid-template-columns: 2px 1fr;
+  gap: 0 3.5rem;
+  position: relative;
+}
+
+.timelineTrack {
+  position: relative;
+  /* full height stretch */
+}
+
+.timelineLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.timelineItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 1.75rem;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border-light);
+  position: relative;
+  will-change: opacity, transform;
+}
+
+.timelineItem:last-child {
+  border-bottom: none;
+}
+
+/* Dot on the line */
+.timelineDot {
+  position: absolute;
+  left: calc(-3.5rem - 5px);   /* aligns to center of 2px line */
+  top: 2.75rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4.5px var(--accent);
+}
+
+.timelineNum {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  color: var(--border);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 3.5rem;
+  padding-top: 0.1em;
+}
+
+.timelineTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-headline);
+  font-weight: 400;
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
+}
+
+.timelineDesc {
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: 1.72;
+  max-width: 560px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* 5 · BEFORE / AFTER                                                         */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.ba {
+  height: 250vh;   /* scroll spacer — lets us animate through 150vh of scrub */
+}
+
+.baPinned {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Both panels fill the same pinned space */
+.baBefore,
+.baAfter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: var(--section-px);
+  gap: 4rem;
+}
+
+.baBefore {
+  background: var(--bg-alt);
+}
+
+.baAfter {
+  background: var(--accent);
+  clip-path: inset(0 100% 0 0);   /* starts hidden; GSAP animates to inset(0 0% 0 0) */
+  will-change: clip-path;
+}
+
+.baContent {
+  max-width: 480px;
+}
+
+.baTag {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.baTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 2.8vw, 2.5rem);
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.baDesc {
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.baList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.baList li {
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.baList li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--border);
+}
+
+/* Large decorative letter */
+.baVisual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 280px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.06);
+  font-family: var(--font-display);
+  font-size: 9rem;
+  color: rgba(0,0,0,0.08);
+  user-select: none;
+}
+
+.baAfter .baVisual {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.1);
+}
+
+/* Thin progress bar at the very bottom */
+.baProgress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.9);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+  z-index: 10;
+}
+
+/* Hint labels */
+.baHints {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 0;
+  right: 0;
+  padding: 0 var(--section-px);
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.25);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* 6 · OUTRO                                                                  */
+/* ══════════════════════════════════════════════════════════════════════════ */
+.outro {
+  padding: var(--section-py) var(--section-px);
+  background: var(--text);
+  color: var(--bg);
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.outroInner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.outroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  line-height: 1.2;
+  color: var(--bg);
+  margin-bottom: 3rem;
+}
+
+.outroCta {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2.5rem;
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.ctaBtn:hover {
+  background: var(--bg-alt);
+}
+
+.ctaGhost {
+  color: rgba(246,244,240,0.5);
+  font-size: var(--fs-body);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ctaGhost:hover {
+  color: rgba(246,244,240,0.9);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/* Responsive                                                                  */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .chaptersLayout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .chaptersRight {
+    display: none;  /* skip sticky panel on small screens */
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .timelineNum {
+    display: none;
+  }
+
+  .timelineDot {
+    left: calc(-3.5rem - 1px);
+  }
+
+  .ba {
+    height: 300vh;
+  }
+
+  .baBefore,
+  .baAfter {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+
+  .baVisual {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .outroCta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .badge {
+    display: none;
+  }
+}
