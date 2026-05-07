@@ -974,6 +974,7 @@
     <div class="cfg-divider"></div>
     <div class="cfg-group">
       <span class="cfg-label">Font</span>
+      <span class="cfg-active-name" id="cfg-active-font"></span>
       <div class="cfg-group" id="cfg-fonts" style="gap:4px;"></div>
     </div>
     <button class="cfg-export" id="cfg-export">
@@ -992,11 +993,11 @@
     <div class="ds-page-hero-meta">
       <span class="ds-meta-pill">
         <span class="ds-meta-pill-dot"></span>
-        Playfair Display — Display &amp; Headlines
+        <span data-font-name="display">Playfair Display</span> — Display &amp; Headlines
       </span>
       <span class="ds-meta-pill">
         <span class="ds-meta-pill-dot" style="background:#64748B;"></span>
-        Inter — Body &amp; UI
+        <span data-font-name="body">Inter</span> — Body &amp; UI
       </span>
       <span class="ds-meta-pill">
         <span class="ds-meta-pill-dot" style="background:#059669;"></span>
@@ -1108,25 +1109,25 @@
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:48px;">
     <div class="js-accent-bg-subtle" style="padding:24px 28px; border-radius:var(--radius-lg); border:1px solid var(--border-accent); background:rgba(47,128,237,0.03);">
       <p style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent); margin-bottom:10px;">Display &amp; Headings</p>
-      <p style="font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--color-black); letter-spacing:-0.01em; margin-bottom:8px;">Playfair Display</p>
+      <p data-font="display" data-font-name="display" style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--color-black); letter-spacing:-0.01em; margin-bottom:8px;">Playfair Display</p>
       <p style="font-size:13px; color:var(--color-gray-500); line-height:1.6;">Serif typeface for H1–H2 headlines. Brings editorial authority and warmth to structural messaging. Weights 400–700.</p>
       <div style="display:flex; gap:12px; margin-top:14px;">
-        <span style="font-family:'Playfair Display',serif; font-size:16px; font-weight:400; color:var(--color-gray-700);">Regular</span>
-        <span style="font-family:'Playfair Display',serif; font-size:16px; font-weight:600; color:var(--color-gray-700);">SemiBold</span>
-        <span style="font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--color-gray-700);">Bold</span>
-        <span style="font-family:'Playfair Display',serif; font-size:16px; font-weight:600; font-style:italic; color:var(--color-gray-700);">Italic</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:400; color:var(--color-gray-700);">Regular</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--color-gray-700);">SemiBold</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--color-gray-700);">Bold</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:600; font-style:italic; color:var(--color-gray-700);">Italic</span>
       </div>
     </div>
     <div style="padding:24px 28px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--color-gray-100);">
       <p style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-gray-500); margin-bottom:10px;">Body &amp; UI</p>
-      <p style="font-family:'Inter',sans-serif; font-size:28px; font-weight:600; color:var(--color-black); letter-spacing:-0.02em; margin-bottom:8px;">Inter</p>
+      <p data-font="body" data-font-name="body" style="font-family:var(--font-body); font-size:28px; font-weight:600; color:var(--color-black); letter-spacing:-0.02em; margin-bottom:8px;">Inter</p>
       <p style="font-size:13px; color:var(--color-gray-500); line-height:1.6;">Geometric sans-serif for H3, body, labels, and all UI elements. Exceptional readability at every size. Weights 300–700.</p>
       <div style="display:flex; gap:12px; margin-top:14px;">
-        <span style="font-family:'Inter',sans-serif; font-size:16px; font-weight:300; color:var(--color-gray-700);">Light</span>
-        <span style="font-family:'Inter',sans-serif; font-size:16px; font-weight:400; color:var(--color-gray-700);">Regular</span>
-        <span style="font-family:'Inter',sans-serif; font-size:16px; font-weight:500; color:var(--color-gray-700);">Medium</span>
-        <span style="font-family:'Inter',sans-serif; font-size:16px; font-weight:600; color:var(--color-gray-700);">SemiBold</span>
-        <span style="font-family:'Inter',sans-serif; font-size:16px; font-weight:700; color:var(--color-gray-700);">Bold</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:300; color:var(--color-gray-700);">Light</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:400; color:var(--color-gray-700);">Regular</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:500; color:var(--color-gray-700);">Medium</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:600; color:var(--color-gray-700);">SemiBold</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:700; color:var(--color-gray-700);">Bold</span>
       </div>
     </div>
   </div>
@@ -2136,6 +2137,8 @@
     // Swap font name labels in type specimens
     document.querySelectorAll('[data-font-name="display"]').forEach(el => el.textContent = font.displayLabel);
     document.querySelectorAll('[data-font-name="body"]').forEach(el => el.textContent = font.bodyLabel);
+    const activeFontEl = document.getElementById('cfg-active-font');
+    if (activeFontEl) activeFontEl.textContent = font.label;
     activeFont = id;
   }
 
