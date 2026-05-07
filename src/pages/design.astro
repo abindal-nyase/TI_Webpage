@@ -1,0 +1,2206 @@
+---
+// NYA Design System Showcase
+// Fonts: Playfair Display (display/headings) + Inter (body/UI)
+// Blueprint: src/design/NYA_Tenant_Improvement_Figma_File_Blueprint.md
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>NYA — Design System</title>
+
+  <!-- Font stack: Playfair Display (display/H1–H2) + Inter (body/UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design tokens (mirrors design-system.css) ── */
+    :root {
+      --color-primary:       #0B1F3B;
+      --color-primary-light: #1E3A5F;
+      --color-accent:        #2F80ED;
+      --color-accent-hover:  #1C6ED5;
+      --color-black:         #0F172A;
+      --color-gray-900:      #1E293B;
+      --color-gray-700:      #475569;
+      --color-gray-500:      #64748B;
+      --color-gray-300:      #E2E8F0;
+      --color-gray-200:      #EEF2F7;
+      --color-gray-100:      #F8FAFC;
+      --color-white:         #FFFFFF;
+      --color-value:         #059669;
+      --border-default:      #E2E8F0;
+      --border-accent:       rgba(47,128,237,0.25);
+      --shadow-1: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+      --shadow-2: 0 4px 12px rgba(15,23,42,0.08), 0 2px 4px rgba(15,23,42,0.04);
+      --shadow-3: 0 8px 24px rgba(15,23,42,0.10), 0 4px 8px rgba(15,23,42,0.06);
+      --shadow-4: 0 16px 40px rgba(15,23,42,0.12), 0 8px 16px rgba(15,23,42,0.08);
+      --shadow-accent: 0 8px 28px rgba(47,128,237,0.28);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Inter', system-ui, sans-serif;
+      --font-mono:    'SF Mono', 'Fira Code', monospace;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-gray-100);
+      color: var(--color-black);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Sticky nav ── */
+    .ds-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11,31,59,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      height: 52px;
+      padding: 0 32px;
+    }
+
+    .ds-nav-brand {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-right: 32px;
+      white-space: nowrap;
+    }
+
+    .ds-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .ds-nav-links::-webkit-scrollbar { display: none; }
+
+    .ds-nav-links a {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .ds-nav-links a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .ds-nav-back {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: color 0.15s;
+    }
+
+    .ds-nav-back:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── Page hero ── */
+    .ds-page-hero {
+      background: var(--color-primary);
+      padding: 80px 80px 72px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .ds-page-hero-inner {
+      max-width: 860px;
+    }
+
+    .ds-page-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-accent) 90%, transparent);
+      margin-bottom: 24px;
+    }
+
+    .ds-page-hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: currentColor;
+    }
+
+    .ds-page-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .ds-page-hero p {
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.55);
+      max-width: 540px;
+    }
+
+    .ds-page-hero-meta {
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .ds-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 5px 14px;
+    }
+
+    .ds-meta-pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    /* ── Section layout ── */
+    .ds-section {
+      padding: 72px 80px;
+      border-bottom: 1px solid var(--border-default);
+      background: var(--color-white);
+    }
+
+    .ds-section:nth-child(even) {
+      background: var(--color-gray-100);
+    }
+
+    .ds-section-header {
+      margin-bottom: 48px;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .ds-section-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-gray-500);
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .ds-section-heading {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--color-black);
+    }
+
+    /* ── Grid helpers ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+
+    /* ── Color swatches ── */
+    .swatch-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--color-white);
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-1);
+      transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+    }
+
+    .swatch-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-3);
+    }
+
+    .swatch-color { height: 80px; }
+
+    .swatch-info { padding: 14px 16px; }
+
+    .swatch-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-black);
+      margin-bottom: 3px;
+    }
+
+    .swatch-hex {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-gray-500);
+    }
+
+    .swatch-use {
+      font-size: 11px;
+      color: var(--color-gray-500);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
+    /* ── Typography specimens ── */
+    .type-specimen {
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    .type-specimen:first-child { padding-top: 0; }
+    .type-specimen:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .type-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .type-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-gray-500);
+      background: var(--color-gray-100);
+      border: 1px solid var(--border-default);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+
+    .type-tag.accent {
+      background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+      border-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+      color: var(--color-accent);
+    }
+
+    /* Type scale specimens */
+    .specimen-display {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--color-black);
+    }
+
+    .specimen-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 600;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      color: var(--color-black);
+    }
+
+    .specimen-h3 {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      color: var(--color-black);
+    }
+
+    .specimen-body-lg {
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.65;
+      font-weight: 400;
+      color: var(--color-gray-700);
+    }
+
+    .specimen-body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      font-weight: 400;
+      color: var(--color-gray-700);
+    }
+
+    .specimen-label {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      font-weight: 500;
+      color: var(--color-gray-500);
+    }
+
+    .specimen-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+    }
+
+    .specimen-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1.5px;
+      background: currentColor;
+    }
+
+    /* ── Spacing bars ── */
+    .space-table { display: flex; flex-direction: column; gap: 0; max-width: 640px; }
+
+    .space-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    .space-row:last-child { border-bottom: none; }
+
+    .space-token {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-gray-500);
+      width: 72px;
+      flex-shrink: 0;
+    }
+
+    .space-bar-track {
+      width: 220px;
+      height: 20px;
+      background: var(--color-gray-100);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border-default);
+    }
+
+    .space-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 30%, transparent), color-mix(in srgb, var(--color-accent) 15%, transparent));
+      border-right: 2px solid var(--color-accent);
+    }
+
+    .space-px {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-black);
+      width: 36px;
+    }
+
+    .space-note { font-size: 11px; color: var(--color-gray-500); }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 52px;
+      padding: 0 28px;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 220ms var(--ease-out), transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-accent);
+    }
+
+    .btn-primary:disabled {
+      background: var(--color-gray-300);
+      color: var(--color-gray-500);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 52px;
+      padding: 0 28px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--color-primary);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      border: 1.5px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 220ms var(--ease-out), background 220ms var(--ease-out), transform 220ms var(--ease-out);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-primary);
+      background: color-mix(in srgb, var(--color-primary) 4%, transparent);
+      transform: translateY(-1px);
+    }
+
+    .btn-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    /* ── Cards ── */
+    .feature-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 28px;
+      border-radius: var(--radius-lg);
+      background: var(--color-white);
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-1);
+      transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), border-color 300ms var(--ease-out);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-4);
+      border-color: var(--border-accent);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-black);
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--color-gray-700);
+    }
+
+    .process-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding: 28px 20px;
+      border-radius: var(--radius-lg);
+      background: var(--color-white);
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-1);
+    }
+
+    .step-number {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* ── Radius showcase ── */
+    .radius-card {
+      background: var(--color-white);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .radius-box {
+      width: 72px;
+      height: 72px;
+      background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+      border: 1.5px solid var(--color-accent);
+    }
+
+    .radius-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-black);
+      text-align: center;
+    }
+
+    .radius-value {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-gray-500);
+    }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: var(--border-default); margin: 48px 0; }
+
+    /* ── Sub-heading ── */
+    .sub-heading {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: 20px;
+    }
+
+    /* ── Alternates section ── */
+    .alt-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-default);
+      background: var(--color-white);
+      overflow: hidden;
+      box-shadow: var(--shadow-1);
+      transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
+    }
+
+    .alt-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-3);
+    }
+
+    .alt-card-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .alt-card-header {
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .alt-card-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-black);
+    }
+
+    .alt-card-body { padding: 18px 22px 20px; }
+
+    .alt-card-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--color-gray-700);
+      margin-bottom: 16px;
+    }
+
+    .alt-select-btn {
+      margin-top: 14px;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      background: none;
+      border: 1px solid var(--color-accent);
+      border-radius: 6px;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .alt-select-btn:hover {
+      background: var(--color-accent);
+      color: #fff;
+    }
+
+    .mini-swatches { display: flex; gap: 6px; }
+
+    .mini-swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    /* Font alt cards */
+    .font-alt-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-default);
+      background: var(--color-white);
+      box-shadow: var(--shadow-1);
+      overflow: hidden;
+      transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
+    }
+
+    .font-alt-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-3);
+    }
+
+    .font-alt-header {
+      padding: 16px 22px;
+      background: var(--color-gray-100);
+      border-bottom: 1px solid var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .font-alt-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+    }
+
+    .font-alt-names {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-gray-500);
+    }
+
+    .font-alt-body { padding: 22px 22px 24px; }
+
+    .font-alt-specimen {
+      margin-bottom: 10px;
+      color: var(--color-black);
+    }
+
+    .font-alt-desc {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--color-gray-500);
+      margin-top: 12px;
+    }
+
+    /* Button variants */
+    .btn-variant-row {
+      padding: 24px 28px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-default);
+      background: var(--color-white);
+    }
+
+    .btn-variant-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: 16px;
+    }
+
+    /* ── Section previews ── */
+    .preview-wrap {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-2);
+      margin-bottom: 36px;
+    }
+
+    .preview-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-gray-500);
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .ds-page-hero { padding: 56px 40px 48px; }
+      .ds-section { padding: 56px 40px; }
+      .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .ds-page-hero { padding: 40px 24px 36px; }
+      .ds-section { padding: 40px 24px; }
+      .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+      .ds-nav { padding: 0 20px; }
+    }
+
+    /* ── Configurator panel ── */
+    .cfg-panel {
+      position: sticky;
+      top: 52px;
+      z-index: 99;
+      background: rgba(10,18,35,0.98);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 9px 32px;
+    }
+
+    .cfg-inner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .cfg-inner::-webkit-scrollbar { display: none; }
+
+    .cfg-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .cfg-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cfg-active-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      white-space: nowrap;
+      min-width: 130px;
+      flex-shrink: 0;
+    }
+
+    .cfg-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+
+    .cfg-color-btn {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 5px 7px;
+      border-radius: 7px;
+      border: 1.5px solid transparent;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .cfg-color-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .cfg-color-btn.active {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.32);
+    }
+
+    .cfg-swatch {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .cfg-font-btn {
+      padding: 5px 11px;
+      border-radius: 7px;
+      border: 1.5px solid transparent;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cfg-font-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
+    }
+
+    .cfg-font-btn.active {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.32);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .cfg-export {
+      margin-left: auto;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 7px;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      border: none;
+      cursor: pointer;
+      transition: filter 0.15s, transform 0.15s, background 0.2s;
+    }
+
+    .cfg-export:hover {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
+    }
+
+    .cfg-export.copied {
+      background: #059669;
+    }
+
+    @media (max-width: 640px) {
+      .cfg-panel { padding: 8px 20px; }
+      .cfg-active-name { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── Nav ── -->
+<nav class="ds-nav">
+  <span class="ds-nav-brand">NYA / Design System</span>
+  <div class="ds-nav-links">
+    <a href="#colors">Colors</a>
+    <a href="#typography">Typography</a>
+    <a href="#spacing">Spacing</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#cards">Cards</a>
+    <a href="#radius">Radius</a>
+    <a href="#alternates">Alternates</a>
+    <a href="#previews">Previews</a>
+  </div>
+  <a class="ds-nav-back" href="/">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Dev Hub
+  </a>
+</nav>
+
+<!-- ── Configurator ── -->
+<div class="cfg-panel">
+  <div class="cfg-inner">
+    <div class="cfg-group">
+      <span class="cfg-label">Color</span>
+      <span class="cfg-active-name" id="cfg-active-color"></span>
+      <div class="cfg-group" id="cfg-colors" style="gap:4px;"></div>
+    </div>
+    <div class="cfg-divider"></div>
+    <div class="cfg-group">
+      <span class="cfg-label">Font</span>
+      <span class="cfg-active-name" id="cfg-active-font"></span>
+      <div class="cfg-group" id="cfg-fonts" style="gap:4px;"></div>
+    </div>
+    <button class="cfg-export" id="cfg-export">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSS
+    </button>
+  </div>
+</div>
+
+<!-- ── Page Hero ── -->
+<div class="ds-page-hero">
+  <div class="ds-page-hero-inner">
+    <div class="ds-page-hero-eyebrow">Nabih Youssef Associates — Internal</div>
+    <h1>NYA Tenant Improvement<br/>Design System</h1>
+    <p>Foundation tokens, component specifications, and alternate design explorations for the TI microsite. Based on the Figma file blueprint.</p>
+    <div class="ds-page-hero-meta">
+      <span class="ds-meta-pill">
+        <span class="ds-meta-pill-dot"></span>
+        <span data-font-name="display">Playfair Display</span> — Display &amp; Headlines
+      </span>
+      <span class="ds-meta-pill">
+        <span class="ds-meta-pill-dot" style="background:#64748B;"></span>
+        <span data-font-name="body">Inter</span> — Body &amp; UI
+      </span>
+      <span class="ds-meta-pill">
+        <span class="ds-meta-pill-dot" style="background:#059669;"></span>
+        Blueprint v1.0
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     01 — Colors
+════════════════════════════════ -->
+<section class="ds-section" id="colors">
+  <div class="ds-section-header">
+    <span class="ds-section-num">01</span>
+    <h2 class="ds-section-heading">Color Palette</h2>
+  </div>
+
+  <p class="sub-heading">Brand <span id="brand-palette-label" style="font-weight:400; color:var(--color-gray-500); font-size:0.85em; margin-left:8px;">— Navy + Blue</span></p>
+  <div class="grid-4" style="margin-bottom:32px;" id="brand-palette-grid">
+    <div class="swatch-card" id="brand-swatch-0">
+      <div class="swatch-color" style="background:#0B1F3B;"></div>
+      <div class="swatch-info">
+        <p class="swatch-name">Primary Navy</p>
+        <p class="swatch-hex">#0B1F3B</p>
+        <p class="swatch-use">Authority, footer, dark CTA</p>
+      </div>
+    </div>
+    <div class="swatch-card" id="brand-swatch-1">
+      <div class="swatch-color" style="background:#1E3A5F;"></div>
+      <div class="swatch-info">
+        <p class="swatch-name">Light Navy</p>
+        <p class="swatch-hex">#1E3A5F</p>
+        <p class="swatch-use">Secondary dark surfaces</p>
+      </div>
+    </div>
+    <div class="swatch-card" id="brand-swatch-2">
+      <div class="swatch-color" style="background:#2F80ED;"></div>
+      <div class="swatch-info">
+        <p class="swatch-name">Accent Blue</p>
+        <p class="swatch-hex">#2F80ED</p>
+        <p class="swatch-use">CTA, links, overlays</p>
+      </div>
+    </div>
+    <div class="swatch-card" id="brand-swatch-3">
+      <div class="swatch-color" style="background:#1C6ED5;"></div>
+      <div class="swatch-info">
+        <p class="swatch-name">Accent Hover</p>
+        <p class="swatch-hex">#1C6ED5</p>
+        <p class="swatch-use">Button hover state</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="sub-heading">Neutrals (Refined B2B Palette)</p>
+  <div class="grid-4" style="margin-bottom:32px;">
+    {[
+      { name: 'Black',     hex: '#0F172A', use: 'Primary headings' },
+      { name: 'Gray 900',  hex: '#1E293B', use: 'Body dark' },
+      { name: 'Gray 700',  hex: '#475569', use: 'Paragraph text' },
+      { name: 'Gray 500',  hex: '#64748B', use: 'Notes, meta text' },
+      { name: 'Gray 300',  hex: '#E2E8F0', use: 'Borders' },
+      { name: 'Gray 200',  hex: '#EEF2F7', use: 'Subtle backgrounds' },
+      { name: 'Gray 100',  hex: '#F8FAFC', use: 'Page background' },
+      { name: 'White',     hex: '#FFFFFF', use: 'Card, section background' },
+    ].map(({ name, hex, use }) => (
+      <div class="swatch-card">
+        <div class="swatch-color" style={`background:${hex}; border-bottom: 1px solid #E2E8F0;`}></div>
+        <div class="swatch-info">
+          <p class="swatch-name">{name}</p>
+          <p class="swatch-hex">{hex}</p>
+          <p class="swatch-use">{use}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <p class="sub-heading">Semantic</p>
+  <div class="grid-4">
+    <div class="swatch-card">
+      <div class="swatch-color" style="background:#059669;"></div>
+      <div class="swatch-info">
+        <p class="swatch-name">Value / Success</p>
+        <p class="swatch-hex">#059669</p>
+        <p class="swatch-use">Value emphasis, success state</p>
+      </div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-color" style="background:#DC2626;"></div>
+      <div class="swatch-info">
+        <p class="swatch-name">Destructive</p>
+        <p class="swatch-hex">#DC2626</p>
+        <p class="swatch-use">Error, destructive actions</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     02 — Typography
+════════════════════════════════ -->
+<section class="ds-section" id="typography">
+  <div class="ds-section-header">
+    <span class="ds-section-num">02</span>
+    <h2 class="ds-section-heading">Typography</h2>
+  </div>
+
+  <!-- Font stack callout -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:48px;">
+    <div class="js-accent-bg-subtle" style="padding:24px 28px; border-radius:var(--radius-lg); border:1px solid var(--border-accent); background:rgba(47,128,237,0.03);">
+      <p style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent); margin-bottom:10px;">Display &amp; Headings</p>
+      <p data-font="display" data-font-name="display" style="font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--color-black); letter-spacing:-0.01em; margin-bottom:8px;">Playfair Display</p>
+      <p style="font-size:13px; color:var(--color-gray-500); line-height:1.6;">Serif typeface for H1–H2 headlines. Brings editorial authority and warmth to structural messaging. Weights 400–700.</p>
+      <div style="display:flex; gap:12px; margin-top:14px;">
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:400; color:var(--color-gray-700);">Regular</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--color-gray-700);">SemiBold</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--color-gray-700);">Bold</span>
+        <span data-font="display" style="font-family:var(--font-display); font-size:16px; font-weight:600; font-style:italic; color:var(--color-gray-700);">Italic</span>
+      </div>
+    </div>
+    <div style="padding:24px 28px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--color-gray-100);">
+      <p style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-gray-500); margin-bottom:10px;">Body &amp; UI</p>
+      <p data-font="body" data-font-name="body" style="font-family:var(--font-body); font-size:28px; font-weight:600; color:var(--color-black); letter-spacing:-0.02em; margin-bottom:8px;">Inter</p>
+      <p style="font-size:13px; color:var(--color-gray-500); line-height:1.6;">Geometric sans-serif for H3, body, labels, and all UI elements. Exceptional readability at every size. Weights 300–700.</p>
+      <div style="display:flex; gap:12px; margin-top:14px;">
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:300; color:var(--color-gray-700);">Light</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:400; color:var(--color-gray-700);">Regular</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:500; color:var(--color-gray-700);">Medium</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:600; color:var(--color-gray-700);">SemiBold</span>
+        <span data-font="body" style="font-family:var(--font-body); font-size:16px; font-weight:700; color:var(--color-gray-700);">Bold</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Eyebrow -->
+  <div class="type-specimen">
+    <span class="specimen-eyebrow" data-copy="eyebrow">Tenant Improvement</span>
+    <div class="type-meta-row">
+      <span class="type-tag accent">Caps / Eyebrow</span>
+      <span class="type-tag" data-font-name="body">Inter</span>
+      <span class="type-tag">11px / 16px</span>
+      <span class="type-tag">700 Bold</span>
+      <span class="type-tag">0.10em tracking</span>
+      <span class="type-tag" data-copy="accentLabel">Accent Blue — section labels</span>
+    </div>
+  </div>
+
+  <!-- H1 -->
+  <div class="type-specimen">
+    <p class="specimen-display" data-copy="h1">Most engineers see the space.<br/>We see how the building actually works.</p>
+    <div class="type-meta-row">
+      <span class="type-tag accent">H1 / Hero</span>
+      <span class="type-tag" data-font-name="display">Playfair Display</span>
+      <span class="type-tag">64px / 72px</span>
+      <span class="type-tag">700 Bold</span>
+      <span class="type-tag">−0.02em tracking</span>
+      <span class="type-tag">color-black — hero headline</span>
+    </div>
+  </div>
+
+  <!-- H2 -->
+  <div class="type-specimen">
+    <p class="specimen-h2" data-copy="h2">What Looks Simple Can Become Complicated Quickly</p>
+    <div class="type-meta-row">
+      <span class="type-tag accent">H2 / Section</span>
+      <span class="type-tag" data-font-name="display">Playfair Display</span>
+      <span class="type-tag">44px / 52px</span>
+      <span class="type-tag">600 SemiBold</span>
+      <span class="type-tag">−0.01em tracking</span>
+      <span class="type-tag">color-black — section headlines</span>
+    </div>
+  </div>
+
+  <!-- H3 -->
+  <div class="type-specimen">
+    <p class="specimen-h3" data-copy="h3">A Firm Built on Care, Trust, and Serious Work</p>
+    <div class="type-meta-row">
+      <span class="type-tag accent">H3 / Card</span>
+      <span class="type-tag" data-font-name="body">Inter</span>
+      <span class="type-tag">20px / 28px</span>
+      <span class="type-tag">600 SemiBold</span>
+      <span class="type-tag">−0.01em tracking</span>
+      <span class="type-tag">color-black — card titles</span>
+    </div>
+  </div>
+
+  <!-- Body Large -->
+  <div class="type-specimen">
+    <p class="specimen-body-lg" data-copy="bodyLg">Tenant improvements succeed when the existing building is understood, not assumed. NYA brings clarity to structure, constraints, and possibilities before decisions become costly.</p>
+    <div class="type-meta-row">
+      <span class="type-tag accent">Body / Large</span>
+      <span class="type-tag" data-font-name="body">Inter</span>
+      <span class="type-tag">18px / 28px</span>
+      <span class="type-tag">400 Regular</span>
+      <span class="type-tag">1.65 line-height</span>
+      <span class="type-tag">gray-700 — hero &amp; section intros</span>
+    </div>
+  </div>
+
+  <!-- Body Default -->
+  <div class="type-specimen">
+    <p class="specimen-body" data-copy="body">Existing buildings rarely behave like clean templates. Years of prior modifications, hidden as-built discrepancies, and on-site adaptations mean the real condition is always particular. NYA tailors details to reduce field conflicts and construction-phase surprises.</p>
+    <div class="type-meta-row">
+      <span class="type-tag accent">Body / Default</span>
+      <span class="type-tag" data-font-name="body">Inter</span>
+      <span class="type-tag">16px / 26px</span>
+      <span class="type-tag">400 Regular</span>
+      <span class="type-tag">1.65 line-height</span>
+      <span class="type-tag">gray-700 — standard text</span>
+    </div>
+  </div>
+
+  <!-- Label -->
+  <div class="type-specimen">
+    <p class="specimen-label">Structural clarity before costly decisions.</p>
+    <div class="type-meta-row">
+      <span class="type-tag accent">Label / Small</span>
+      <span class="type-tag">Inter</span>
+      <span class="type-tag">14px / 22px</span>
+      <span class="type-tag">500 Medium</span>
+      <span class="type-tag">gray-500 — notes, captions</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     03 — Spacing
+════════════════════════════════ -->
+<section class="ds-section" id="spacing">
+  <div class="ds-section-header">
+    <span class="ds-section-num">03</span>
+    <h2 class="ds-section-heading">Spacing Scale</h2>
+  </div>
+
+  <div class="grid-2" style="gap:48px;">
+    <div>
+      <p class="sub-heading">4px Base Scale</p>
+      <div class="space-table">
+        {[
+          { token: '--sp-1',  px: 4,   note: 'Micro gap' },
+          { token: '--sp-2',  px: 8,   note: 'Tight gap' },
+          { token: '--sp-3',  px: 12,  note: 'Close items' },
+          { token: '--sp-4',  px: 16,  note: 'Default gap' },
+          { token: '--sp-5',  px: 20,  note: '' },
+          { token: '--sp-6',  px: 24,  note: 'Card internal' },
+          { token: '--sp-7',  px: 28,  note: '' },
+          { token: '--sp-8',  px: 32,  note: 'Card padding' },
+          { token: '--sp-10', px: 40,  note: '' },
+          { token: '--sp-12', px: 48,  note: 'Section sub-gap' },
+          { token: '--sp-16', px: 64,  note: 'Mobile section pad' },
+          { token: '--sp-18', px: 72,  note: '' },
+          { token: '--sp-20', px: 80,  note: '' },
+          { token: '--sp-30', px: 120, note: 'Desktop section pad' },
+        ].map(({ token, px, note }) => (
+          <div class="space-row">
+            <span class="space-token">{token}</span>
+            <div class="space-bar-track">
+              <div class="space-bar-fill" style={`width:${Math.min((px / 120) * 100, 100)}%`}></div>
+            </div>
+            <span class="space-px">{px}px</span>
+            <span class="space-note">{note}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <p class="sub-heading">Layout Tokens</p>
+      <div class="space-table">
+        {[
+          { token: '--container',        value: '1200px',  note: 'Max content width' },
+          { token: '--container-narrow', value: '780px',   note: 'Narrow text column' },
+          { token: '--section-padding',  value: '120px',   note: 'Desktop vert. padding' },
+          { token: '--section-mob',      value: '64px',    note: 'Mobile vert. padding' },
+          { token: '--gutter',           value: '32px',    note: 'Column gutter' },
+          { token: '--margin-desktop',   value: '120px',   note: 'Side margins @ 1440' },
+        ].map(({ token, value, note }) => (
+          <div class="space-row">
+            <span class="space-token" style="width:180px;">{token}</span>
+            <span class="space-px" style="width:64px;">{value}</span>
+            <span class="space-note">{note}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="divider" style="margin:36px 0;"></div>
+
+      <p class="sub-heading">Grid System</p>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
+        {[
+          { label: 'Desktop frame',  value: '1440px' },
+          { label: 'Columns',        value: '12' },
+          { label: 'Gutter',         value: '32px' },
+          { label: 'Margin (each)',  value: '120px' },
+        ].map(({ label, value }) => (
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-default); align-items:center;">
+            <span style="font-size:13px; color:var(--color-gray-700);">{label}</span>
+            <span style="font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--color-black);">{value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     04 — Buttons & Labels
+════════════════════════════════ -->
+<section class="ds-section" id="buttons">
+  <div class="ds-section-header">
+    <span class="ds-section-num">04</span>
+    <h2 class="ds-section-heading">Buttons &amp; Labels</h2>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:32px;">
+
+    <!-- Primary -->
+    <div style="padding:28px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--color-gray-100);">
+      <p class="sub-heading" style="margin-bottom:16px;">Button / Primary — Inter 15px Medium</p>
+      <div class="btn-row">
+        <button class="btn-primary">Start Planning Your TI Project</button>
+        <button class="btn-primary">Start Your TI Conversation</button>
+        <button class="btn-primary" disabled>Disabled State</button>
+      </div>
+      <div class="type-meta-row" style="margin-top:16px;">
+        <span class="type-tag">52px height</span>
+        <span class="type-tag">0 28px padding</span>
+        <span class="type-tag">radius: 8px</span>
+        <span class="type-tag">fill: #2F80ED</span>
+        <span class="type-tag">hover: translateY(−2px) + shadow</span>
+        <span class="type-tag">transition: 220ms ease-out</span>
+      </div>
+    </div>
+
+    <!-- Secondary -->
+    <div style="padding:28px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--color-gray-100);">
+      <p class="sub-heading" style="margin-bottom:16px;">Button / Secondary — Inter 15px Medium</p>
+      <div class="btn-row">
+        <button class="btn-secondary">Explore Our TI Approach</button>
+        <button class="btn-secondary">Meet the Team</button>
+      </div>
+      <div class="type-meta-row" style="margin-top:16px;">
+        <span class="type-tag">52px height</span>
+        <span class="type-tag">transparent fill</span>
+        <span class="type-tag">1.5px stroke navy 18%</span>
+        <span class="type-tag">hover: full navy border</span>
+      </div>
+    </div>
+
+    <!-- On Dark -->
+    <div style="padding:28px; border-radius:var(--radius-lg); background:var(--color-primary);">
+      <p class="sub-heading" style="color:rgba(255,255,255,0.3); margin-bottom:16px;">On Dark Background</p>
+      <div class="btn-row">
+        <button class="btn-primary">Start Your TI Conversation</button>
+        <button class="btn-secondary" style="color:#fff; border-color:rgba(255,255,255,0.22);">Learn More</button>
+      </div>
+    </div>
+
+    <!-- Eyebrow component -->
+    <div style="padding:28px; border-radius:var(--radius-lg); border:1px solid var(--border-default); background:var(--color-gray-100);">
+      <p class="sub-heading" style="margin-bottom:20px;">Eyebrow Label — Inter 11px Bold, 0.10em tracking</p>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <span class="specimen-eyebrow">Tenant Improvement</span>
+        <span class="specimen-eyebrow">Who We Are at NYA</span>
+        <span class="specimen-eyebrow">The Problem with TIs</span>
+      </div>
+      <div class="type-meta-row" style="margin-top:16px;">
+        <span class="type-tag">28px rule — gap 10px — before text</span>
+        <span class="type-tag">color: accent blue</span>
+        <span class="type-tag">ALL CAPS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     05 — Cards
+════════════════════════════════ -->
+<section class="ds-section" id="cards">
+  <div class="ds-section-header">
+    <span class="ds-section-num">05</span>
+    <h2 class="ds-section-heading">Card Components</h2>
+  </div>
+
+  <p class="sub-heading" style="margin-bottom:20px;">Feature Card — Culture Grid (radius-lg, shadow-1→4 on hover)</p>
+  <div class="grid-3" style="margin-bottom:40px;">
+    <div class="feature-card">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <p class="card-title" data-copy="feat1Title">Client Advocacy</p>
+      <p class="card-body" data-copy="feat1Body">NYA takes client care seriously — listening closely, understanding what matters most, and working to protect those priorities throughout the project.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <p class="card-title" data-copy="feat2Title">Make-It-Work Mindset</p>
+      <p class="card-body" data-copy="feat2Body">NYA translates architectural ambition into structural solutions that are coordinated, code-conscious, and constructible.</p>
+    </div>
+    <div class="feature-card">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <p class="card-title" data-copy="feat3Title">Communication That Reduces Pressure</p>
+      <p class="card-body" data-copy="feat3Body">NYA intercepts small gaps before they become delays — responding quickly and keeping clients informed even when a full answer requires more time.</p>
+    </div>
+  </div>
+
+  <p class="sub-heading" style="margin-bottom:20px;">Process Step Card — Horizontal Steps (center-aligned)</p>
+  <div class="grid-3" style="margin-bottom:40px;">
+    <div class="process-card">
+      <div class="step-number">1</div>
+      <p class="card-title" data-copy="proc1Title">Understand the Building</p>
+      <p class="card-body" data-copy="proc1Body">Study the existing building on its own terms.</p>
+    </div>
+    <div class="process-card">
+      <div class="step-number">2</div>
+      <p class="card-title" data-copy="proc2Title">Identify Issues Early</p>
+      <p class="card-body" data-copy="proc2Body">Clarify constraints before decisions become expensive.</p>
+    </div>
+    <div class="process-card">
+      <div class="step-number">3</div>
+      <p class="card-title" data-copy="proc3Title">Tailor the Details</p>
+      <p class="card-body" data-copy="proc3Body">Shape details around actual field conditions.</p>
+    </div>
+  </div>
+
+  <p class="sub-heading" style="margin-bottom:20px;">Glass Card — Hero Overlay (backdrop-filter: blur 20px)</p>
+  <div class="js-primary-grad" style="background:linear-gradient(135deg, #0B1F3B 0%, #1E3A5F 100%); padding:48px; border-radius:var(--radius-lg);">
+    <div style="padding:24px 28px; border-radius:var(--radius-xl); background:rgba(255,255,255,0.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 20px 48px rgba(15,23,42,0.12); border:1px solid rgba(255,255,255,0.6); max-width:380px;">
+      <p data-copy="glassTitle" style="font-family:var(--font-body); font-size:14px; font-weight:600; color:var(--color-black); margin-bottom:8px;">We look beneath the finish.</p>
+      <p data-copy="glassBody" style="font-family:var(--font-body); font-size:14px; color:var(--color-gray-700); line-height:1.65;">Structure, constraints, load paths, and hidden conditions are studied early so the design can move forward with confidence.</p>
+    </div>
+    <div class="type-meta-row" style="margin-top:20px;">
+      <span class="type-tag" style="border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.06);">fill: white 88%</span>
+      <span class="type-tag" style="border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.06);">blur: 20px</span>
+      <span class="type-tag" style="border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.06);">radius: 24px</span>
+      <span class="type-tag" style="border-color:rgba(255,255,255,0.12); color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.06);">shadow-glass</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     06 — Radius
+════════════════════════════════ -->
+<section class="ds-section" id="radius">
+  <div class="ds-section-header">
+    <span class="ds-section-num">06</span>
+    <h2 class="ds-section-heading">Border Radius</h2>
+  </div>
+
+  <div class="grid-4">
+    {[
+      { token: '--radius-sm',  px: 8,  box: 8,  use: 'Buttons, tags' },
+      { token: '--radius-md',  px: 12, box: 12, use: 'Token cards, small panels' },
+      { token: '--radius-lg',  px: 16, box: 16, use: 'Feature cards, sections' },
+      { token: '--radius-xl',  px: 24, box: 24, use: 'Glass card, large panels' },
+    ].map(({ token, px, box, use }) => (
+      <div class="radius-card">
+        <div class="radius-box" style={`border-radius:${box}px;`}></div>
+        <p class="radius-label">{token}</p>
+        <p class="radius-value">{px}px — {use}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     07 — Alternates
+════════════════════════════════ -->
+<section class="ds-section" id="alternates">
+  <div class="ds-section-header">
+    <span class="ds-section-num">07</span>
+    <h2 class="ds-section-heading">Design Alternates</h2>
+  </div>
+
+  <!-- Color palette alternates -->
+  <p class="sub-heading" style="margin-bottom:20px;">Color Palette Options</p>
+  <div class="grid-3" style="margin-bottom:48px;">
+
+    <div class="alt-card" data-palette-id="navy-blue">
+      <div class="alt-card-header">
+        <span class="alt-card-name">Navy + Blue</span>
+        <span class="alt-card-badge" style="background:var(--color-accent);">Recommended</span>
+      </div>
+      <div class="alt-card-body">
+        <p class="alt-card-desc">Authority and precision. Premium, institutional feel — best fit for a structural engineering brand.</p>
+        <div class="mini-swatches">
+          <div class="mini-swatch" style="background:#0B1F3B;" title="#0B1F3B"></div>
+          <div class="mini-swatch" style="background:#1E3A5F;" title="#1E3A5F"></div>
+          <div class="mini-swatch" style="background:#2F80ED;" title="#2F80ED"></div>
+          <div class="mini-swatch" style="background:#F8FAFC;" title="#F8FAFC"></div>
+          <div class="mini-swatch" style="background:#059669;" title="#059669"></div>
+        </div>
+        <button class="alt-select-btn" onclick="applySchemeGlobal('navy-blue')">Use this palette</button>
+      </div>
+    </div>
+
+    <div class="alt-card" data-palette-id="slate-amber">
+      <div class="alt-card-header">
+        <span class="alt-card-name">Slate + Amber</span>
+        <span class="alt-card-badge" style="background:#D97706;">Alt A — Warmer</span>
+      </div>
+      <div class="alt-card-body">
+        <p class="alt-card-desc">Approachable confidence. Suits "care and craft" messaging — less institutional, more relationship-forward.</p>
+        <div class="mini-swatches">
+          <div class="mini-swatch" style="background:#1F2937;"></div>
+          <div class="mini-swatch" style="background:#374151;"></div>
+          <div class="mini-swatch" style="background:#D97706;"></div>
+          <div class="mini-swatch" style="background:#F9FAFB;"></div>
+          <div class="mini-swatch" style="background:#059669;"></div>
+        </div>
+        <button class="alt-select-btn" onclick="applySchemeGlobal('slate-amber')">Use this palette</button>
+      </div>
+    </div>
+
+    <div class="alt-card" data-palette-id="charcoal-cyan">
+      <div class="alt-card-header">
+        <span class="alt-card-name">Charcoal + Cyan</span>
+        <span class="alt-card-badge" style="background:#1E293B;">Alt B — Darker</span>
+      </div>
+      <div class="alt-card-body">
+        <p class="alt-card-desc">High-contrast modern tech feel — appropriate if targeting Class-A office tenants or tech company fit-outs.</p>
+        <div class="mini-swatches">
+          <div class="mini-swatch" style="background:#0F172A;"></div>
+          <div class="mini-swatch" style="background:#1E293B;"></div>
+          <div class="mini-swatch" style="background:#06B6D4;"></div>
+          <div class="mini-swatch" style="background:#F8FAFC;"></div>
+          <div class="mini-swatch" style="background:#10B981;"></div>
+        </div>
+        <button class="alt-select-btn" onclick="applySchemeGlobal('charcoal-cyan')">Use this palette</button>
+      </div>
+    </div>
+
+    <div class="alt-card" data-palette-id="forest-stone">
+      <div class="alt-card-header">
+        <span class="alt-card-name">Forest + Stone</span>
+        <span class="alt-card-badge" style="background:#2D4A2D;">Alt C — Earth</span>
+      </div>
+      <div class="alt-card-body">
+        <p class="alt-card-desc">Sustainability-forward. Suits ESG-aware clients, LEED-adjacent messaging, adaptive reuse projects.</p>
+        <div class="mini-swatches">
+          <div class="mini-swatch" style="background:#1A2E1A;"></div>
+          <div class="mini-swatch" style="background:#2D4A2D;"></div>
+          <div class="mini-swatch" style="background:#6B9B6B;"></div>
+          <div class="mini-swatch" style="background:#F5F5F0;"></div>
+          <div class="mini-swatch" style="background:#C9A96E;"></div>
+        </div>
+        <button class="alt-select-btn" onclick="applySchemeGlobal('forest-stone')">Use this palette</button>
+      </div>
+    </div>
+
+    <div class="alt-card" data-palette-id="violet-gold">
+      <div class="alt-card-header">
+        <span class="alt-card-name">Deep Violet + Gold</span>
+        <span class="alt-card-badge" style="background:#6D28D9;">Alt D — Boutique</span>
+      </div>
+      <div class="alt-card-body">
+        <p class="alt-card-desc">Boutique firm energy. Distinguished from competitors. Higher personality — higher risk, higher reward.</p>
+        <div class="mini-swatches">
+          <div class="mini-swatch" style="background:#1E1B4B;"></div>
+          <div class="mini-swatch" style="background:#4C1D95;"></div>
+          <div class="mini-swatch" style="background:#7C3AED;"></div>
+          <div class="mini-swatch" style="background:#FAFAF9;"></div>
+          <div class="mini-swatch" style="background:#B45309;"></div>
+        </div>
+        <button class="alt-select-btn" onclick="applySchemeGlobal('violet-gold')">Use this palette</button>
+      </div>
+    </div>
+
+    <div class="alt-card" data-palette-id="navy-gold">
+      <div class="alt-card-header">
+        <span class="alt-card-name">Navy + Authority Gold</span>
+        <span class="alt-card-badge" style="background:#1E3A8A;">Alt E — Legal</span>
+      </div>
+      <div class="alt-card-body">
+        <p class="alt-card-desc">Trust navy + gold accent. Signals established institutional credibility — common in legal and finance services.</p>
+        <div class="mini-swatches">
+          <div class="mini-swatch" style="background:#1E3A8A;"></div>
+          <div class="mini-swatch" style="background:#1E40AF;"></div>
+          <div class="mini-swatch" style="background:#B45309;"></div>
+          <div class="mini-swatch" style="background:#F8FAFC;"></div>
+          <div class="mini-swatch" style="background:#64748B;"></div>
+        </div>
+        <button class="alt-select-btn" onclick="applySchemeGlobal('navy-gold')">Use this palette</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Font pairing alternates -->
+  <p class="sub-heading" style="margin-bottom:20px;">Font Pairing Options</p>
+  <div class="grid-3" style="margin-bottom:48px;">
+
+    <div class="font-alt-card">
+      <div class="font-alt-header">
+        <span class="font-alt-label">Recommended</span>
+        <span class="font-alt-names">Playfair Display + Inter</span>
+      </div>
+      <div class="font-alt-body">
+        <p class="font-alt-specimen" style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; line-height:1.15; letter-spacing:-0.01em;">Before anything is built, we understand what already exists.</p>
+        <p style="font-family:'Inter',sans-serif; font-size:13px; line-height:1.65; color:var(--color-gray-700);">Structural clarity before costly decisions. NYA brings expertise to the details others assume.</p>
+        <p class="font-alt-desc">Serif authority in headlines + geometric precision in body. Editorial, premium, timeless — matches the firm's depth without being cold.</p>
+        <div class="type-meta-row" style="margin-top:12px;">
+          <span class="type-tag accent">Selected</span>
+          <span class="type-tag">Serif + Geometric sans</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="font-alt-card">
+      <div class="font-alt-header">
+        <span class="font-alt-label">Alt A — Contemporary</span>
+        <span class="font-alt-names">Fraunces + Plus Jakarta Sans</span>
+      </div>
+      <div class="font-alt-body">
+        <p class="font-alt-specimen" style="font-family:'Fraunces',serif; font-size:22px; font-weight:600; line-height:1.15; letter-spacing:-0.01em;">Before anything is built, we understand what already exists.</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; line-height:1.65; color:var(--color-gray-700);">Structural clarity before costly decisions. NYA brings expertise to the details others assume.</p>
+        <p class="font-alt-desc">Optical-size serif with personality + modern humanist sans. High polish, distinctive — strong for agency-tier positioning without feeling generic.</p>
+        <div class="type-meta-row" style="margin-top:12px;">
+          <span class="type-tag">Variable serif + Humanist sans</span>
+          <span class="type-tag">Premium feel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="font-alt-card">
+      <div class="font-alt-header">
+        <span class="font-alt-label">Alt B — Luxury Editorial</span>
+        <span class="font-alt-names">Cormorant Garamond + Montserrat</span>
+      </div>
+      <div class="font-alt-body">
+        <p class="font-alt-specimen" style="font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; line-height:1.15; letter-spacing:-0.01em; font-style:italic;">Before anything is built, we understand what already exists.</p>
+        <p style="font-family:'Montserrat',sans-serif; font-size:12px; line-height:1.65; color:var(--color-gray-700); letter-spacing:0.02em;">Structural clarity before costly decisions. NYA brings expertise to the details others assume.</p>
+        <p class="font-alt-desc">High-contrast elegant serif with italic headline emphasis + Montserrat body. Fashion-adjacent sophistication — strong for founder-story and brand narrative.</p>
+        <div class="type-meta-row" style="margin-top:12px;">
+          <span class="type-tag">High-contrast serif + Geometric sans</span>
+          <span class="type-tag">Luxury positioning</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="font-alt-card">
+      <div class="font-alt-header">
+        <span class="font-alt-label">Alt C — Institutional</span>
+        <span class="font-alt-names">Libre Baskerville + Source Sans 3</span>
+      </div>
+      <div class="font-alt-body">
+        <p class="font-alt-specimen" style="font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; line-height:1.2; letter-spacing:-0.01em;">Before anything is built, we understand what already exists.</p>
+        <p style="font-family:'Source Sans 3',sans-serif; font-size:13px; line-height:1.65; color:var(--color-gray-700);">Structural clarity before costly decisions. NYA brings expertise to the details others assume.</p>
+        <p class="font-alt-desc">Classic book serif with strong stroke contrast + neutral humanist sans. Authoritative and academic — conveys established credibility without feeling corporate.</p>
+        <div class="type-meta-row" style="margin-top:12px;">
+          <span class="type-tag">Book serif + Neutral humanist</span>
+          <span class="type-tag">Institutional authority</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="font-alt-card">
+      <div class="font-alt-header">
+        <span class="font-alt-label">Alt D — Engineered Editorial</span>
+        <span class="font-alt-names">Spectral + Work Sans</span>
+      </div>
+      <div class="font-alt-body">
+        <p class="font-alt-specimen" style="font-family:'Spectral',serif; font-size:22px; font-weight:600; line-height:1.15; letter-spacing:-0.01em;">Before anything is built, we understand what already exists.</p>
+        <p style="font-family:'Work Sans',sans-serif; font-size:13px; line-height:1.65; color:var(--color-gray-700);">Structural clarity before costly decisions. NYA brings expertise to the details others assume.</p>
+        <p class="font-alt-desc">Screen-optimized editorial serif with fine detail + mechanical precision sans. Feels both intelligent and technical — ideal for an engineering firm with high visual standards.</p>
+        <div class="type-meta-row" style="margin-top:12px;">
+          <span class="type-tag">Editorial serif + Mechanical sans</span>
+          <span class="type-tag">Precision positioning</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Button style alternates -->
+  <p class="sub-heading" style="margin-bottom:20px;">Button Style Options</p>
+  <div style="display:flex; flex-direction:column; gap:16px;">
+
+    <div class="btn-variant-row">
+      <p class="btn-variant-label">Current — Filled rectangle + Stroke secondary</p>
+      <div class="btn-row">
+        <button class="btn-primary">Start Planning Your TI Project</button>
+        <button class="btn-secondary">Explore Our Approach</button>
+      </div>
+    </div>
+
+    <div class="btn-variant-row">
+      <p class="btn-variant-label">Alt A — Pill shape</p>
+      <div class="btn-row">
+        <button style="display:inline-flex; align-items:center; height:50px; padding:0 28px; border-radius:999px; background:var(--color-accent); color:#fff; font-family:var(--font-body); font-size:15px; font-weight:500; border:none; cursor:pointer; transition:background 200ms, transform 200ms;">Start Planning Your TI Project</button>
+        <button style="display:inline-flex; align-items:center; height:50px; padding:0 28px; border-radius:999px; background:transparent; color:var(--color-primary); font-family:var(--font-body); font-size:15px; font-weight:500; border:1.5px solid color-mix(in srgb, var(--color-primary) 20%, transparent); cursor:pointer;">Explore Our Approach</button>
+      </div>
+    </div>
+
+    <div class="btn-variant-row">
+      <p class="btn-variant-label">Alt B — With directional arrow</p>
+      <div class="btn-row">
+        <button style="display:inline-flex; align-items:center; gap:10px; height:50px; padding:0 24px; border-radius:8px; background:var(--color-accent); color:#fff; font-family:var(--font-body); font-size:15px; font-weight:500; border:none; cursor:pointer;">
+          Start Planning Your TI Project
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button style="display:inline-flex; align-items:center; gap:8px; height:50px; padding:0 4px; border-radius:0; background:transparent; color:var(--color-accent); font-family:var(--font-body); font-size:15px; font-weight:600; border:none; border-bottom:2px solid currentColor; cursor:pointer;">
+          Learn More
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="btn-variant-row" style="background:var(--color-primary); border-color:transparent;">
+      <p class="btn-variant-label" style="color:rgba(255,255,255,0.3);">Alt C — On Navy (ghost outlined)</p>
+      <div class="btn-row">
+        <button style="display:inline-flex; align-items:center; height:50px; padding:0 28px; border-radius:8px; background:rgba(255,255,255,0.1); color:#fff; font-family:var(--font-body); font-size:15px; font-weight:500; border:1.5px solid rgba(255,255,255,0.25); cursor:pointer; backdrop-filter:blur(8px);">Start Planning Your TI Project</button>
+        <button style="display:inline-flex; align-items:center; height:50px; padding:0 4px; border-radius:0; background:transparent; color:rgba(255,255,255,0.65); font-family:var(--font-body); font-size:15px; font-weight:500; border:none; border-bottom:1.5px solid rgba(255,255,255,0.3); cursor:pointer;">Learn More</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════
+     08 — Section Previews
+════════════════════════════════ -->
+<section class="ds-section" id="previews">
+  <div class="ds-section-header">
+    <span class="ds-section-num">08</span>
+    <h2 class="ds-section-heading">Section Previews</h2>
+  </div>
+
+  <!-- Hero Light -->
+  <p class="preview-label">Hero — Option A (Light, Playfair Display H1)</p>
+  <div class="preview-wrap" style="margin-bottom:36px;">
+    <div style="background:linear-gradient(105deg, #ffffff 55%, #F8FAFC 100%); padding:60px 56px; display:flex; flex-direction:column; gap:20px; max-width:640px;">
+      <span class="specimen-eyebrow">Tenant Improvement</span>
+      <p data-font="display" style="font-family:'Playfair Display',serif; font-size:clamp(32px,4vw,52px); font-weight:700; line-height:1.1; letter-spacing:-0.02em; color:var(--color-black);">Most engineers see the space. We see how the building actually works.</p>
+      <p class="specimen-body-lg">Tenant improvements succeed when the existing building is understood, not assumed. NYA brings clarity to structure, constraints, and possibilities before decisions become costly.</p>
+      <div class="btn-row">
+        <button class="btn-primary">Start Planning Your TI Project</button>
+        <button class="btn-secondary">Explore Our Approach</button>
+      </div>
+      <p class="specimen-label">Structural clarity before costly decisions.</p>
+    </div>
+  </div>
+
+  <!-- Hero Dark -->
+  <p class="preview-label">Hero — Option B (Dark Navy, italic Playfair Display)</p>
+  <div class="preview-wrap" style="margin-bottom:36px;">
+    <div class="js-primary-grad" style="background:linear-gradient(135deg, #0B1F3B 0%, #1E3A5F 100%); padding:60px 56px; display:flex; flex-direction:column; gap:20px; max-width:640px;">
+      <span class="specimen-eyebrow js-accent-eyebrow" style="color:rgba(47,128,237,0.9);">Tenant Improvement</span>
+      <p data-font="display" style="font-family:'Playfair Display',serif; font-size:clamp(32px,4vw,52px); font-weight:700; font-style:italic; line-height:1.1; letter-spacing:-0.01em; color:#ffffff;">Before anything is built, we understand what already exists.</p>
+      <p data-font="body" style="font-family:'Inter',sans-serif; font-size:18px; line-height:1.65; color:rgba(255,255,255,0.65);">NYA brings structural clarity before decisions become costly.</p>
+      <div class="btn-row">
+        <button class="btn-primary">Start Planning Your TI Project</button>
+        <button class="btn-secondary" style="color:#fff; border-color:rgba(255,255,255,0.22);">Learn More</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final CTA -->
+  <p class="preview-label">Final CTA Section (Navy gradient, center-aligned)</p>
+  <div class="preview-wrap" style="margin-bottom:36px;">
+    <div class="js-primary-grad" style="background:linear-gradient(135deg, #0B1F3B 0%, #1E3A5F 100%); padding:72px 56px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px;">
+      <span class="specimen-eyebrow js-accent-eyebrow" style="color:rgba(47,128,237,0.9);">Get Started</span>
+      <p data-font="display" style="font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:700; line-height:1.15; letter-spacing:-0.02em; color:#fff; max-width:560px;">Work With a Team That Takes TI Seriously</p>
+      <p data-font="body" style="font-family:'Inter',sans-serif; font-size:18px; line-height:1.65; color:rgba(255,255,255,0.65); max-width:480px;">Bring NYA into the conversation early and give your project a clearer path through design, review, approval, and construction.</p>
+      <button class="btn-primary" style="margin-top:8px;">Start Your TI Conversation</button>
+    </div>
+  </div>
+
+  <!-- Problem Cards -->
+  <p class="preview-label">Problem Cards — Section 03 (Gray 100 background)</p>
+  <div class="preview-wrap" style="margin-bottom:36px;">
+    <div style="background:var(--color-gray-100); padding:48px 48px 52px;">
+      <span class="specimen-eyebrow" style="display:inline-flex; margin-bottom:16px;">The Problem with TIs</span>
+      <p data-font="display" style="font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,38px); font-weight:700; line-height:1.15; letter-spacing:-0.02em; color:var(--color-black); margin-bottom:32px;">What Looks Simple Can Become Complicated Quickly</p>
+      <div class="grid-3">
+        {[
+          ['Hidden Structural Risk',           'Early decisions made without enough structural clarity lead to avoidable complications.'],
+          ['Generic Engineering Assumptions',  'Treating the building like a template misses details that reflect how it actually works.'],
+          ['RFIs, Rework, and Delays',         'Unclear drawings that miss actual conditions create field conflicts during construction.'],
+        ].map(([title, desc]) => (
+          <div class="feature-card">
+            <div class="card-icon" style="background:rgba(220,38,38,0.07); color:#DC2626;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <p class="card-title">{title}</p>
+            <p class="card-body">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Process Steps -->
+  <p class="preview-label">Process Steps — Section 04 (5-column, White background)</p>
+  <div class="preview-wrap">
+    <div style="background:#fff; padding:52px 48px 56px;">
+      <p data-font="display" style="font-family:'Playfair Display',serif; font-size:clamp(22px,3vw,36px); font-weight:700; line-height:1.18; letter-spacing:-0.02em; color:var(--color-black); text-align:center; margin-bottom:12px;">What Doing Tenant Improvements Right Looks Like</p>
+      <p data-font="body" style="font-family:'Inter',sans-serif; font-size:16px; line-height:1.65; color:var(--color-gray-700); text-align:center; max-width:580px; margin:0 auto 40px;">A well-run TI project starts with understanding the building, identifying constraints early, and keeping communication clear from design through construction.</p>
+      <div class="grid-5">
+        {[
+          ['Understand the Building', 'Study the existing building on its own terms.'],
+          ['Identify Issues Early',   'Clarify constraints before decisions become expensive.'],
+          ['Tailor the Details',      'Shape details around actual field conditions.'],
+          ['Coordinate Clearly',      'Keep structural team, architect, contractor, and owner aligned.'],
+          ['Move With Confidence',    'Support review, approval, and construction with fewer surprises.'],
+        ].map(([title, desc], i) => (
+          <div class="process-card">
+            <div class="step-number">{i + 1}</div>
+            <p style="font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--color-black); text-align:center; line-height:1.35;">{title}</p>
+            <p style="font-family:var(--font-body); font-size:12px; line-height:1.6; color:var(--color-gray-700); text-align:center;">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<script is:inline>
+(function () {
+  const SCHEMES = [
+    {
+      id: 'navy-blue', name: 'Navy + Blue',
+      swatches: ['#0B1F3B','#1E3A5F','#2F80ED','#F8FAFC'],
+      brandSwatches: [
+        { name: 'Primary Navy',  use: 'Authority, footer, dark CTA' },
+        { name: 'Light Navy',    use: 'Secondary dark surfaces' },
+        { name: 'Accent Blue',   use: 'CTA, links, overlays' },
+        { name: 'Accent Hover',  use: 'Button hover state' },
+      ],
+      vars: {
+        '--color-primary': '#0B1F3B',
+        '--color-primary-light': '#1E3A5F',
+        '--color-accent': '#2F80ED',
+        '--color-accent-hover': '#1C6ED5',
+        '--border-accent': 'rgba(47,128,237,0.25)',
+        '--shadow-accent': '0 8px 28px rgba(47,128,237,0.28)',
+      },
+      navBg: 'rgba(11,31,59,0.97)',
+      copy: {
+        accentLabel: 'Accent Blue — section labels',
+        eyebrow: 'Tenant Improvement',
+        h1: 'Most engineers see the space.<br/>We see how the building actually works.',
+        h2: 'What Looks Simple Can Become Complicated Quickly',
+        h3: 'A Firm Built on Care, Trust, and Serious Work',
+        bodyLg: 'Tenant improvements succeed when the existing building is understood, not assumed. NYA brings clarity to structure, constraints, and possibilities before decisions become costly.',
+        body: 'Existing buildings rarely behave like clean templates. Years of prior modifications, hidden as-built discrepancies, and on-site adaptations mean the real condition is always particular. NYA tailors details to reduce field conflicts and construction-phase surprises.',
+        feat1Title: 'Client Advocacy', feat1Body: 'NYA takes client care seriously — listening closely, understanding what matters most, and working to protect those priorities throughout the project.',
+        feat2Title: 'Make-It-Work Mindset', feat2Body: 'NYA translates architectural ambition into structural solutions that are coordinated, code-conscious, and constructible.',
+        feat3Title: 'Communication That Reduces Pressure', feat3Body: 'NYA intercepts small gaps before they become delays — responding quickly and keeping clients informed even when a full answer requires more time.',
+        proc1Title: 'Understand the Building', proc1Body: 'Study the existing building on its own terms.',
+        proc2Title: 'Identify Issues Early', proc2Body: 'Clarify constraints before decisions become expensive.',
+        proc3Title: 'Tailor the Details', proc3Body: 'Shape details around actual field conditions.',
+        glassTitle: 'We look beneath the finish.', glassBody: 'Structure, constraints, load paths, and hidden conditions are studied early so the design can move forward with confidence.',
+      },
+    },
+    {
+      id: 'slate-amber', name: 'Slate + Amber',
+      swatches: ['#1F2937','#374151','#D97706','#F9FAFB'],
+      brandSwatches: [
+        { name: 'Slate Dark',    use: 'Authority, footer, dark CTA' },
+        { name: 'Slate Mid',     use: 'Secondary dark surfaces' },
+        { name: 'Amber Accent',  use: 'CTA, links, overlays' },
+        { name: 'Amber Hover',   use: 'Button hover state' },
+      ],
+      vars: {
+        '--color-primary': '#1F2937',
+        '--color-primary-light': '#374151',
+        '--color-accent': '#D97706',
+        '--color-accent-hover': '#B45309',
+        '--border-accent': 'rgba(217,119,6,0.25)',
+        '--shadow-accent': '0 8px 28px rgba(217,119,6,0.28)',
+      },
+      navBg: 'rgba(31,41,55,0.97)',
+      copy: {
+        accentLabel: 'Amber Accent — section labels',
+        eyebrow: 'Tenant Improvement',
+        h1: 'Every project starts with listening.<br/>Then we show you what\'s really there.',
+        h2: 'Good Work Begins Before the First Drawing',
+        h3: 'A Practice Built on Relationships, Not Transactions',
+        bodyLg: 'Tenant improvements go smoother when someone takes time to understand the building — and the people who\'ll work in it. NYA brings that care to every engagement.',
+        body: 'We believe the best outcomes come from honest conversations early. Our process is designed to surface constraints, align expectations, and keep your team informed — so surprises stay rare.',
+        feat1Title: 'Thoughtful From the Start', feat1Body: 'NYA takes time to understand the architectural intent before translating it into structure — so the result actually reflects what was envisioned.',
+        feat2Title: 'A Partner, Not Just a Vendor', feat2Body: 'We treat every project team like a long-term relationship. Quick replies, plain-language updates, and honest assessments when they matter most.',
+        feat3Title: 'Here for the Whole Project', feat3Body: 'NYA stays engaged from schematic through construction — so the engineer who understood the brief is the one who answers the RFI.',
+        proc1Title: 'Listen First', proc1Body: 'Understand the team, the goals, and the building before making structural decisions.',
+        proc2Title: 'Be Honest Early', proc2Body: 'Name constraints plainly so the design can respond rather than react.',
+        proc3Title: 'Stay in It', proc3Body: 'See the project through — from schematic to site observation.',
+        glassTitle: 'We\'re here when you need us.', glassBody: 'Good structural engineering is quiet when it\'s working. We\'re vocal when something needs your attention, and easy to reach when you have questions.',
+      },
+    },
+    {
+      id: 'charcoal-cyan', name: 'Charcoal + Cyan',
+      swatches: ['#0F172A','#1E293B','#06B6D4','#F8FAFC'],
+      brandSwatches: [
+        { name: 'Charcoal Dark',  use: 'Authority, footer, dark CTA' },
+        { name: 'Charcoal Mid',   use: 'Secondary dark surfaces' },
+        { name: 'Cyan Accent',    use: 'CTA, links, overlays' },
+        { name: 'Cyan Hover',     use: 'Button hover state' },
+      ],
+      vars: {
+        '--color-primary': '#0F172A',
+        '--color-primary-light': '#1E293B',
+        '--color-accent': '#06B6D4',
+        '--color-accent-hover': '#0891B2',
+        '--border-accent': 'rgba(6,182,212,0.25)',
+        '--shadow-accent': '0 8px 28px rgba(6,182,212,0.28)',
+      },
+      navBg: 'rgba(15,23,42,0.97)',
+      copy: {
+        accentLabel: 'Cyan Accent — section labels',
+        eyebrow: 'Structural Engineering',
+        h1: 'Precision engineering for Class-A fit-outs.<br/>No guesswork, no surprises.',
+        h2: 'Complex Buildings Require Systematic Thinking',
+        h3: 'High-Performance Spaces, Engineered to Spec',
+        bodyLg: 'Modern tenant improvements demand exacting coordination across structure, MEP, and envelope. NYA delivers the technical depth to keep complex fit-outs on schedule.',
+        body: 'Our workflow integrates early structural analysis with BIM-compatible documentation to catch conflicts before they reach the field. Every detail is traceable, every assumption documented.',
+        feat1Title: 'Systematic, Not Reactive', feat1Body: 'NYA front-loads structural analysis to eliminate downstream surprises — coordinating with MEP and facade before the design hardens.',
+        feat2Title: 'Documentation Built for Speed', feat2Body: 'Our deliverables are structured for fast review — clear scope, zero ambiguity, and RFI prevention built in.',
+        feat3Title: 'Coordinated From Day One', feat3Body: 'NYA integrates with the full project team early so structural conflicts surface in the model, not in the field.',
+        proc1Title: 'Analyze the Existing System', proc1Body: 'Model the structural system against proposed loads before design progresses.',
+        proc2Title: 'Coordinate Across Disciplines', proc2Body: 'Resolve conflicts at the design stage, not during construction.',
+        proc3Title: 'Deliver Buildable Documents', proc3Body: 'Produce drawings contractors can follow without interpretation.',
+        glassTitle: 'Data-driven from day one.', glassBody: 'Load paths, capacity limits, and structural conflicts are quantified early — so every downstream decision is made on solid ground.',
+      },
+    },
+    {
+      id: 'forest-stone', name: 'Forest + Stone',
+      swatches: ['#1A2E1A','#2D4A2D','#6B9B6B','#F5F5F0'],
+      brandSwatches: [
+        { name: 'Forest Dark',    use: 'Authority, footer, dark CTA' },
+        { name: 'Forest Mid',     use: 'Secondary dark surfaces' },
+        { name: 'Forest Accent',  use: 'CTA, links, overlays' },
+        { name: 'Forest Hover',   use: 'Button hover state' },
+      ],
+      vars: {
+        '--color-primary': '#1A2E1A',
+        '--color-primary-light': '#2D4A2D',
+        '--color-accent': '#6B9B6B',
+        '--color-accent-hover': '#5A8A5A',
+        '--border-accent': 'rgba(107,155,107,0.25)',
+        '--shadow-accent': '0 8px 28px rgba(107,155,107,0.28)',
+      },
+      navBg: 'rgba(26,46,26,0.97)',
+      copy: {
+        accentLabel: 'Forest Accent — section labels',
+        eyebrow: 'Adaptive Reuse',
+        h1: 'The greenest building is the one already standing.<br/>We help you use it well.',
+        h2: 'Structural Engineering in Service of Responsible Development',
+        h3: 'Less Waste. Better Buildings. Longer Lifespans.',
+        bodyLg: 'Tenant improvements are an opportunity to extend the life of existing buildings, reduce embodied carbon, and do more with what\'s already there. NYA brings structural rigor to that mission.',
+        body: 'We approach every project with material efficiency and long-term performance in mind. Whether you\'re pursuing LEED certification or simply want to build responsibly, NYA provides the expertise to support your goals.',
+        feat1Title: 'Extend, Don\'t Replace', feat1Body: 'NYA assesses existing structural capacity to maximize reuse — reducing demolition scope, material waste, and construction disruption.',
+        feat2Title: 'ESG-Aligned Engineering', feat2Body: 'Our documentation supports sustainability certifications and carbon reporting — so your structural work counts toward your larger commitments.',
+        feat3Title: 'Material Efficiency by Design', feat3Body: 'Every structural intervention is sized for what\'s needed — not over-engineered, not under-considered. Right-sized from the start.',
+        proc1Title: 'Assess What Exists', proc1Body: 'Evaluate the existing structure for reuse potential before specifying new work.',
+        proc2Title: 'Minimize New Material', proc2Body: 'Design structural interventions that do more with less — reinforcing, not replacing.',
+        proc3Title: 'Document for Certification', proc3Body: 'Provide the structural evidence that LEED and ESG audits require.',
+        glassTitle: 'Responsible use of existing buildings.', glassBody: 'Every kilogram of structural steel that doesn\'t get demolished is a kilogram that doesn\'t need to be produced. NYA helps you capture that value.',
+      },
+    },
+    {
+      id: 'violet-gold', name: 'Deep Violet + Gold',
+      swatches: ['#1E1B4B','#4C1D95','#7C3AED','#FAFAF9'],
+      brandSwatches: [
+        { name: 'Violet Dark',    use: 'Authority, footer, dark CTA' },
+        { name: 'Violet Mid',     use: 'Secondary dark surfaces' },
+        { name: 'Violet Accent',  use: 'CTA, links, overlays' },
+        { name: 'Gold Accent',    use: 'Button hover state' },
+      ],
+      vars: {
+        '--color-primary': '#1E1B4B',
+        '--color-primary-light': '#4C1D95',
+        '--color-accent': '#7C3AED',
+        '--color-accent-hover': '#6D28D9',
+        '--border-accent': 'rgba(124,58,237,0.25)',
+        '--shadow-accent': '0 8px 28px rgba(124,58,237,0.28)',
+      },
+      navBg: 'rgba(30,27,75,0.97)',
+      copy: {
+        accentLabel: 'Violet Accent — section labels',
+        eyebrow: 'Structural Engineering',
+        h1: 'We don\'t make assumptions.<br/>We make structures that hold.',
+        h2: 'Craft Matters When the Details Are Difficult',
+        h3: 'Boutique Practice. Principal-Level Work.',
+        bodyLg: 'NYA isn\'t for every project — and that\'s the point. We take on work that rewards careful thinking and personal accountability, from complex adaptive reuse to one-of-a-kind fit-outs.',
+        body: 'Every project gets a principal-level engineer, not a project manager passing notes. We thrive in complexity, enjoy difficult problems, and take pride in producing documents that actually build well — not just pass review.',
+        feat1Title: 'Principals on Every Project', feat1Body: 'No handoffs to junior staff once the work is sold. The engineer who scopes your project signs and seals the drawings.',
+        feat2Title: 'Complexity Is Our Default', feat2Body: 'Difficult buildings with unusual constraints are where NYA\'s depth shows most clearly. We don\'t prefer the straightforward work.',
+        feat3Title: 'No Boilerplate', feat3Body: 'Every detail is developed for the specific conditions of this project — not adapted from a previous one.',
+        proc1Title: 'Understand Deeply First', proc1Body: 'Take time to learn what makes this building particular — then design for it.',
+        proc2Title: 'Think Before Drawing', proc2Body: 'Work through structural logic before producing documents — so the solution is clear, not complicated.',
+        proc3Title: 'Stand Behind It', proc3Body: 'Produce work we\'d stake our reputation on — then stake our reputation on it.',
+        glassTitle: 'No templates. No boilerplate.', glassBody: 'Every structural solution is developed from first principles for the specific conditions of the project. That\'s how good buildings get built.',
+      },
+    },
+    {
+      id: 'navy-gold', name: 'Navy + Authority Gold',
+      swatches: ['#1E3A8A','#1E40AF','#B45309','#F8FAFC'],
+      brandSwatches: [
+        { name: 'Navy Dark',      use: 'Authority, footer, dark CTA' },
+        { name: 'Navy Mid',       use: 'Secondary dark surfaces' },
+        { name: 'Gold Accent',    use: 'CTA, links, overlays' },
+        { name: 'Gold Hover',     use: 'Button hover state' },
+      ],
+      vars: {
+        '--color-primary': '#1E3A8A',
+        '--color-primary-light': '#1E40AF',
+        '--color-accent': '#B45309',
+        '--color-accent-hover': '#92400E',
+        '--border-accent': 'rgba(180,83,9,0.25)',
+        '--shadow-accent': '0 8px 28px rgba(180,83,9,0.28)',
+      },
+      navBg: 'rgba(30,58,138,0.97)',
+      copy: {
+        accentLabel: 'Gold Accent — section labels',
+        eyebrow: 'Structural Engineering',
+        h1: 'Decades of structural knowledge.<br/>The engineering partner your clients trust.',
+        h2: 'Experience That Speaks for Itself',
+        h3: 'Institutional-Grade Engineering for Discerning Clients',
+        bodyLg: 'When the stakes are high and the timeline is tight, you need a structural engineer with an established record. NYA has delivered reliable, defensible solutions across demanding tenant improvement programs.',
+        body: 'Our documentation standards and quality assurance processes are built for institutional review, legal scrutiny, and complex multi-tenant environments. We understand what it means to be a trusted advisor — and we deliver accordingly.',
+        feat1Title: 'Accountable Deliverables', feat1Body: 'NYA\'s documents are structured for legal and institutional review — clear scope, complete calculations, and audit-ready records.',
+        feat2Title: 'A Record of Reliability', feat2Body: 'Clients return to NYA because the work is consistent. No surprises in the field, no ambiguity in the drawings.',
+        feat3Title: 'Built for Scrutiny', feat3Body: 'Our documentation holds up under permit review, institutional approval, and post-occupancy audit — now and for the life of the building.',
+        proc1Title: 'Establish the Record', proc1Body: 'Document existing conditions thoroughly so every structural decision has a defensible basis.',
+        proc2Title: 'Coordinate With Counsel', proc2Body: 'Work within the procurement and approval frameworks that institutional clients require.',
+        proc3Title: 'Deliver With Accountability', proc3Body: 'Produce work that holds up under scrutiny — from permit review to post-occupancy audit.',
+        glassTitle: 'Trusted by institutions. Built to last.', glassBody: 'NYA\'s structural documentation is designed to withstand institutional scrutiny, legal review, and regulatory requirements — now and for the life of the building.',
+      },
+    },
+  ];
+
+  const FONTS = [
+    {
+      id: 'playfair-inter', label: 'Playfair + Inter',
+      displayFamily: "'Playfair Display', Georgia, serif",
+      bodyFamily: "'Inter', system-ui, sans-serif",
+      displayLabel: 'Playfair Display', bodyLabel: 'Inter',
+    },
+    {
+      id: 'fraunces-jakarta', label: 'Fraunces + Jakarta',
+      displayFamily: "'Fraunces', Georgia, serif",
+      bodyFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+      displayLabel: 'Fraunces', bodyLabel: 'Plus Jakarta Sans',
+    },
+    {
+      id: 'cormorant-montserrat', label: 'Cormorant + Montserrat',
+      displayFamily: "'Cormorant Garamond', Georgia, serif",
+      bodyFamily: "'Montserrat', system-ui, sans-serif",
+      displayLabel: 'Cormorant Garamond', bodyLabel: 'Montserrat',
+    },
+    {
+      id: 'baskerville-source', label: 'Baskerville + Source Sans',
+      displayFamily: "'Libre Baskerville', Georgia, serif",
+      bodyFamily: "'Source Sans 3', system-ui, sans-serif",
+      displayLabel: 'Libre Baskerville', bodyLabel: 'Source Sans 3',
+    },
+    {
+      id: 'spectral-work', label: 'Spectral + Work Sans',
+      displayFamily: "'Spectral', Georgia, serif",
+      bodyFamily: "'Work Sans', system-ui, sans-serif",
+      displayLabel: 'Spectral', bodyLabel: 'Work Sans',
+    },
+  ];
+
+  let activeScheme = 'navy-blue';
+  let activeFont = 'playfair-inter';
+
+  const EXPORT_ICON = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  const CHECK_ICON = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+  function applyScheme(id) {
+    const scheme = SCHEMES.find(s => s.id === id);
+    if (!scheme) return;
+    const root = document.documentElement;
+    Object.entries(scheme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+    document.querySelector('.ds-nav').style.background = scheme.navBg;
+    document.getElementById('cfg-active-color').textContent = scheme.name;
+    document.querySelectorAll('.cfg-color-btn').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.id === id)
+    );
+    const grad = `linear-gradient(135deg, ${scheme.vars['--color-primary']} 0%, ${scheme.vars['--color-primary-light']} 100%)`;
+    document.querySelectorAll('.js-primary-grad').forEach(el => el.style.background = grad);
+    const accentColor = `color-mix(in srgb, ${scheme.vars['--color-accent']} 90%, transparent)`;
+    document.querySelectorAll('.js-accent-eyebrow').forEach(el => el.style.color = accentColor);
+    const accentBg = `color-mix(in srgb, ${scheme.vars['--color-accent']} 3%, transparent)`;
+    document.querySelectorAll('.js-accent-bg-subtle').forEach(el => el.style.background = accentBg);
+    // Update Section 01 brand swatches
+    const hexKeys = ['--color-primary','--color-primary-light','--color-accent','--color-accent-hover'];
+    hexKeys.forEach((key, i) => {
+      const card = document.getElementById(`brand-swatch-${i}`);
+      if (!card) return;
+      const hex = scheme.vars[key];
+      card.querySelector('.swatch-color').style.background = hex;
+      card.querySelector('.swatch-hex').textContent = hex;
+      if (scheme.brandSwatches && scheme.brandSwatches[i]) {
+        card.querySelector('.swatch-name').textContent = scheme.brandSwatches[i].name;
+        card.querySelector('.swatch-use').textContent = scheme.brandSwatches[i].use;
+      }
+    });
+    const label = document.getElementById('brand-palette-label');
+    if (label) label.textContent = `— ${scheme.name}`;
+    // Highlight selected alt-card in Section 07
+    document.querySelectorAll('.alt-card[data-palette-id]').forEach(card => {
+      card.style.outline = card.dataset.paletteId === id ? '2px solid var(--color-accent)' : '';
+    });
+    // Swap copy text
+    if (scheme.copy) {
+      document.querySelectorAll('[data-copy]').forEach(el => {
+        const key = el.dataset.copy;
+        if (scheme.copy[key] !== undefined) el.innerHTML = scheme.copy[key];
+      });
+    }
+    activeScheme = id;
+  }
+
+  function applyFont(id) {
+    const font = FONTS.find(f => f.id === id);
+    if (!font) return;
+    const root = document.documentElement;
+    root.style.setProperty('--font-display', font.displayFamily);
+    root.style.setProperty('--font-body', font.bodyFamily);
+    document.querySelectorAll('[data-font="display"]').forEach(el => el.style.fontFamily = font.displayFamily);
+    document.querySelectorAll('[data-font="body"]').forEach(el => el.style.fontFamily = font.bodyFamily);
+    document.querySelectorAll('.cfg-font-btn').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.id === id)
+    );
+    // Swap font name labels in type specimens
+    document.querySelectorAll('[data-font-name="display"]').forEach(el => el.textContent = font.displayLabel);
+    document.querySelectorAll('[data-font-name="body"]').forEach(el => el.textContent = font.bodyLabel);
+    const activeFontEl = document.getElementById('cfg-active-font');
+    if (activeFontEl) activeFontEl.textContent = font.label;
+    activeFont = id;
+  }
+
+  function exportCSS() {
+    const scheme = SCHEMES.find(s => s.id === activeScheme);
+    const font = FONTS.find(f => f.id === activeFont);
+    const lines = [':root {'];
+    Object.entries(scheme.vars).forEach(([k, v]) => lines.push(`  ${k}: ${v};`));
+    lines.push(`  --font-display: ${font.displayFamily};`);
+    lines.push(`  --font-body: ${font.bodyFamily};`);
+    lines.push('}');
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      const btn = document.getElementById('cfg-export');
+      btn.classList.add('copied');
+      btn.innerHTML = CHECK_ICON + ' Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = EXPORT_ICON + ' Export CSS';
+      }, 2000);
+    });
+  }
+
+  function init() {
+    const colorsEl = document.getElementById('cfg-colors');
+    const fontsEl = document.getElementById('cfg-fonts');
+
+    SCHEMES.forEach(scheme => {
+      const btn = document.createElement('button');
+      btn.className = 'cfg-color-btn';
+      btn.dataset.id = scheme.id;
+      btn.title = scheme.name;
+      btn.innerHTML = scheme.swatches
+        .map(hex => `<span class="cfg-swatch" style="background:${hex};"></span>`)
+        .join('');
+      btn.addEventListener('click', () => applyScheme(scheme.id));
+      colorsEl.appendChild(btn);
+    });
+
+    FONTS.forEach(font => {
+      const btn = document.createElement('button');
+      btn.className = 'cfg-font-btn';
+      btn.dataset.id = font.id;
+      btn.textContent = font.label;
+      btn.addEventListener('click', () => applyFont(font.id));
+      fontsEl.appendChild(btn);
+    });
+
+    document.getElementById('cfg-export').addEventListener('click', exportCSS);
+
+    applyScheme('navy-blue');
+    applyFont('playfair-inter');
+  }
+
+  window.applySchemeGlobal = applyScheme;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
