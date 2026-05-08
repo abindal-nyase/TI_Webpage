@@ -1,0 +1,459 @@
+/* ── ROOT ─────────────────────────────────────────────────────────────────── */
+.root {
+  --black: #080808;
+  --white: #f0ece4;
+  --gold: #c9a84c;
+  --gold-dim: rgba(201,168,76,0.15);
+  --muted: #555;
+  --text: #ccc5b9;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+}
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 3rem;
+  background: linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%);
+}
+.navLogo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.navLinks {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navLinks a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.navLinks a:hover { color: var(--gold); }
+
+/* ── HERO ─────────────────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding: 8rem 2rem 4rem;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.heroEyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s 0.3s ease forwards;
+}
+.heroTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 12vw, 13rem);
+  line-height: 0.9;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s 0.6s ease forwards;
+}
+.heroTitle span { color: var(--gold); }
+.heroSub {
+  max-width: 520px;
+  margin: 2.5rem auto 0;
+  font-size: 1.2rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp 1s 0.9s ease forwards;
+}
+.heroScrollHint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s 1.4s ease forwards;
+}
+.heroScrollHint span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.scrollLine {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s 2s infinite;
+}
+
+/* ── CHAPTER HEADER ─────────────────────────────────────────────────────── */
+.chHeader {
+  padding: 6vh 8vw 4vh;
+}
+.chLabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1rem;
+}
+.chTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+.chDivider {
+  height: 1px;
+  background: linear-gradient(to right, var(--gold) 0%, transparent 60%);
+  margin: 0 8vw 0 0;
+  opacity: 0.4;
+}
+
+/* ── STAIR SCENE ─────────────────────────────────────────────────────────── */
+.stairScrollDriver {
+  height: 100vh;
+  position: relative;
+}
+.stairScene {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.stairImagePanel {
+  position: relative;
+  overflow: hidden;
+}
+.stairImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.8s ease;
+}
+.stairImgHidden { opacity: 0; }
+
+/* Narrative text panel */
+.stairTextPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6vh 6vw 6vh 4vw;
+  position: relative;
+}
+.narrativeBlock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6vh 6vw 6vh 4vw;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  pointer-events: none;
+}
+.narrativeBlockActive {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.narrStep {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+.narrTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 4.5vw, 5rem);
+  line-height: 0.95;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+.narrBody {
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--text);
+}
+.narrBody p + p { margin-top: 1rem; }
+.narrBody em { font-style: italic; color: var(--white); }
+.narrBody strong { font-style: normal; font-weight: 400; color: var(--gold); }
+
+.statRow {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201,168,76,0.2);
+}
+.statNum {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.statLabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── GALLERY STRIP ─────────────────────────────────────────────────────────── */
+.galleryStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+}
+.galleryStrip img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(20%);
+  transition: filter 0.3s;
+}
+.galleryStrip img:hover { filter: grayscale(0%); }
+
+/* ── JEWEL BOX ──────────────────────────────────────────────────────────────── */
+.jewelSection { padding-top: 0; }
+.jewelLayout {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  min-height: 100vh;
+}
+.jewelText {
+  padding: 18vh 5vw 10vh 8vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.jewelImages {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.jewelImages img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(30%);
+}
+
+/* Transformation SVG diagram */
+.transformDiagram {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+.diagramCol {
+  flex: 1;
+  text-align: center;
+}
+.diagramLabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+.diagramSvg { width: 100%; max-width: 160px; }
+.diagramArrow {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+/* Blast / historical note */
+.blastNote {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-left: 3px solid var(--gold);
+  background: var(--gold-dim);
+}
+.blastNoteLabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+}
+.blastNote p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text);
+  font-style: italic;
+}
+.blastNote p strong { color: var(--white); font-style: normal; }
+
+/* ── CHRIST CATHEDRAL ───────────────────────────────────────────────────────── */
+.cathedralSection {
+  background: var(--black);
+  padding: 10vh 0;
+}
+.cathedralFullImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(15%);
+}
+.cathedralBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.cathedralText {
+  padding: 8vh 6vw 8vh 8vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cathedralImgSide {
+  position: relative;
+  overflow: hidden;
+}
+.cathedralImgSide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(20%);
+}
+.nyaCredit {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(201,168,76,0.25);
+}
+.nyaCreditLabel {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.nyaCredit p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────────────────────── */
+.footer {
+  background: #050505;
+  border-top: 1px solid #1a1a1a;
+  padding: 4rem 8vw;
+  text-align: center;
+}
+.footerLogo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.footer p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ── REVEAL ANIMATION ───────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.inView {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── KEYFRAMES ──────────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(1.1); }
+}
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .nav { padding: 1rem 1.5rem; }
+  .navLinks { display: none; }
+  .stairScene { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
+  .stairScrollDriver { height: 500vh; }
+  .jewelLayout { grid-template-columns: 1fr; }
+  .jewelImages { position: relative; }
+  .jewelImages img:last-child { display: none; }
+  .cathedralBody { grid-template-columns: 1fr; }
+  .cathedralImgSide { height: 40vh; }
+  .galleryStrip { grid-template-columns: 1fr 1fr; }
+}
