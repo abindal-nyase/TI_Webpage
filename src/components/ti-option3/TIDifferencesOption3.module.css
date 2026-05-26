@@ -1,0 +1,124 @@
+/*
+ * IMPORTANT: Use only CSS variables — never hardcode colors or font families.
+ * The option3.astro theme switcher updates --color-primary, --color-accent,
+ * --font-display, --font-body, etc. on :root. Components read them here.
+ */
+
+.section {
+  background: var(--surface-page, #F8FAFC);
+  padding: var(--section-padding, 120px) 0;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop, 120px);
+}
+
+.header {
+  max-width: 640px;
+  margin-bottom: 72px;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow, 11px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1.5px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--color-black, #0F172A);
+  margin-bottom: 24px;
+}
+
+.lead {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--color-gray-700, #475569);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.card {
+  padding: 36px;
+  border-radius: var(--radius-lg, 16px);
+  background: var(--surface-card, #fff);
+  border: 1px solid var(--border-default, #E2E8F0);
+  box-shadow: var(--shadow-1);
+  transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), border-color 300ms var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-4);
+  border-color: var(--border-accent);
+}
+
+.cardIcon {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+}
+
+.cardTitle {
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-black, #0F172A);
+  margin-bottom: 12px;
+}
+
+.cardBody {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--color-gray-700, #475569);
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 24px;
+  }
+
+  .section {
+    padding: var(--section-padding-mob, 64px) 0;
+  }
+}

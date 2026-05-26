@@ -1,0 +1,130 @@
+/*
+ * IMPORTANT: Use only CSS variables — never hardcode colors or font families.
+ * The option3.astro theme switcher updates --color-primary, --color-accent,
+ * --font-display, --font-body, etc. on :root. Components read them here.
+ */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  background: var(--color-primary);
+  overflow: hidden;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--container, 1200px);
+  margin: 0 auto;
+  padding: 120px var(--margin-desktop, 120px);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow, 11px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1.5px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 28px;
+}
+
+.subheading {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 220ms var(--ease-out), transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+}
+
+.btnPrimary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-accent);
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: var(--radius-sm, 8px);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 220ms var(--ease-out), background 220ms var(--ease-out);
+}
+
+.btnSecondary:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  opacity: 0.85;
+  /* TODO: replace with background image/video */
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 80px 24px;
+  }
+}

@@ -1,0 +1,159 @@
+/*
+ * IMPORTANT: Use only CSS variables — never hardcode colors or font families.
+ * The option3.astro theme switcher updates --color-primary, --color-accent,
+ * --font-display, --font-body, etc. on :root. Components read them here.
+ */
+
+.section {
+  background: var(--surface-card, #fff);
+  padding: var(--section-padding, 120px) 0;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--margin-desktop, 120px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+/* ── Left: text content ── */
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow, 11px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 1.5px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-black, #0F172A);
+  margin-bottom: 24px;
+}
+
+.lead {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-gray-700, #475569);
+  margin-bottom: 48px;
+}
+
+.pillars {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.pillar {
+  padding-left: 24px;
+  border-left: 2px solid var(--color-accent);
+}
+
+.pillarTitle {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-black, #0F172A);
+  margin-bottom: 8px;
+}
+
+.pillarBody {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-gray-700, #475569);
+}
+
+/* ── Right: visual ── */
+
+.visual {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.quote {
+  padding: 36px;
+  border-radius: var(--radius-xl, 24px);
+  background: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quoteText {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 22px);
+  font-style: italic;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quoteAttrib {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
+  letter-spacing: 0.03em;
+}
+
+.imgPlaceholder {
+  height: 280px;
+  border-radius: var(--radius-lg, 16px);
+  background: var(--surface-subtle, #EEF2F7);
+  border: 1px solid var(--border-default, #E2E8F0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgLabel {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gray-500, #64748B);
+}
+
+@media (max-width: 960px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 24px;
+  }
+
+  .section {
+    padding: var(--section-padding-mob, 64px) 0;
+  }
+}
