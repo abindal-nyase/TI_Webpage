@@ -105,7 +105,7 @@ export default function FirmCultureOption3() {
               key={w.word + i}
               ref={el => wordRefs.current[i] = el}
               className={styles.word}
-              style={{ top: w.top, left: w.left, fontSize: w.size }}
+              style={{ top: w.top, left: w.left, '--word-size': w.size }}
             >
               {w.word}
             </span>

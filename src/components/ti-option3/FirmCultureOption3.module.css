@@ -33,6 +33,7 @@
   position: absolute;
   font-family: var(--font-body);
   font-weight: 700;
+  font-size: var(--word-size, 0.72rem);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff;
@@ -95,6 +96,6 @@
   }
 
   .word {
-    font-size: 0.55rem !important;
+    --word-size: 0.55rem;
   }
 }
