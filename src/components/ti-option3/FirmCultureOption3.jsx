@@ -5,44 +5,27 @@ import styles from './FirmCultureOption3.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ROWS = [
-  ['RESPONSIBLE','ARCHITECTURE','DESIGN','ANALYSIS','PLANNING','ENGINEERING','ACCOUNTABLE','CONSTRUCTION','MANAGEMENT','STRATEGY','QUALITY'],
-  ['EXPERIENCED','EXCELLENCE','LEADERSHIP','VISION','SOLUTIONS','PROCESS','RELIABLE','SYSTEMS','STANDARDS','TECHNICAL','EXPERTISE'],
-  ['KNOWLEDGEABLE','PROFESSIONAL','DEVELOPMENT','EXECUTION','PRECISION','DELIVERY','INNOVATIVE','VALUE','PERFORMANCE','RESULTS','COMMITMENT'],
-  ['COLLABORATIVE','SERVICE','FOCUS','GROWTH','IMPACT','DRIVEN','TRANSPARENT','PURPOSE','SKILLED','TRUSTED','PROVEN'],
-  ['PASSIONATE','AGILE','ENGAGED','DEDICATED','THOROUGH','EFFECTIVE','INTEGRITY','EFFICIENT','ADAPTIVE','CONNECTED','BOLD'],
-  ['CARING','CLEAR','STRONG','ACTIVE','SMART','ALIGNED','STRUCTURED','HONEST','DIRECT','OPEN','SOLID'],
-  ['DYNAMIC','SOUND','FIRM','SHARP','LEAN','SWIFT','CREATIVE','BRIGHT','STEADY','CAPABLE','PREPARED'],
-  ['ESTABLISHED','INVESTED','ATTENTIVE','FORWARD','MINDFUL','GROUNDED','CURIOUS','DILIGENT','AMBITIOUS','PRINCIPLED','COHESIVE'],
-  ['RESILIENT','DISCIPLINED','FOCUSED','RESPONSIVE','INTENTIONAL','PROACTIVE','METICULOUS','COMMITTED','DEPENDABLE','VERSATILE','PRECISE'],
-  ['MOTIVATED','EARNEST','CAREFUL','GENUINE','INVOLVED','PRESENT','AWARE','FORTHRIGHT','PRACTICAL','CONSIDERED','MEASURED'],
-];
+const BASE_WORDS = ['CARE','CONCERN','RESPONSIBLE','ACCOUNTABLE','DYNAMIC','GOOD','READY','RELIABLE','KNOWLEDGEABLE','EXPERIENCED'];
+const NUM_ROWS = 16;
+const WORDS_PER_ROW = 28;
 
-const SIZES = ['0.65rem','0.72rem','0.78rem','0.72rem','0.65rem','0.78rem','0.72rem','0.65rem','0.72rem','0.78rem'];
-
-const WORDS = ROWS.flatMap((row, ri) =>
-  row.map((word, ci) => ({
-    word,
-    top:  `${3 + ri * 10}%`,
-    left: `${(ri % 2 === 0 ? 0 : 4) + ci * 9}%`,
-    size: SIZES[ri],
-  }))
+const WORD_GRID = Array.from({ length: NUM_ROWS }, (_, ri) =>
+  Array.from({ length: WORDS_PER_ROW }, (_, ci) => BASE_WORDS[(ri * 3 + ci) % BASE_WORDS.length])
 );
 
 export default function FirmCultureOption3() {
-  const sectionRef = useRef(null);
-  const stickyRef  = useRef(null);
-  const nyaRef     = useRef(null);
-  const wordRefs   = useRef([]);
-  const flashCtx   = useRef(null);
+  const sectionRef      = useRef(null);
+  const stickyRef       = useRef(null);
+  const compositionRef  = useRef(null);
+  const wordRefs        = useRef([]);
+  const flashCtx        = useRef(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const sticky  = stickyRef.current;
-    const nya     = nyaRef.current;
-    if (!section || !sticky || !nya) return;
+    const section     = sectionRef.current;
+    const sticky      = stickyRef.current;
+    const composition = compositionRef.current;
+    if (!section || !sticky || !composition) return;
 
-    // scroll timeline — only NYA scale, no bg or word tweens
     const scrollCtx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -54,10 +37,10 @@ export default function FirmCultureOption3() {
           pinSpacing: false,
         },
       });
-      tl.fromTo(nya, { scale: 8 }, { scale: 1, ease: 'power2.out', duration: 1 }, 0);
+      tl.fromTo(composition, { scale: 8 }, { scale: 1, ease: 'power2.out', duration: 1 }, 0);
     }, section);
 
-    // word flash loop — white opacity only, no color change
+    // word flash loop — white opacity only
     flashCtx.current = gsap.context(() => {
       const words = wordRefs.current.filter(Boolean);
       let active  = new Set();
@@ -73,7 +56,7 @@ export default function FirmCultureOption3() {
           ease: 'power1.out',
           onComplete: () => {
             gsap.to(words[idx], {
-              opacity: 0.1,
+              opacity: 0.15,
               duration: 0.55,
               delay: 0.25,
               ease: 'power1.in',
@@ -98,27 +81,30 @@ export default function FirmCultureOption3() {
     <section ref={sectionRef} className={styles.section}>
       <div ref={stickyRef} className={styles.sticky}>
 
-        {/* word cloud */}
+        {/* word cloud — dense repeating rows */}
         <div className={styles.wordCloud} aria-hidden="true">
-          {WORDS.map((w, i) => (
-            <span
-              key={w.word + i}
-              ref={el => wordRefs.current[i] = el}
-              className={styles.word}
-              style={{ top: w.top, left: w.left, '--word-size': w.size }}
-            >
-              {w.word}
-            </span>
+          {WORD_GRID.map((row, ri) => (
+            <div key={ri} className={styles.wordRow}>
+              {row.map((word, ci) => {
+                const i = ri * WORDS_PER_ROW + ci;
+                return (
+                  <span
+                    key={ci}
+                    ref={el => wordRefs.current[i] = el}
+                    className={styles.word}
+                  >
+                    {word}
+                  </span>
+                );
+              })}
+            </div>
           ))}
         </div>
 
-        {/* composition: tagline above NYA — both static, revealed by NYA zoom-out */}
-        <div className={styles.composition}>
-          <div className={styles.taglineGroup} aria-hidden="true">
-            <p className={styles.taglineText}>Care, Trust, and<br />Serious Work.</p>
-            <p className={styles.taglineSub}>NYA</p>
-          </div>
-          <div ref={nyaRef} className={styles.nya}>NYA</div>
+        {/* composition: tagline + NYA — zooms as unit */}
+        <div ref={compositionRef} className={styles.composition}>
+          <p className={styles.taglineText}>Care, Trust, and<br />Serious Work.</p>
+          <div className={styles.nya}>NYA</div>
         </div>
 
       </div>

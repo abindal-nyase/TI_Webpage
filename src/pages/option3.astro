@@ -5,7 +5,7 @@
  * Theme switcher bar at top lets you toggle color scheme and font pair.
  * All components read CSS variables from :root — they react to changes automatically.
  *
- * Color schemes: navy-blue | slate-amber | charcoal-cyan | forest-stone | violet-gold | navy-gold
+ * Color schemes: navy-blue | slate-amber | charcoal-cyan | forest-stone | violet-gold | navy-gold | maroon-gold
  * Font pairs:    playfair-inter | fraunces-jakarta | cormorant-montserrat | baskerville-source | spectral-work
  */
 import '../index.css';
@@ -284,6 +284,18 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
           '--color-accent-hover':  '#92400E',
           '--border-accent':       'rgba(180,83,9,0.25)',
           '--shadow-accent':       '0 8px 28px rgba(180,83,9,0.28)',
+        },
+      },
+      {
+        id: 'maroon-gold', name: 'Maroon + Gold',
+        swatches: ['#5C0B0B', '#C9953A'],
+        vars: {
+          '--color-primary':       '#5C0B0B',
+          '--color-primary-light': '#7A1515',
+          '--color-accent':        '#C9953A',
+          '--color-accent-hover':  '#B07E28',
+          '--border-accent':       'rgba(201,149,58,0.25)',
+          '--shadow-accent':       '0 8px 28px rgba(201,149,58,0.28)',
         },
       },
     ];
