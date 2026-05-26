@@ -42,11 +42,7 @@ export default function FirmCultureOption3() {
     const nya     = nyaRef.current;
     if (!section || !sticky || !nya) return;
 
-    const root        = document.documentElement;
-    const primaryColor = getComputedStyle(root).getPropertyValue('--color-primary').trim() || '#0B1F3B';
-    const accentColor  = getComputedStyle(root).getPropertyValue('--color-accent').trim()  || '#2F80ED';
-
-    // ── scroll timeline ──────────────────────────────────────────────────────
+    // scroll timeline — only NYA scale, no bg or word tweens
     const scrollCtx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -58,30 +54,10 @@ export default function FirmCultureOption3() {
           pinSpacing: false,
         },
       });
-
-      // phase 1 — bg + word cloud fade in
-      tl.fromTo(sticky,
-        { backgroundColor: '#ffffff' },
-        { backgroundColor: primaryColor, duration: 0.15 },
-        0
-      );
-      tl.fromTo(wordRefs.current,
-        { opacity: 0 },
-        { opacity: 1, stagger: 0.008, duration: 0.15 },
-        0
-      );
-
-      // phase 2 — NYA zoom out
-      tl.fromTo(nya,
-        { scale: 8 },
-        { scale: 1, ease: 'power2.out', duration: 0.78 },
-        0.1
-      );
-
-
+      tl.fromTo(nya, { scale: 8 }, { scale: 1, ease: 'power2.out', duration: 1 }, 0);
     }, section);
 
-    // ── word flash loop ──────────────────────────────────────────────────────
+    // word flash loop — white opacity only, no color change
     flashCtx.current = gsap.context(() => {
       const words = wordRefs.current.filter(Boolean);
       let active  = new Set();
@@ -89,18 +65,14 @@ export default function FirmCultureOption3() {
       const flash = () => {
         const available = words.filter((_, i) => !active.has(i));
         if (available.length === 0) return;
-
-        const idx  = words.indexOf(available[Math.floor(Math.random() * available.length)]);
+        const idx = words.indexOf(available[Math.floor(Math.random() * available.length)]);
         active.add(idx);
-
         gsap.to(words[idx], {
-          color: accentColor,
           opacity: 1,
           duration: 0.25,
           ease: 'power1.out',
           onComplete: () => {
             gsap.to(words[idx], {
-              color: '#ffffff',
               opacity: 0.1,
               duration: 0.55,
               delay: 0.25,
@@ -109,11 +81,9 @@ export default function FirmCultureOption3() {
             });
           },
         });
-
         gsap.delayedCall(0.55 + Math.random() * 0.9, flash);
       };
 
-      // stagger two independent flash chains
       flash();
       gsap.delayedCall(0.4, flash);
     });
