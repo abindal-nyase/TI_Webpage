@@ -27,8 +27,8 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
   mask-image: radial-gradient(ellipse 28% 35% at 50% 50%, black 20%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 28% 35% at 50% 50%, black 20%, transparent 100%);
   pointer-events: none;
