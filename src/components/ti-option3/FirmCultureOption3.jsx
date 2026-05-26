@@ -6,7 +6,7 @@ import styles from './FirmCultureOption3.module.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const BASE_WORDS = ['CARE','CONCERN','RESPONSIBLE','ACCOUNTABLE','DYNAMIC','GOOD','READY','RELIABLE','KNOWLEDGEABLE','EXPERIENCED'];
-const NUM_ROWS = 16;
+const NUM_ROWS = 28;
 const WORDS_PER_ROW = 28;
 
 const WORD_GRID = Array.from({ length: NUM_ROWS }, (_, ri) =>
