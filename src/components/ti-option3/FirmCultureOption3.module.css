@@ -73,7 +73,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-4);
+  gap: var(--sp-8);
   pointer-events: none;
   transform-origin: center center;
   will-change: transform;
@@ -81,7 +81,7 @@
 
 .taglineText {
   font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 60px);
+  font-size: clamp(33.6px, 4.8vw, 72px);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -94,7 +94,7 @@
 
 .nya {
   font-family: var(--font-display);
-  font-size: 14vw;
+  font-size: 8.96vw;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -104,7 +104,7 @@
 
 @media (max-width: 768px) {
   .nya {
-    font-size: 20vw;
+    font-size: 12.8vw;
   }
 
   .word {
