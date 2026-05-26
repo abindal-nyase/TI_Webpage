@@ -5,30 +5,29 @@ import styles from './FirmCultureOption3.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WORDS = [
-  { word: 'Responsible',   top: '8%',  left: '5%',  size: '0.85rem', rot: 0 },
-  { word: 'Accountable',   top: '8%',  left: '42%', size: '0.75rem', rot: 0 },
-  { word: 'Dynamic',       top: '8%',  left: '72%', size: '0.9rem',  rot: 0 },
-  { word: 'Good',          top: '16%', left: '18%', size: '1rem',    rot: 0 },
-  { word: 'Ready',         top: '16%', left: '58%', size: '0.8rem',  rot: 0 },
-  { word: 'Reliable',      top: '24%', left: '2%',  size: '0.85rem', rot: 0 },
-  { word: 'Knowledgeable', top: '24%', left: '30%', size: '0.7rem',  rot: 0 },
-  { word: 'Experienced',   top: '24%', left: '68%', size: '0.9rem',  rot: 0 },
-  { word: 'Care',          top: '32%', left: '10%', size: '1.1rem',  rot: 0 },
-  { word: 'Concern',       top: '32%', left: '48%', size: '0.8rem',  rot: 0 },
-  { word: 'Innovative',    top: '58%', left: '5%',  size: '0.85rem', rot: 0 },
-  { word: 'Agile',         top: '58%', left: '38%', size: '1rem',    rot: 0 },
-  { word: 'Collaborative', top: '58%', left: '65%', size: '0.75rem', rot: 0 },
-  { word: 'Structured',    top: '68%', left: '18%', size: '0.9rem',  rot: 0 },
-  { word: 'Transparent',   top: '68%', left: '55%', size: '0.8rem',  rot: 0 },
-  { word: 'Passionate',    top: '78%', left: '8%',  size: '0.85rem', rot: 0 },
-  { word: 'Flexible',      top: '78%', left: '45%', size: '1rem',    rot: 0 },
-  { word: 'Caring',        top: '88%', left: '25%', size: '0.9rem',  rot: 0 },
-  { word: 'Connected',     top: '88%', left: '62%', size: '0.8rem',  rot: 0 },
-  { word: 'Integrity',     top: '40%', left: '78%', size: '0.85rem', rot: 0 },
-  { word: 'Creative',      top: '48%', left: '82%', size: '0.9rem',  rot: 0 },
-  { word: 'Established',   top: '40%', left: '2%',  size: '0.75rem', rot: 0 },
+const ROWS = [
+  ['RESPONSIBLE','ARCHITECTURE','DESIGN','ANALYSIS','PLANNING','ENGINEERING','ACCOUNTABLE','CONSTRUCTION','MANAGEMENT','STRATEGY','QUALITY'],
+  ['EXPERIENCED','EXCELLENCE','LEADERSHIP','VISION','SOLUTIONS','PROCESS','RELIABLE','SYSTEMS','STANDARDS','TECHNICAL','EXPERTISE'],
+  ['KNOWLEDGEABLE','PROFESSIONAL','DEVELOPMENT','EXECUTION','PRECISION','DELIVERY','INNOVATIVE','VALUE','PERFORMANCE','RESULTS','COMMITMENT'],
+  ['COLLABORATIVE','SERVICE','FOCUS','GROWTH','IMPACT','DRIVEN','TRANSPARENT','PURPOSE','SKILLED','TRUSTED','PROVEN'],
+  ['PASSIONATE','AGILE','ENGAGED','DEDICATED','THOROUGH','EFFECTIVE','INTEGRITY','EFFICIENT','ADAPTIVE','CONNECTED','BOLD'],
+  ['CARING','CLEAR','STRONG','ACTIVE','SMART','ALIGNED','STRUCTURED','HONEST','DIRECT','OPEN','SOLID'],
+  ['DYNAMIC','SOUND','FIRM','SHARP','LEAN','SWIFT','CREATIVE','BRIGHT','STEADY','CAPABLE','PREPARED'],
+  ['ESTABLISHED','INVESTED','ATTENTIVE','FORWARD','MINDFUL','GROUNDED','CURIOUS','DILIGENT','AMBITIOUS','PRINCIPLED','COHESIVE'],
+  ['RESILIENT','DISCIPLINED','FOCUSED','RESPONSIVE','INTENTIONAL','PROACTIVE','METICULOUS','COMMITTED','DEPENDABLE','VERSATILE','PRECISE'],
+  ['MOTIVATED','EARNEST','CAREFUL','GENUINE','INVOLVED','PRESENT','AWARE','FORTHRIGHT','PRACTICAL','CONSIDERED','MEASURED'],
 ];
+
+const SIZES = ['0.65rem','0.72rem','0.78rem','0.72rem','0.65rem','0.78rem','0.72rem','0.65rem','0.72rem','0.78rem'];
+
+const WORDS = ROWS.flatMap((row, ri) =>
+  row.map((word, ci) => ({
+    word,
+    top:  `${3 + ri * 10}%`,
+    left: `${(ri % 2 === 0 ? 0 : 4) + ci * 9}%`,
+    size: SIZES[ri],
+  }))
+);
 
 export default function FirmCultureOption3() {
   const sectionRef = useRef(null);
