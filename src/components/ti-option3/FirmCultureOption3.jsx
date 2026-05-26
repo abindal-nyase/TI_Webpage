@@ -1,68 +1,157 @@
-/*
- * FirmCultureOption3 — SKELETON
- *
- * IMPORTANT: All styles MUST use CSS variables from the design system.
- * The theme switcher on option3.astro sets --color-primary, --color-accent,
- * --color-primary-light, --font-display, --font-body, etc. on :root at runtime.
- * Never hardcode colors or font families — always reference the CSS variable.
- *
- * Intent: Shows what it's like to work at/with NYA — culture, values, team.
- * Dark background section with stat callouts and team/culture imagery.
- */
-
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './FirmCultureOption3.module.css';
 
-const STATS = [
-  { value: '35+', label: 'Years in practice' },
-  { value: '2,000+', label: 'TI projects completed' },
-  { value: '8', label: 'Cities served' },
-  { value: '100%', label: 'Principal involvement' },
-];
+gsap.registerPlugin(ScrollTrigger);
 
-const VALUES = [
-  { id: 1, title: 'Serious Work, Seriously Done', body: 'Placeholder: culture value body copy describing how NYA approaches quality.' },
-  { id: 2, title: 'Principal-Led, Always', body: 'Placeholder: culture value body copy describing firm structure and accountability.' },
-  { id: 3, title: 'Long Relationships, Not Transactions', body: 'Placeholder: culture value body copy about how NYA builds lasting partnerships.' },
+const WORDS = [
+  { word: 'Responsible',   top: '8%',  left: '5%',  size: '0.85rem', rot: 0 },
+  { word: 'Accountable',   top: '8%',  left: '42%', size: '0.75rem', rot: 0 },
+  { word: 'Dynamic',       top: '8%',  left: '72%', size: '0.9rem',  rot: 0 },
+  { word: 'Good',          top: '16%', left: '18%', size: '1rem',    rot: 0 },
+  { word: 'Ready',         top: '16%', left: '58%', size: '0.8rem',  rot: 0 },
+  { word: 'Reliable',      top: '24%', left: '2%',  size: '0.85rem', rot: 0 },
+  { word: 'Knowledgeable', top: '24%', left: '30%', size: '0.7rem',  rot: 0 },
+  { word: 'Experienced',   top: '24%', left: '68%', size: '0.9rem',  rot: 0 },
+  { word: 'Care',          top: '32%', left: '10%', size: '1.1rem',  rot: 0 },
+  { word: 'Concern',       top: '32%', left: '48%', size: '0.8rem',  rot: 0 },
+  { word: 'Innovative',    top: '58%', left: '5%',  size: '0.85rem', rot: 0 },
+  { word: 'Agile',         top: '58%', left: '38%', size: '1rem',    rot: 0 },
+  { word: 'Collaborative', top: '58%', left: '65%', size: '0.75rem', rot: 0 },
+  { word: 'Structured',    top: '68%', left: '18%', size: '0.9rem',  rot: 0 },
+  { word: 'Transparent',   top: '68%', left: '55%', size: '0.8rem',  rot: 0 },
+  { word: 'Passionate',    top: '78%', left: '8%',  size: '0.85rem', rot: 0 },
+  { word: 'Flexible',      top: '78%', left: '45%', size: '1rem',    rot: 0 },
+  { word: 'Caring',        top: '88%', left: '25%', size: '0.9rem',  rot: 0 },
+  { word: 'Connected',     top: '88%', left: '62%', size: '0.8rem',  rot: 0 },
+  { word: 'Integrity',     top: '40%', left: '78%', size: '0.85rem', rot: 0 },
+  { word: 'Creative',      top: '48%', left: '82%', size: '0.9rem',  rot: 0 },
+  { word: 'Established',   top: '40%', left: '2%',  size: '0.75rem', rot: 0 },
 ];
 
 export default function FirmCultureOption3() {
+  const sectionRef = useRef(null);
+  const stickyRef  = useRef(null);
+  const nyaRef     = useRef(null);
+  const wordRefs   = useRef([]);
+  const flashCtx   = useRef(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const sticky  = stickyRef.current;
+    const nya     = nyaRef.current;
+    if (!section || !sticky || !nya) return;
+
+    const root        = document.documentElement;
+    const primaryColor = getComputedStyle(root).getPropertyValue('--color-primary').trim() || '#0B1F3B';
+    const accentColor  = getComputedStyle(root).getPropertyValue('--color-accent').trim()  || '#2F80ED';
+
+    // ── scroll timeline ──────────────────────────────────────────────────────
+    const scrollCtx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end:   'bottom bottom',
+          scrub: 1.2,
+          pin:   sticky,
+          pinSpacing: false,
+        },
+      });
+
+      // phase 1 — bg + word cloud fade in
+      tl.fromTo(sticky,
+        { backgroundColor: '#ffffff' },
+        { backgroundColor: primaryColor, duration: 0.15 },
+        0
+      );
+      tl.fromTo(wordRefs.current,
+        { opacity: 0 },
+        { opacity: 1, stagger: 0.008, duration: 0.15 },
+        0
+      );
+
+      // phase 2 — NYA zoom out
+      tl.fromTo(nya,
+        { scale: 8 },
+        { scale: 1, ease: 'power2.out', duration: 0.78 },
+        0.1
+      );
+
+
+    }, section);
+
+    // ── word flash loop ──────────────────────────────────────────────────────
+    flashCtx.current = gsap.context(() => {
+      const words = wordRefs.current.filter(Boolean);
+      let active  = new Set();
+
+      const flash = () => {
+        const available = words.filter((_, i) => !active.has(i));
+        if (available.length === 0) return;
+
+        const idx  = words.indexOf(available[Math.floor(Math.random() * available.length)]);
+        active.add(idx);
+
+        gsap.to(words[idx], {
+          color: accentColor,
+          opacity: 1,
+          duration: 0.25,
+          ease: 'power1.out',
+          onComplete: () => {
+            gsap.to(words[idx], {
+              color: '#ffffff',
+              opacity: 0.1,
+              duration: 0.55,
+              delay: 0.25,
+              ease: 'power1.in',
+              onComplete: () => active.delete(idx),
+            });
+          },
+        });
+
+        gsap.delayedCall(0.55 + Math.random() * 0.9, flash);
+      };
+
+      // stagger two independent flash chains
+      flash();
+      gsap.delayedCall(0.4, flash);
+    });
+
+    return () => {
+      scrollCtx.revert();
+      flashCtx.current?.revert();
+    };
+  }, []);
+
   return (
-    <section className={styles.section}>
-      <div className={styles.inner}>
-        <header className={styles.header}>
-          <p className={styles.eyebrow}>Firm Culture</p>
-          <h2 className={styles.heading}>
-            Heading about who we are<br />
-            and how we work.
-          </h2>
-        </header>
+    <section ref={sectionRef} className={styles.section}>
+      <div ref={stickyRef} className={styles.sticky}>
 
-        {/* Stats row */}
-        <div className={styles.stats}>
-          {STATS.map((s, i) => (
-            <div key={i} className={styles.stat}>
-              <span className={styles.statValue}>{s.value}</span>
-              <span className={styles.statLabel}>{s.label}</span>
-            </div>
+        {/* word cloud */}
+        <div className={styles.wordCloud} aria-hidden="true">
+          {WORDS.map((w, i) => (
+            <span
+              key={w.word + i}
+              ref={el => wordRefs.current[i] = el}
+              className={styles.word}
+              style={{ top: w.top, left: w.left, fontSize: w.size }}
+            >
+              {w.word}
+            </span>
           ))}
         </div>
 
-        {/* Values grid */}
-        <div className={styles.values}>
-          {VALUES.map((v) => (
-            <div key={v.id} className={styles.valueCard}>
-              <h3 className={styles.valueTitle}>{v.title}</h3>
-              <p className={styles.valueBody}>{v.body}</p>
-            </div>
-          ))}
+        {/* composition: tagline above NYA — both static, revealed by NYA zoom-out */}
+        <div className={styles.composition}>
+          <div className={styles.taglineGroup} aria-hidden="true">
+            <p className={styles.taglineText}>Care, Trust, and<br />Serious Work.</p>
+            <p className={styles.taglineSub}>NYA</p>
+          </div>
+          <div ref={nyaRef} className={styles.nya}>NYA</div>
         </div>
 
-        {/* Image placeholder row */}
-        <div className={styles.imageRow} aria-hidden="true">
-          <div className={styles.imgSlot} />
-          <div className={styles.imgSlot} />
-          <div className={styles.imgSlot} />
-        </div>
       </div>
     </section>
   );
