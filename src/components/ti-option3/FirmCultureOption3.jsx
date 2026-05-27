@@ -42,7 +42,7 @@ export default function FirmCultureOption3() {
             invalidateOnRefresh: true,
           },
         });
-        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'power2.out', duration: 1 }, 0);
+        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'none', duration: 1 }, 0);
       });
       ScrollTrigger.refresh();
     });
