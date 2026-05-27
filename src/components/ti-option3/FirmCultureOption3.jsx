@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import styles from './FirmCultureOption3.module.css';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const BASE_WORDS = ['CARE','CONCERN','RESPONSIBLE','ACCOUNTABLE','DYNAMIC','GOOD','READY','RELIABLE','KNOWLEDGEABLE','EXPERIENCED'];
 const NUM_ROWS = 28;
@@ -18,18 +19,18 @@ export default function FirmCultureOption3() {
   const stickyRef       = useRef(null);
   const compositionRef  = useRef(null);
   const wordRefs        = useRef([]);
-  const flashCtx        = useRef(null);
 
-  useEffect(() => {
+  useGSAP((context) => {
     const section     = sectionRef.current;
     const sticky      = stickyRef.current;
     const composition = compositionRef.current;
     if (!section || !sticky || !composition) return;
 
-    let scrollCtx;
+    let cancelled = false;
 
     document.fonts.ready.then(() => {
-      scrollCtx = gsap.context(() => {
+      if (cancelled) return;
+      context.add(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
@@ -42,45 +43,41 @@ export default function FirmCultureOption3() {
           },
         });
         tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'power2.out', duration: 1 }, 0);
-      }, section);
+      });
+      ScrollTrigger.refresh();
     });
 
-    // word flash loop — white opacity only
-    flashCtx.current = gsap.context(() => {
-      const words = wordRefs.current.filter(Boolean);
-      let active  = new Set();
+    // word flash loop — tracked automatically by useGSAP context
+    const words = wordRefs.current.filter(Boolean);
+    let active  = new Set();
 
-      const flash = () => {
-        const available = words.filter((_, i) => !active.has(i));
-        if (available.length === 0) return;
-        const idx = words.indexOf(available[Math.floor(Math.random() * available.length)]);
-        active.add(idx);
-        gsap.to(words[idx], {
-          opacity: 1,
-          duration: 0.25,
-          ease: 'power1.out',
-          onComplete: () => {
-            gsap.to(words[idx], {
-              opacity: 0.15,
-              duration: 0.55,
-              delay: 0.25,
-              ease: 'power1.in',
-              onComplete: () => active.delete(idx),
-            });
-          },
-        });
-        gsap.delayedCall(0.55 + Math.random() * 0.9, flash);
-      };
-
-      flash();
-      gsap.delayedCall(0.4, flash);
-    });
-
-    return () => {
-      scrollCtx?.revert();
-      flashCtx.current?.revert();
+    const flash = () => {
+      const available = words.filter((_, i) => !active.has(i));
+      if (available.length === 0) return;
+      const idx = words.indexOf(available[Math.floor(Math.random() * available.length)]);
+      active.add(idx);
+      gsap.to(words[idx], {
+        opacity: 1,
+        duration: 0.25,
+        ease: 'power1.out',
+        onComplete: () => {
+          gsap.to(words[idx], {
+            opacity: 0.15,
+            duration: 0.55,
+            delay: 0.25,
+            ease: 'power1.in',
+            onComplete: () => active.delete(idx),
+          });
+        },
+      });
+      gsap.delayedCall(0.55 + Math.random() * 0.9, flash);
     };
-  }, []);
+
+    flash();
+    gsap.delayedCall(0.4, flash);
+
+    return () => { cancelled = true; };
+  }, { scope: sectionRef });
 
   return (
     <section ref={sectionRef} className={styles.section}>
