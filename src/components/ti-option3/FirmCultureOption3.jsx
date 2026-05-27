@@ -36,12 +36,13 @@ export default function FirmCultureOption3() {
             trigger: section,
             start: 'top top',
             end:   'bottom bottom',
-            scrub: 1.2,
+            scrub: 0.3,
             pin:   sticky,
             invalidateOnRefresh: true,
           },
         });
-        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'none', duration: 1 }, 0);
+        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'none', duration: 8 }, 0);
+        tl.to({}, { duration: 1 }, 8);
       });
     });
 
