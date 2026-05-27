@@ -74,6 +74,7 @@ export default function FirmCultureOption3() {
 
     flash();
     gsap.delayedCall(0.4, flash);
+    gsap.delayedCall(0.8, flash);
 
     return () => { cancelled = true; };
   }, { scope: sectionRef });
