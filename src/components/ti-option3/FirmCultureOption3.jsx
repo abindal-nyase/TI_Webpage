@@ -38,13 +38,11 @@ export default function FirmCultureOption3() {
             end:   'bottom bottom',
             scrub: 1.2,
             pin:   sticky,
-            pinSpacing: false,
             invalidateOnRefresh: true,
           },
         });
         tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'none', duration: 1 }, 0);
       });
-      ScrollTrigger.refresh();
     });
 
     // word flash loop — tracked automatically by useGSAP context

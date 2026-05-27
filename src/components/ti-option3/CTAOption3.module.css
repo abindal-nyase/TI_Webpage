@@ -6,8 +6,12 @@
 
 .section {
   background: var(--color-primary);
+  min-height: 100vh;
   padding: var(--section-padding, 120px) 0;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .inner {
