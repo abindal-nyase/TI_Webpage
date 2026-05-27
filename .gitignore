@@ -18,3 +18,4 @@ test-results/
 .venv/
 assets/Option2Assets/
 *.xlsx
+FIRMCULTURE_DEBUG.md
