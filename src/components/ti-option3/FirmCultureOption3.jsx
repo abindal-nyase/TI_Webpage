@@ -6,7 +6,26 @@ import styles from './FirmCultureOption3.module.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const BASE_WORDS = ['CARE','CONCERN','RESPONSIBLE','ACCOUNTABLE','DYNAMIC','GOOD','READY','RELIABLE','KNOWLEDGEABLE','EXPERIENCED'];
+const BASE_WORDS = [
+  "ACCOUNTABLE",
+  "AGILE",
+  "COLLABORATIVE",
+  "CONNECTED",
+  "CREATIVE",
+  "ESTABLISHED",
+  "EXPERIENCED",
+  "FLEXIBLE",
+  "INNOVATIVE",
+  "INTEGRITY",
+  "PASSIONATE",
+  "READY",
+  "STRUCTURED",
+  "TRANSPARENT",
+  "KNOWLEDGEABLE",
+  "RELIABLE",
+  "DYNAMIC",
+  "CARING",
+];
 const NUM_ROWS = 28;
 const WORDS_PER_ROW = 28;
 
