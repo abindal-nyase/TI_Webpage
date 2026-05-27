@@ -26,19 +26,24 @@ export default function FirmCultureOption3() {
     const composition = compositionRef.current;
     if (!section || !sticky || !composition) return;
 
-    const scrollCtx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end:   'bottom bottom',
-          scrub: 1.2,
-          pin:   sticky,
-          pinSpacing: false,
-        },
-      });
-      tl.fromTo(composition, { scale: 8 }, { scale: 1, ease: 'power2.out', duration: 1 }, 0);
-    }, section);
+    let scrollCtx;
+
+    document.fonts.ready.then(() => {
+      scrollCtx = gsap.context(() => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end:   'bottom bottom',
+            scrub: 1.2,
+            pin:   sticky,
+            pinSpacing: false,
+            invalidateOnRefresh: true,
+          },
+        });
+        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'power2.out', duration: 1 }, 0);
+      }, section);
+    });
 
     // word flash loop — white opacity only
     flashCtx.current = gsap.context(() => {
@@ -72,7 +77,7 @@ export default function FirmCultureOption3() {
     });
 
     return () => {
-      scrollCtx.revert();
+      scrollCtx?.revert();
       flashCtx.current?.revert();
     };
   }, []);
