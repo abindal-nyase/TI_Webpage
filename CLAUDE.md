@@ -98,6 +98,58 @@ src/
     NYA_Tenant_Improvement_Figma_File_Blueprint.md
 ```
 
+## Lenis + GSAP ScrollTrigger (option3 components)
+
+Every option3 component that uses scroll animation relies on **Lenis** (smooth scroll) + **GSAP ScrollTrigger** (scrub/pin). GlobalSetup.jsx initializes both globally — do not reinitialize them in individual components.
+
+### How GlobalSetup wires them
+
+```js
+const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
+lenis.on('scroll', ScrollTrigger.update)  // keeps ST in sync with Lenis
+gsap.ticker.add((time) => { lenis.raf(time * 1000) })  // drives Lenis via GSAP ticker
+gsap.ticker.lagSmoothing(0)
+```
+
+No `ScrollTrigger.scrollerProxy()` needed — Lenis v1 uses native scroll so `window.scrollY` stays accurate.
+
+### Rules for every animated component in `src/components/ti-option3/`
+
+**DO use `gsap.context()` inside `useEffect` for cleanup:**
+```js
+useEffect(() => {
+  const ctx = gsap.context(() => {
+    // all GSAP/ScrollTrigger code here
+  }, rootRef);
+  return () => ctx.revert();
+}, []);
+```
+
+**DO NOT add `position: sticky` in CSS on any element that GSAP pins.** GSAP pin sets `position: fixed` — CSS sticky fights it and causes the page to get stuck. Let GSAP own pinning entirely.
+
+**DO use `scrub` (not `toggleActions`) for scroll-driven animations:**
+```js
+scrollTrigger: {
+  trigger: sectionRef.current,
+  start: 'top top',
+  end: 'bottom bottom',
+  scrub: 1,          // number = seconds for playhead to catch up (smoothness)
+  pin: elementRef.current,
+  invalidateOnRefresh: true,
+}
+```
+
+**DO wrap ScrollTrigger creation in `document.fonts.ready.then()`** if the animation depends on font-sized elements (prevents wrong measurements before fonts load).
+
+**DO use `invalidateOnRefresh: true`** on any ScrollTrigger that uses computed sizes (font-relative units, vw/vh, etc.).
+
+**DO NOT use `pinSpacing: false` unless the section already has explicit scroll height** (e.g. `min-height: 400vh`). Default `pinSpacing: true` is safer.
+
+### Accessing Lenis in a component (e.g. scroll-to)
+```js
+window.__lenis?.scrollTo(element, { offset: -80, duration: 1.4 })
+```
+
 ## Dev server
 
 ```bash
