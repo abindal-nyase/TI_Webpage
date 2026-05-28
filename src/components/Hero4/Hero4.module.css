@@ -1,0 +1,205 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Hero4 — NYA isometric building, exact Paveletsky replica.
+   CSS verbatim from Paveletsky main.css.
+   Animation positions computed from animation.js tlFirstScroll.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Outer section — clip boundary ───────────────────────────────── */
+.home {
+  overflow: hidden;
+  background: #000;
+  position: relative;
+  z-index: 35;
+}
+
+/* ── Pinned wrapper ───────────────────────────────────────────────── */
+.trigger {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+}
+
+/* ── Composition root — verbatim Paveletsky: left: 11vh ──────────── */
+.movehome {
+  left: 11vh;
+  position: relative;
+}
+
+/* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
+.layer .imgHover         { display: none;  }
+.layer:hover .imgBase    { display: none;  }
+.layer:hover .imgHover   { display: block; }
+
+/* ── Shared image rules ───────────────────────────────────────────── */
+.imgBase,
+.imgHover {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  /* pointer-events left ON so mouse reaches the image → parent .layer gets :hover */
+}
+
+/* ── Layer container — make the whole visible area hoverable ─────── */
+.layer {
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAYER CONTAINERS — verbatim Paveletsky main.css
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── L1  (home1, z 50) ───────────────────────────────────────────── */
+.l1 {
+  position: relative;
+  top: 0vh;
+  left: 29.75vw;
+  width: 60vw;
+  z-index: 50;
+}
+.l1 .imgBase,
+.l1 .imgHover {
+  width: 55.4vw;
+  left: -3.7vw;
+  top: -14.6vh;
+}
+
+/* ── L2  (home2, z 47) ───────────────────────────────────────────── */
+.l2 {
+  position: absolute;
+  top: 25.64vh;
+  left: 20.82vw;
+  width: 60vw;
+  z-index: 47;
+}
+.l2 .imgBase,
+.l2 .imgHover {
+  width: 41vw;
+  left: -7.5vw;
+  top: -32vh;
+}
+
+/* ── L3  (home3, z 47) ───────────────────────────────────────────── */
+.l3 {
+  position: absolute;
+  top: 3.7vw;
+  left: 29.75vw;
+  width: 69.3vw;
+  z-index: 47;
+}
+.l3 .imgBase,
+.l3 .imgHover {
+  width: 55.44vw;
+  left: -3.7vw;
+  top: -8vh;
+}
+
+/* ── L4  (home4, z 46) ───────────────────────────────────────────── */
+.l4 {
+  position: absolute;
+  top: 2vh;
+  left: 13.4vw;
+  width: 85vw;
+  z-index: 46;
+}
+.l4 .imgBase,
+.l4 .imgHover {
+  width: 68vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L5  (home5, z 44) ───────────────────────────────────────────── */
+.l5 {
+  position: absolute;
+  top: 3.2vh;
+  left: 13.44vw;
+  width: 87vw;
+  z-index: 44;
+}
+.l5 .imgBase,
+.l5 .imgHover {
+  width: 35.68vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L6  (home6, z 44) ───────────────────────────────────────────── */
+.l6 {
+  position: absolute;
+  top: 18.3vh;
+  left: 26.3vw;
+  width: 84.8vw;
+  z-index: 44;
+}
+.l6 .imgBase,
+.l6 .imgHover {
+  width: 55.1vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L7  (home7, z 44) ───────────────────────────────────────────── */
+.l7 {
+  position: absolute;
+  top: 33vh;
+  left: 4.7vw;
+  width: 89vw;
+  z-index: 44;
+}
+.l7 .imgBase,
+.l7 .imgHover {
+  width: 57.7vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L8  (home8, z 42) ───────────────────────────────────────────── */
+.l8 {
+  position: absolute;
+  top: 15.86vh;
+  left: 4.8vw;
+  width: 80.65vw;
+  z-index: 42;
+}
+.l8 .imgBase,
+.l8 .imgHover {
+  width: 95%;
+  left: 0;
+  top: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ANIMATED BACKGROUNDS — verbatim Paveletsky main.css
+   bg1/bg2 are siblings to .movehome, both inside .trigger.
+   They start off-screen (clipped by .home overflow:hidden) and
+   animate upward via GSAP y transform.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── bg1 container ───────────────────────────────────────────────── */
+.bg1 {
+  position: relative;
+  top: 1968px;
+  width: 100%;
+}
+
+/* ── bg1 image — starts invisible, fades in during scroll ────────── */
+.bg1Img {
+  position: absolute;
+  width: 100%;
+  top: 106vh;
+  opacity: 0;
+}
+
+/* ── bg2 container ───────────────────────────────────────────────── */
+.bg2 {
+  position: relative;
+  top: 224vh;
+  width: 100%;
+}
+
+/* ── bg2 image ───────────────────────────────────────────────────── */
+.bg2Img {
+  position: absolute;
+  width: 100%;
+  top: -252vh;
+}
