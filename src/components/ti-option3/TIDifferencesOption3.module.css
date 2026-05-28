@@ -2,25 +2,42 @@
  * IMPORTANT: Use only CSS variables — never hardcode colors or font families.
  * The option3.astro theme switcher updates --color-primary, --color-accent,
  * --font-display, --font-body, etc. on :root. Components read them here.
+ *
+ * Bebas Neue is kept only for decorative numerics (disc numbers, percentages).
+ * It is not in option3.astro's font link, so we import it here.
  */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-.section {
-  background: var(--surface-page, #F8FAFC);
-  padding: var(--section-padding, 120px) 0;
+/* ── TOKENS ──────────────────────────────────────────────────────────────── */
+.root {
+  --red:   #c85050;
+  --green: #4ab87a;
+
+  background: var(--surface-card, #fff);
+  color: var(--color-black, #0F172A);
+  font-family: var(--font-display);
 }
 
-.inner {
-  width: 100%;
-  max-width: var(--container, 1200px);
-  margin: 0 auto;
-  padding: 0 var(--margin-desktop, 120px);
+
+/* ── INTRO ───────────────────────────────────────────────────────────────── */
+.intro {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 6rem 8vw;
+  text-align: center;
+}
+.introBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  max-width: 720px;
 }
 
-.header {
-  max-width: 640px;
-  margin-bottom: 72px;
-}
-
+/* Eyebrow — matches TIDifferencesOption3 style: accent color + decorative line */
 .eyebrow {
   font-family: var(--font-body);
   font-size: var(--text-eyebrow, 11px);
@@ -28,12 +45,11 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: 20px;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .eyebrow::before {
   content: '';
   display: block;
@@ -43,82 +59,527 @@
   flex-shrink: 0;
 }
 
-.heading {
+.introH {
   font-family: var(--font-display);
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
   font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.01em;
   color: var(--color-black, #0F172A);
-  margin-bottom: 24px;
+  margin: 0;
+}
+.introH em { font-style: italic; color: var(--color-accent); }
+
+.introSub {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--color-gray-700, #475569);
+  margin: 0;
 }
 
-.lead {
+.cue {
   font-family: var(--font-body);
-  font-size: 18px;
-  line-height: 1.65;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
   color: var(--color-gray-700, #475569);
 }
 
-.grid {
+/* ── LAYOUT ──────────────────────────────────────────────────────────────── */
+.discDriver { position: relative; }
+.barDriver  { position: relative; }
+
+.discScene {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-.card {
-  padding: 36px;
-  border-radius: var(--radius-lg, 16px);
+  grid-template-columns: 44% 56%;
+  overflow: hidden;
   background: var(--surface-card, #fff);
-  border: 1px solid var(--border-default, #E2E8F0);
-  box-shadow: var(--shadow-1);
-  transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), border-color 300ms var(--ease-out);
+}
+.discSceneCollapse { overflow: clip; }
+
+/* ── TOWER COLUMN ─────────────────────────────────────────────────────────── */
+.towerCol {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 2vh 2vw;
+  overflow: visible;
+  border-right: 1px solid var(--border-accent);
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-4);
-  border-color: var(--border-accent);
+.towerSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
-.cardIcon {
-  display: block;
+/* ── SECTION HEADERS ──────────────────────────────────────────────────────── */
+.sectionHead {
+  text-align: center;
+  transition: opacity 0.5s ease;
+}
+.sectionHeadHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.eyebrowRed {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: calc(9px * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--color-accent);
-  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 3px;
 }
-
-.cardTitle {
+.eyebrowGreen {
   font-family: var(--font-body);
-  font-size: 20px;
+  font-size: calc(9px * var(--font-scale, 1));
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 3px;
+}
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: calc(clamp(1.6rem, 2.8vw, 2.4rem) * var(--font-scale, 1));
   font-weight: 600;
-  letter-spacing: -0.01em;
   color: var(--color-black, #0F172A);
-  margin-bottom: 12px;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
-.cardBody {
+/* ── TOWER SCALE WRAPPER ──────────────────────────────────────────────────── */
+.towerOuter {
+  position: relative;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.towerInner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: left top;
+}
+.tower { position: relative; }
+
+/* ── DISC ─────────────────────────────────────────────────────────────────── */
+.disc {
+  position: absolute;
+  transform: translateY(-520px);
+  opacity: 0;
+}
+.discOn {
+  transform: translateY(0);
+  opacity: 1;
+  transition:
+    transform var(--drop-dur, 0.58s) cubic-bezier(0.18, 1.18, 0.38, 1),
+    opacity   0.15s ease;
+}
+.discFace {
+  width: 100%;
+  height: var(--face-h, 60px);
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse 75% 64% at 36% 28%,
+    rgba(255, 255, 255, 0.24) 0%,
+    var(--f)                  46%,
+    rgba(0,   0,   0,   0.22) 100%
+  );
+  transition: box-shadow 0.3s ease;
+}
+.discFaceLive      { box-shadow: 0 0 40px rgba(196, 37, 53, 0.7); }
+.discFaceLiveGreen { box-shadow: 0 0 40px rgba(13, 168, 94, 0.7); }
+.discNum {
   font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.68);
+  user-select: none;
+  pointer-events: none;
+}
+.discSide {
+  width: 100%;
+  height: var(--side-elh, 52px);
+  margin-top: calc(-1 * var(--face-hr, 30px));
+  background: linear-gradient(to bottom, var(--f) 0%, var(--r) 100%);
+  border-radius: 0 0 50% 50% / 0 0 var(--face-hr, 30px) var(--face-hr, 30px);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── PROGRESS BARS ────────────────────────────────────────────────────────── */
+.barArea {
+  width: min(300px, 94%);
+  transition: opacity 0.5s ease;
+}
+.barHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.towerWithBar {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+.valueBarWrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.valueBarRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 4px;
+}
+.valueBarLabel {
+  font-family: var(--font-body);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gray-700, #475569);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  user-select: none;
+}
+.valueBar {
+  border-radius: 2px 2px 0 0;
+  flex-shrink: 0;
+}
+.riskBarWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 12px;
+  gap: 4px;
+}
+.riskBarLabel {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+.riskBarTitle {
+  font-family: var(--font-body);
+  font-size: calc(7px * var(--font-scale, 1));
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--color-gray-700, #475569);
 }
-
-@media (max-width: 960px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+.riskBarPct {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: calc(13px * var(--font-scale, 1));
+  color: var(--color-black, #0F172A);
+  line-height: 1;
+}
+.riskBarCat {
+  font-family: var(--font-body);
+  font-size: calc(6px * var(--font-scale, 1));
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gray-700, #475569);
+}
+.riskBar {
+  border-radius: 2px;
 }
 
-@media (max-width: 768px) {
-  .inner {
-    padding: 0 24px;
-  }
+/* ── TEXT COLUMN ──────────────────────────────────────────────────────────── */
+.textCol {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3vh 4vw 3vh 2.5vw;
+  overflow: hidden;
+}
 
-  .section {
-    padding: var(--section-padding-mob, 64px) 0;
+/* ── TEXT CARD ────────────────────────────────────────────────────────────── */
+.discCard {
+  --white: #f0ece3;
+  --text:  #b0a89a;
+  --muted: rgba(255, 255, 255, 0.35);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.9vh 1rem;
+  border-radius: var(--radius-lg, 12px);
+  background: var(--color-primary);
+  color: var(--white);
+  margin-bottom: 6px;
+  opacity: 0;
+  transform: translateX(22px);
+  transition:
+    opacity    0.4s ease,
+    transform  0.4s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.discCard:last-child { margin-bottom: 0; }
+.discCardOn    { opacity: 1; transform: translateX(0); }
+.discCardRed   { box-shadow: inset 0 0 0 1.5px var(--red); }
+.discCardGreen { box-shadow: inset 0 0 0 1.5px var(--green); }
+
+.discCardNum {
+  font-family: var(--font-body);
+  font-size: calc(1.3rem * var(--font-scale, 1));
+  letter-spacing: 0.08em;
+  color: var(--border-accent, rgba(255,255,255,0.16));
+  flex-shrink: 0;
+  min-width: 2ch;
+  transition: color 0.35s ease;
+  padding-top: 0.1rem;
+}
+.discCardRed   .discCardNum { color: var(--red); }
+.discCardGreen .discCardNum { color: var(--green); }
+
+.discCardBody {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+/* ── NEGATIVE SECTION ─────────────────────────────────────────────────────── */
+.discNegSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+.discCat {
+  font-family: var(--font-body);
+  font-size: calc(9.5px * var(--font-scale, 1));
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+  transition: color 0.35s ease;
+}
+.discCardRed   .discCat { color: var(--red); }
+.discCardGreen .discCat { color: var(--green); }
+
+.discNegTxt {
+  font-family: var(--font-display);
+  font-size: calc(clamp(0.82rem, 1.05vw, 0.94rem) * var(--font-scale, 1));
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(176, 168, 154, 0.28);
+  margin: 0;
+  transition: color 0.4s ease;
+}
+.discCardRed .discNegTxt { color: var(--text); }
+
+/* ── POSITIVE SLOT ────────────────────────────────────────────────────────── */
+.discPosSlotReserved {
+  min-height: 2.4rem;
+  margin-top: 0.45rem;
+  border-top: 1px solid var(--border-accent, rgba(255,255,255,0.04));
+  padding-top: 0.45rem;
+}
+.discPosSlotOn { min-height: 0; }
+
+.discPosRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+.pencilIcon {
+  flex-shrink: 0;
+  color: var(--green);
+  position: relative;
+  top: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.pencilVisible {
+  opacity: 1;
+  animation: pencilWrite 0.9s ease-in-out infinite;
+}
+.pencilSvg { width: 13px; height: 13px; display: block; }
+
+.discPosTxt {
+  font-family: var(--font-display);
+  font-size: calc(clamp(1rem, 1.35vw, 1.18rem) * var(--font-scale, 1) * var(--pos-neg-ratio, 1));
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--white);
+  margin: 0;
+  clip-path: inset(0 100% 0 0);
+}
+.discPosTxtWrite {
+  animation: handwrite 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── OPTION LABELS ────────────────────────────────────────────────────────── */
+.optionLabel {
+  text-align: center;
+  padding: 3rem 0 1rem;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gray-700, #475569);
+  background: var(--surface-card, #fff);
+}
+.optionDivider {
+  width: 120px;
+  height: 1px;
+  background: var(--border-default, #E2E8F0);
+  margin: 0 auto 1.5rem;
+}
+
+/* ── OPTION 1: BARS & BUBBLES ─────────────────────────────────────────────── */
+.barScene {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface-card, #fff);
+}
+.barChartArea {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.barPairSlot {
+  position: absolute;
+  bottom: var(--baseline, 15%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bubble-bar-gap, 0px);
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+.trajectoryLabel {
+  position: absolute;
+  transform-origin: 0 0;
+  background: var(--color-primary);
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-lg, 12px);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 3;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.redBar,
+.greenBar {
+  flex-shrink: 0;
+  border-radius: 0 0 3px 3px;
+}
+
+.redBubble,
+.greenBubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-shrink: 0;
+  animation: bubbleEnter 0.58s cubic-bezier(0.18, 1.18, 0.38, 1) forwards;
+}
+
+.redBubbleCat,
+.greenBubbleCat {
+  font-family: var(--font-body);
+  font-size: calc(9.5px * var(--font-scale, 1));
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.80);
+  margin-bottom: 10px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.redBubbleTxt,
+.greenBubbleTxt {
+  font-family: var(--font-display);
+  font-size: calc(clamp(0.82rem, 1.05vw, 0.94rem) * var(--font-scale, 1));
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+/* ── KEYFRAMES ────────────────────────────────────────────────────────────── */
+@keyframes handwrite {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0);   }
+}
+@keyframes pencilWrite {
+  0%   { transform: translateX(0)   rotate(-10deg); }
+  30%  { transform: translateX(4px) rotate(-6deg);  }
+  60%  { transform: translateX(8px) rotate(-10deg); }
+  85%  { transform: translateX(4px) rotate(-14deg); }
+  100% { transform: translateX(0)   rotate(-10deg); }
+}
+@keyframes bubbleEnter {
+  from { opacity: 0; transform: translateY(-40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .discScene {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+  .towerCol {
+    padding: 3vh 5vw 2vh;
+    overflow: visible;
+    gap: 8px;
+  }
+  .textCol {
+    border-top: 1px solid var(--border-default, #E2E8F0);
+    padding: 2vh 5vw;
   }
 }
