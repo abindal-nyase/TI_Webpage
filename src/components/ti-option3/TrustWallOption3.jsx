@@ -17,7 +17,7 @@ const ROW_TOP = [
   { id: 2, name: "Mata Construction", src: "/logos/mata-construction.webp" },
   { id: 3, name: "Novo Construction", src: "/logos/novo.jpg" },
   { id: 4, name: "Swinerton", src: "/logos/swinerton.png" },
-  { id: 5, name: "Turner & Townsend", src: "/logos/turner-townsend.svg" },
+  { id: 5, name: "Turner & Townsend", src: "/logos/turner-townsend.png" },
   {
     id: 6,
     name: "Brookfield Properties",
@@ -31,7 +31,7 @@ const ROW_TOP = [
   {
     id: 12,
     name: "Rising Realty Partners",
-    src: "/logos/rising-realty-partners.webp",
+    src: "/logos/rising.png",
   },
   { id: 13, name: "Tishman Speyer", src: "/logos/tishman-speyer.webp" },
   { id: 14, name: "AECOM", src: "/logos/aecom.svg" },
@@ -41,10 +41,10 @@ const ROW_TOP = [
 
 const ROW_BOTTOM = [
   { id: 17, name: "DLR Group", src: "/logos/dlr-group.svg" },
-  { id: 18, name: "Formm Studio", src: "/logos/formm-studio.webp" },
+  { id: 18, name: "Form Studio", src: "/logos/form.png" },
   { id: 19, name: "HOK", src: "/logos/hok.webp" },
-  { id: 20, name: "Gruen", src: "/logos/gruen.webp" },
-  { id: 21, name: "HED Design", src: "/logos/hed-design.webp" },
+  { id: 20, name: "Gruen", src: "/logos/gruen.png" },
+  { id: 21, name: "HED Design", src: "/logos/hed.png" },
   { id: 22, name: "Perkins & Will", src: "/logos/perkins-will.svg" },
   { id: 23, name: "Huntsman Architectural", src: "/logos/huntsman.webp" },
   { id: 24, name: "Johnson Fain", src: "/logos/johnson-fain.webp" },
