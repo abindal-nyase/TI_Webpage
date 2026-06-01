@@ -13,9 +13,9 @@ import styles from './TrustWallOption3.module.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const ROW_TOP = [
-  { id: 1, name: "Clune Construction", src: "/logos/clune.jpeg" },
+  { id: 1, name: "Clune Construction", src: "/logos/clune.webp" },
   { id: 2, name: "Mata Construction", src: "/logos/mata-construction.webp" },
-  { id: 3, name: "Novo Construction", src: "/logos/novo.jpg" },
+  { id: 3, name: "Novo Construction", src: "/logos/novo.webp" },
   { id: 4, name: "Swinerton", src: "/logos/swinerton.png" },
   { id: 5, name: "Turner & Townsend", src: "/logos/turner-townsend.png" },
   {
@@ -40,26 +40,26 @@ const ROW_TOP = [
 ];
 
 const ROW_BOTTOM = [
-  { id: 17, name: "DLR Group", src: "/logos/dlr-group.svg" },
+  { id: 17, name: "DLR Group", src: "/logos/dlr-group.png" },
   { id: 18, name: "Form Studio", src: "/logos/form.png" },
   { id: 19, name: "HOK", src: "/logos/hok.webp" },
   { id: 20, name: "Gruen", src: "/logos/gruen.png" },
-  { id: 21, name: "HED Design", src: "/logos/hed.png" },
+  { id: 21, name: "HED Design", src: "/logos/hed.webp" },
   { id: 22, name: "Perkins & Will", src: "/logos/perkins-will.svg" },
   { id: 23, name: "Huntsman Architectural", src: "/logos/huntsman.webp" },
   { id: 24, name: "Johnson Fain", src: "/logos/johnson-fain.webp" },
   { id: 25, name: "KDA", src: "/logos/kda.webp" },
-  { id: 26, name: "LPA Inc.", src: "/logos/lpa.svg" },
-  { id: 27, name: "RIOS Inc.", src: "/logos/rios.webp" },
+  { id: 26, name: "LPA Inc.", src: "/logos/lpa-inc.webp" },
+  { id: 27, name: "RIOS Inc.", src: "/logos/rios.png" },
   {
     id: 28,
     name: "Shlemmer Kamus Algaze",
     src: "/logos/shlemmer-kamus-algaze.webp",
   },
   { id: 29, name: "SOM", src: "/logos/som.webp" },
-  { id: 30, name: "Studio One Eleven", src: "/logos/studio-one-eleven.svg" },
-  { id: 31, name: "Ware Malcomb", src: "/logos/ware-malcomb.svg" },
-  { id: 32, name: "Area Architecture", src: "/logos/area.jpg" },
+  { id: 30, name: "Studio One Eleven", src: "/logos/studio111.png" },
+  { id: 31, name: "Ware Malcomb", src: "/logos/ware-malcomb.png" },
+  { id: 32, name: "Area Architecture", src: "/logos/area.webp" },
 ];
 
 function LogoItem({ name, src }) {
