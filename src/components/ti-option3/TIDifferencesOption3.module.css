@@ -96,11 +96,48 @@
   top: 0;
   height: 100vh;
   display: grid;
-  grid-template-columns: 44% 56%;
+  grid-template-columns: var(--tower-col-pct, 44%) 1fr;
   overflow: hidden;
   background: var(--surface-card, #fff);
 }
 .discSceneCollapse { overflow: clip; }
+
+/* CD4: full-width single tower, no text column */
+.discSceneCd4 {
+  grid-template-columns: 1fr;
+}
+
+/* CD4 tower column — fills the full scene, centers tower horizontally */
+.towerColCd4 {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2vh 4vw;
+  overflow: visible;
+}
+
+/* CD3 left tower column */
+.towerColCd3 {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2vh 2vw;
+  overflow: visible;
+  border-right: 1px solid var(--border-accent);
+}
+
+/* Grid-stacking wrapper so red and green towers occupy the same space */
+.towerOverlap {
+  display: grid;
+  grid-template-rows: 1fr;
+  align-items: center;
+}
 
 /* ── TOWER COLUMN ─────────────────────────────────────────────────────────── */
 .towerCol {
@@ -122,6 +159,7 @@
   align-items: center;
   gap: 8px;
   width: 100%;
+  transform: translateX(var(--tower-col-shift, 0px));
 }
 
 /* ── SECTION HEADERS ──────────────────────────────────────────────────────── */
@@ -459,7 +497,7 @@
   margin: 0 auto 1.5rem;
 }
 
-/* ── OPTION 1: BARS & BUBBLES ─────────────────────────────────────────────── */
+/* ── BARS & BUBBLES 1 ─────────────────────────────────────────────────────── */
 .barScene {
   position: sticky;
   top: 0;
