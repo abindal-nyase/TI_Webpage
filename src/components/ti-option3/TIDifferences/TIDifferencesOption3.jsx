@@ -5,7 +5,7 @@ import { CollapsingDiscs4 } from './CollapsingDiscs4.jsx'
 
 export default function TIDifferencesOption3() {
   return (
-    <div className={s.root} style={{ '--red': TEXT_REDS, '--green': TEXT_GREENS }}>
+    <div id="section-ti-differences" className={s.root} style={{ '--red': TEXT_REDS, '--green': TEXT_GREENS }}>
       <Intro />
       <CollapsingDiscs4 />
     </div>

@@ -58,6 +58,7 @@ export default function FirmCultureOption3() {
 
     document.fonts.ready.then(() => {
       if (cancelled) return;
+      ScrollTrigger.refresh();
       context.add(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -108,7 +109,7 @@ export default function FirmCultureOption3() {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className={styles.section}>
+    <section id="section-firm-culture" ref={sectionRef} className={styles.section}>
       <div ref={stickyRef} className={styles.sticky}>
 
         {/* word cloud — dense repeating rows */}

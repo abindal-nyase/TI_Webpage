@@ -145,7 +145,7 @@ export default function TrustWallOption3() {
   }, []);
 
   return (
-    <section ref={sectionRef} className={styles.section}>
+    <section id="section-trust-wall" ref={sectionRef} className={styles.section}>
       <div className={styles.inner}>
         <h2 ref={headingRef} className={styles.heading}>
           In good
