@@ -79,11 +79,9 @@ export const ITEMS = [
 ]
 
 export const COPY = {
-  introEyebrow:    'Structural Pitfalls in TI Projects',
-  introHeadMain:   'When structure is treated as a checkbox,',
+  introHeadMain:   ['When structure is', 'treated as a second thought,'],
   introHeadEm:     'the whole project pays.',
-  introSub:        'A TI project can lose value, time, and design integrity in ways that are easy to miss at the start.',
-  introCue:        'scroll to explore',
+  introSub:        'There are many ways a TI project can lose value, time, and design integrity. Take a look at what changes when the engineer understands the building.',
   eyebrowRed:      'Common Problems',
   titleRed:        'The Risk',
   eyebrowGreen:    'Done Right',

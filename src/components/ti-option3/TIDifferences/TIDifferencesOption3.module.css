@@ -40,7 +40,7 @@
 /* Eyebrow — matches TIDifferencesOption3 style: accent color + decorative line */
 .eyebrow {
   font-family: var(--font-body);
-  font-size: var(--text-eyebrow, 11px);
+  font-size: var(--text-eyebrow, 0.69rem);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -61,14 +61,17 @@
 
 .introH {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  font-size: clamp(1.2rem, 3vw, 2.6rem);
   font-weight: 600;
-  line-height: 1.12;
+  line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--color-black, #0F172A);
   margin: 0;
+  max-width: none;
+  width: max-content;
 }
-.introH em { font-style: italic; color: var(--color-accent); }
+.introH em { font-style: italic; color: var(--color-accent); display: block; white-space: normal; }
+.introHeadMain { white-space: nowrap; display: block; }
 
 .introSub {
   font-family: var(--font-body);
@@ -80,7 +83,7 @@
 
 .cue {
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 400;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -174,7 +177,7 @@
 
 .eyebrowRed {
   font-family: var(--font-body);
-  font-size: calc(9px * var(--font-scale, 1));
+  font-size: calc(0.56rem * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -183,7 +186,7 @@
 }
 .eyebrowGreen {
   font-family: var(--font-body);
-  font-size: calc(9px * var(--font-scale, 1));
+  font-size: calc(0.56rem * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -293,7 +296,7 @@
 }
 .valueBarLabel {
   font-family: var(--font-body);
-  font-size: 7px;
+  font-size: 0.44rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -323,7 +326,7 @@
 }
 .riskBarTitle {
   font-family: var(--font-body);
-  font-size: calc(7px * var(--font-scale, 1));
+  font-size: calc(0.44rem * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -331,13 +334,13 @@
 }
 .riskBarPct {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: calc(13px * var(--font-scale, 1));
+  font-size: calc(0.81rem * var(--font-scale, 1));
   color: var(--color-black, #0F172A);
   line-height: 1;
 }
 .riskBarCat {
   font-family: var(--font-body);
-  font-size: calc(6px * var(--font-scale, 1));
+  font-size: calc(0.375rem * var(--font-scale, 1));
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -413,7 +416,7 @@
 }
 .discCat {
   font-family: var(--font-body);
-  font-size: calc(9.5px * var(--font-scale, 1));
+  font-size: calc(0.59rem * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -483,7 +486,7 @@
   text-align: center;
   padding: 3rem 0 1rem;
   font-family: var(--font-body);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -566,7 +569,7 @@
 .redBubbleCat,
 .greenBubbleCat {
   font-family: var(--font-body);
-  font-size: calc(9.5px * var(--font-scale, 1));
+  font-size: calc(0.59rem * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
