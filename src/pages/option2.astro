@@ -2,6 +2,7 @@
 import '../index.css'
 import GlobalSetup from '../components/GlobalSetup/GlobalSetup'
 import Nav from '../components/Nav/Nav'
+import BackToHub from '../components/BackToHub.astro'
 ---
 
 <!DOCTYPE html>
@@ -20,6 +21,7 @@ import Nav from '../components/Nav/Nav'
     />
   </head>
   <body>
+    <BackToHub />
     <GlobalSetup client:load />
     <Nav client:load />
 
