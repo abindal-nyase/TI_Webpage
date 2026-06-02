@@ -3,6 +3,7 @@ import '../index.css'
 import GlobalSetup from '../components/GlobalSetup/GlobalSetup'
 import StatsStrip from '../components/StatsStrip/StatsStrip'
 import StatsSection from '../components/ti-option2/StatsSection'
+import BackToHub from '../components/BackToHub.astro'
 ---
 
 <!DOCTYPE html>
@@ -49,6 +50,7 @@ import StatsSection from '../components/ti-option2/StatsSection'
     </style>
   </head>
   <body>
+    <BackToHub />
     <GlobalSetup client:load />
 
     <div class="dev-bar">

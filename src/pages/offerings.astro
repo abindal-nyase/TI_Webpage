@@ -2,6 +2,7 @@
 import '../index.css'
 import GlobalSetup from '../components/GlobalSetup/GlobalSetup'
 import Offerings from '../components/Offerings/Offerings'
+import BackToHub from '../components/BackToHub.astro'
 ---
 
 <!DOCTYPE html>
@@ -48,6 +49,7 @@ import Offerings from '../components/Offerings/Offerings'
     </style>
   </head>
   <body>
+    <BackToHub />
     <GlobalSetup client:load />
 
     <div class="dev-bar">

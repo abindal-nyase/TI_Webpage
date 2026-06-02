@@ -1,21 +1,7 @@
 ---
-/*
- * option3.astro — TI Page Option 3 (WIP / Skeleton)
- *
- * Theme switcher bar at top lets you toggle color scheme and font pair.
- * All components read CSS variables from :root — they react to changes automatically.
- *
- * Color schemes: navy-blue | slate-amber | charcoal-cyan | forest-stone | violet-gold | navy-gold | maroon-gold
- * Font pairs:    playfair-inter | fraunces-jakarta | cormorant-montserrat | baskerville-source | spectral-work
- */
 import '../index.css';
 import GlobalSetup from '../components/GlobalSetup/GlobalSetup';
-import Hero4 from '../components/Hero4/Hero4.jsx';
-import TIDifferencesOption3 from '../components/ti-option3/TIDifferences/TIDifferencesOption3';
-import FirmCultureOption3 from '../components/ti-option3/FirmCultureOption3';
-import CTAOption3 from '../components/ti-option3/CTAOption3';
-import CaringFirmOption3 from '../components/ti-option3/CaringFirmOption3';
-import TrustWallOption3 from '../components/ti-option3/TrustWallOption3';
+import TIDifferencesOption3Showcase from '../components/ti-option3/TIDifferences/TIDifferencesOption3Showcase';
 import BackToHub from '../components/BackToHub.astro';
 ---
 
@@ -26,9 +12,8 @@ import BackToHub from '../components/BackToHub.astro';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-  <title>NYA TI — Option 3 (WIP)</title>
+  <title>NYA TI — Option 3 Ideas Showcase</title>
 
-  <!-- All font families used by the theme switcher must be loaded here -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -37,9 +22,6 @@ import BackToHub from '../components/BackToHub.astro';
   />
 
   <style is:global>
-    /* ─────────────────────────────────────
-       Theme switcher bar
-    ───────────────────────────────────── */
     .theme-bar {
       position: sticky;
       top: 0;
@@ -48,24 +30,21 @@ import BackToHub from '../components/BackToHub.astro';
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0 40px;
     }
-
     .theme-bar-inner {
       display: flex;
-      align-items: stretch;
+      align-items: center;
       gap: 0;
       overflow-x: auto;
       scrollbar-width: none;
       height: 56px;
     }
     .theme-bar-inner::-webkit-scrollbar { display: none; }
-
     .tb-group {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-shrink: 0;
     }
-
     .tb-label {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 9px;
@@ -77,7 +56,6 @@ import BackToHub from '../components/BackToHub.astro';
       flex-shrink: 0;
       margin-right: 6px;
     }
-
     .tb-divider {
       width: 1px;
       height: 28px;
@@ -86,8 +64,6 @@ import BackToHub from '../components/BackToHub.astro';
       margin: 0 20px;
       align-self: center;
     }
-
-    /* Color swatch buttons */
     .tb-color-btn {
       display: flex;
       align-items: center;
@@ -123,12 +99,7 @@ import BackToHub from '../components/BackToHub.astro';
       color: #fff;
       white-space: nowrap;
     }
-    .tb-color-btn.active .tb-scheme-name {
-      color: #fff;
-      font-weight: 700;
-    }
-
-    /* Font buttons */
+    .tb-color-btn.active .tb-scheme-name { font-weight: 700; }
     .tb-font-btn {
       padding: 6px 14px;
       border-radius: 8px;
@@ -153,7 +124,6 @@ import BackToHub from '../components/BackToHub.astro';
       border-color: #fff;
       font-weight: 700;
     }
-
     .tb-page-label {
       margin-left: auto;
       flex-shrink: 0;
@@ -166,7 +136,6 @@ import BackToHub from '../components/BackToHub.astro';
       padding-left: 24px;
       align-self: center;
     }
-
     @media (max-width: 640px) {
       .theme-bar { padding: 0 16px; }
       .tb-scheme-name { display: none; }
@@ -178,43 +147,26 @@ import BackToHub from '../components/BackToHub.astro';
   <BackToHub />
   <GlobalSetup client:load />
 
-  <!-- ── Theme switcher bar ── -->
-  <div class="theme-bar" id="theme-bar">
+  <div class="theme-bar">
     <div class="theme-bar-inner">
-
       <div class="tb-group">
         <span class="tb-label">Color</span>
         <div class="tb-group" id="tb-colors" style="gap:4px;"></div>
       </div>
-
       <div class="tb-divider"></div>
-
       <div class="tb-group">
         <span class="tb-label">Font</span>
         <div class="tb-group" id="tb-fonts" style="gap:4px;"></div>
       </div>
-
-      <span class="tb-page-label">Option 3 — WIP</span>
+      <span class="tb-page-label">Option 3 — TI Differences Ideas</span>
     </div>
   </div>
 
-  <!-- ── Page sections ── -->
   <main>
-    <Hero4 client:load />
-    <TIDifferencesOption3 client:visible />
-    <FirmCultureOption3 client:load />
-    <TrustWallOption3 client:visible />
-    <CaringFirmOption3 client:visible />
-    <CTAOption3 client:visible />
+    <TIDifferencesOption3Showcase client:load />
   </main>
 
   <script>
-    /*
-     * Theme switcher — sets CSS custom properties on :root.
-     * All components use var(--color-primary), var(--font-display), etc.
-     * Adding a new scheme: add an entry to SCHEMES below. No other changes needed.
-     */
-
     const SCHEMES = [
       {
         id: 'navy-blue', name: 'NB',
@@ -288,70 +240,38 @@ import BackToHub from '../components/BackToHub.astro';
           '--shadow-accent':       '0 8px 28px rgba(180,83,9,0.28)',
         },
       },
-      {
-        id: 'maroon-gold', name: 'MG',
-        swatches: ['#5C0B0B', '#C9953A'],
-        vars: {
-          '--color-primary':       '#5C0B0B',
-          '--color-primary-light': '#7A1515',
-          '--color-accent':        '#C9953A',
-          '--color-accent-hover':  '#B07E28',
-          '--border-accent':       'rgba(201,149,58,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(201,149,58,0.28)',
-        },
-      },
     ];
 
     const FONTS = [
-      {
-        id: 'playfair-inter', label: 'Playfair + Inter',
-        displayFamily: "'Playfair Display', Georgia, serif",
-        bodyFamily:    "'Inter', system-ui, sans-serif",
-      },
-      {
-        id: 'fraunces-jakarta', label: 'Fraunces + Jakarta',
-        displayFamily: "'Fraunces', Georgia, serif",
-        bodyFamily:    "'Plus Jakarta Sans', system-ui, sans-serif",
-      },
-      {
-        id: 'cormorant-montserrat', label: 'Cormorant + Montserrat',
-        displayFamily: "'Cormorant Garamond', Georgia, serif",
-        bodyFamily:    "'Montserrat', system-ui, sans-serif",
-      },
-      {
-        id: 'baskerville-source', label: 'Baskerville + Source',
-        displayFamily: "'Libre Baskerville', Georgia, serif",
-        bodyFamily:    "'Source Sans 3', system-ui, sans-serif",
-      },
-      {
-        id: 'spectral-work', label: 'Spectral + Work',
-        displayFamily: "'Spectral', Georgia, serif",
-        bodyFamily:    "'Work Sans', system-ui, sans-serif",
-      },
+      { id: 'playfair-inter', label: 'Playfair + Inter', displayFamily: "'Playfair Display', Georgia, serif", bodyFamily: "'Inter', system-ui, sans-serif" },
+      { id: 'fraunces-jakarta', label: 'Fraunces + Jakarta', displayFamily: "'Fraunces', Georgia, serif", bodyFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+      { id: 'cormorant-montserrat', label: 'Cormorant + Montserrat', displayFamily: "'Cormorant Garamond', Georgia, serif", bodyFamily: "'Montserrat', system-ui, sans-serif" },
+      { id: 'baskerville-source', label: 'Baskerville + Source', displayFamily: "'Libre Baskerville', Georgia, serif", bodyFamily: "'Source Sans 3', system-ui, sans-serif" },
+      { id: 'spectral-work', label: 'Spectral + Work', displayFamily: "'Spectral', Georgia, serif", bodyFamily: "'Work Sans', system-ui, sans-serif" },
     ];
 
     let activeScheme = 'navy-blue';
     let activeFont   = 'playfair-inter';
 
-    function applyScheme(id: string) {
+    function applyScheme(id) {
       const scheme = SCHEMES.find(s => s.id === id);
       if (!scheme) return;
       const root = document.documentElement;
       Object.entries(scheme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
       activeScheme = id;
-      document.querySelectorAll<HTMLButtonElement>('.tb-color-btn').forEach(btn =>
+      document.querySelectorAll('.tb-color-btn').forEach(btn =>
         btn.classList.toggle('active', btn.dataset.id === id)
       );
     }
 
-    function applyFont(id: string) {
+    function applyFont(id) {
       const font = FONTS.find(f => f.id === id);
       if (!font) return;
       const root = document.documentElement;
       root.style.setProperty('--font-display', font.displayFamily);
       root.style.setProperty('--font-body',    font.bodyFamily);
       activeFont = id;
-      document.querySelectorAll<HTMLButtonElement>('.tb-font-btn').forEach(btn =>
+      document.querySelectorAll('.tb-font-btn').forEach(btn =>
         btn.classList.toggle('active', btn.dataset.id === id)
       );
     }
@@ -382,7 +302,6 @@ import BackToHub from '../components/BackToHub.astro';
         fontsEl.appendChild(btn);
       });
 
-      // Apply defaults
       applyScheme(activeScheme);
       applyFont(activeFont);
     }
