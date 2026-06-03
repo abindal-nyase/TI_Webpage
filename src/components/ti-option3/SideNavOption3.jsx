@@ -1,75 +1,121 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import styles from './SideNavOption3.module.css';
 
 const SECTIONS = [
-  { id: 'hero4',                   num: '00', label: 'Overview' },
-  { id: 'section-ti-differences',  num: '01', label: 'TI Differences' },
-  { id: 'section-firm-culture',    num: '02', label: 'Firm Culture' },
-  { id: 'section-trust-wall',      num: '03', label: 'Trust & Clients' },
-  { id: 'section-caring-firm',     num: '04', label: 'Our Ethos' },
-  { id: 'section-cta',             num: '05', label: 'Get Started' },
+  { id: 'hero4',                   num: '00', label: 'Overview',       dark: true  },
+  { id: 'section-ti-differences',  num: '01', label: 'TI Differences', dark: false },
+  { id: 'section-firm-culture',    num: '02', label: 'Firm Culture',   dark: true  },
+  { id: 'section-trust-wall',      num: '03', label: 'Trust & Clients',dark: true  },
+  { id: 'section-caring-firm',     num: '04', label: 'Our Ethos',      dark: false },
+  { id: 'section-cta',             num: '05', label: 'Get Started',    dark: true  },
 ];
+
+// Color endpoint definitions (resolved to RGB at runtime)
+const COLOR_PAIRS = {
+  num:     { light: 'var(--color-gray-700)',  dark: 'rgba(255,255,255,0.45)' },
+  numHi:   { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
+  label:   { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
+  border:  { light: 'rgba(0,0,0,0.08)',       dark: 'rgba(255,255,255,0.1)'  },
+  hoverBg: { light: 'rgba(0,0,0,0.05)',       dark: 'rgba(255,255,255,0.07)' },
+  fill:    { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
+};
+
+function parseCSSColor(value) {
+  const probe = document.createElement('div');
+  probe.style.cssText = `color:${value};position:absolute;pointer-events:none;opacity:0`;
+  document.body.appendChild(probe);
+  const raw = getComputedStyle(probe).color; // always returns rgb() or rgba()
+  document.body.removeChild(probe);
+  const m = raw.match(/[\d.]+/g);
+  if (!m) return [0, 0, 0, 1];
+  return [+m[0], +m[1], +m[2], m[3] !== undefined ? +m[3] : 1];
+}
+
+function resolveAllColors() {
+  const out = {};
+  for (const [key, pair] of Object.entries(COLOR_PAIRS)) {
+    out[key] = { light: parseCSSColor(pair.light), dark: parseCSSColor(pair.dark) };
+  }
+  return out;
+}
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function blendRGBA([lr, lg, lb, la], [dr, dg, db, da], t) {
+  return `rgba(${Math.round(lerp(lr, dr, t))},${Math.round(lerp(lg, dg, t))},${Math.round(lerp(lb, db, t))},${lerp(la, da, t).toFixed(3)})`;
+}
 
 function getSectionProgress(el) {
   if (!el) return 0;
   const rect = el.getBoundingClientRect();
   const vh = window.innerHeight;
-  const p = -rect.top / (rect.height - vh);
-  return Math.min(1, Math.max(0, p));
+  return Math.min(1, Math.max(0, -rect.top / (rect.height - vh)));
 }
 
-function NavItems({ activeIdx, progress, onClickSection }) {
-  return (
-    <ul className={styles.list}>
-      {SECTIONS.map((section, idx) => {
-        const isDone = idx < activeIdx;
-        const isActive = idx === activeIdx;
-        const state = isDone ? 'done' : isActive ? 'active' : 'upcoming';
-
-        return (
-          <li key={section.id} className={`${styles.item} ${styles[state]}`}>
-            <button
-              className={styles.btn}
-              onClick={() => onClickSection(section.id)}
-              aria-current={isActive ? 'true' : undefined}
-              aria-label={`Go to ${section.label}`}
-            >
-              <span
-                className={styles.fillBg}
-                style={isActive ? { height: `${Math.round(progress * 100)}%` } : undefined}
-              />
-              <span className={styles.content}>
-                <span className={styles.label}>{section.label}</span>
-                <span className={styles.num}>{section.num}/</span>
-              </span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
-  );
+// Fraction of pill height covered by dark-background sections
+function computeDarkRatio(pillEl) {
+  if (!pillEl) return 0;
+  const pr = pillEl.getBoundingClientRect();
+  let covered = 0;
+  for (const s of SECTIONS) {
+    if (!s.dark) continue;
+    const el = document.getElementById(s.id);
+    if (!el) continue;
+    const sr = el.getBoundingClientRect();
+    const top = Math.max(pr.top, sr.top);
+    const bot = Math.min(pr.bottom, sr.bottom);
+    if (bot > top) covered += bot - top;
+  }
+  return Math.min(1, covered / Math.max(1, pr.height));
 }
 
 export default function SideNavOption3() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+  const itemRefs = useRef([]);
+  const colorsRef = useRef(null);
 
   useEffect(() => {
+    colorsRef.current = resolveAllColors();
+
+    // Re-resolve when theme switcher mutates root style (CSS vars change)
+    const mo = new MutationObserver(() => {
+      colorsRef.current = resolveAllColors();
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+
     const update = () => {
       const mid = window.innerHeight * 0.4;
       let best = 0;
       SECTIONS.forEach((s, i) => {
         const el = document.getElementById(s.id);
-        if (!el) return;
-        if (el.getBoundingClientRect().top <= mid) best = i;
+        if (el && el.getBoundingClientRect().top <= mid) best = i;
       });
       setActiveIdx(best);
       setProgress(getSectionProgress(document.getElementById(SECTIONS[best].id)));
+
+      // Direct DOM update — avoids React re-render on every scroll frame
+      const rc = colorsRef.current;
+      if (!rc) return;
+      itemRefs.current.forEach((el) => {
+        if (!el) return;
+        const t = computeDarkRatio(el);
+        el.style.setProperty('--pill-num',      blendRGBA(rc.num.light,     rc.num.dark,     t));
+        el.style.setProperty('--pill-num-hi',   blendRGBA(rc.numHi.light,   rc.numHi.dark,   t));
+        el.style.setProperty('--pill-label',    blendRGBA(rc.label.light,   rc.label.dark,   t));
+        el.style.setProperty('--pill-border',   blendRGBA(rc.border.light,  rc.border.dark,  t));
+        el.style.setProperty('--pill-hover-bg', blendRGBA(rc.hoverBg.light, rc.hoverBg.dark, t));
+        el.style.setProperty('--pill-fill',     blendRGBA(rc.fill.light,    rc.fill.dark,    t));
+      });
     };
 
     window.addEventListener('scroll', update, { passive: true });
     update();
-    return () => window.removeEventListener('scroll', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      mo.disconnect();
+    };
   }, []);
 
   const handleClick = useCallback((id) => {
@@ -83,8 +129,45 @@ export default function SideNavOption3() {
   }, []);
 
   return (
-    <nav className={`${styles.nav} ${styles.navRight}`} aria-label="Page sections">
-      <NavItems activeIdx={activeIdx} progress={progress} onClickSection={handleClick} />
+    <nav className={`${styles.nav} ${styles.navLeft}`} aria-label="Page sections">
+      <ul className={styles.list} onMouseLeave={() => setHoveredIdx(null)}>
+        {SECTIONS.map((section, idx) => {
+          const isDone = idx < activeIdx;
+          const isActive = idx === activeIdx;
+          const state = isDone ? 'done' : isActive ? 'active' : 'upcoming';
+          const showLabel = (isActive && hoveredIdx === null) || idx === hoveredIdx;
+          let fillHeight = '0%';
+          if (isDone) fillHeight = '100%';
+          else if (isActive) fillHeight = `${Math.round(progress * 100)}%`;
+
+          return (
+            <li
+              key={section.id}
+              ref={(el) => { itemRefs.current[idx] = el; }}
+              className={`${styles.item} ${styles[state]}`}
+              onMouseEnter={() => setHoveredIdx(idx)}
+            >
+              <button
+                className={styles.btn}
+                onClick={() => handleClick(section.id)}
+                aria-current={isActive ? 'true' : undefined}
+                aria-label={`Go to ${section.label}`}
+              >
+                <span
+                  className={styles.fillBg}
+                  style={{ height: fillHeight, background: 'var(--pill-fill)' }}
+                />
+                <span className={styles.content}>
+                  <span className={`${styles.label}${showLabel ? ' ' + styles.labelVisible : ''}`}>
+                    {section.label}
+                  </span>
+                  <span className={styles.num}>{section.num}/</span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 }
