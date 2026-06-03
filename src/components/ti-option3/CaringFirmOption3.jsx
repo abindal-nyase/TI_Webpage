@@ -20,7 +20,7 @@ const PILLARS = [
 
 export default function CaringFirmOption3() {
   return (
-    <section className={styles.section}>
+    <section id="section-caring-firm" className={styles.section}>
       <div className={styles.inner}>
         {/* Left: text content */}
         <div className={styles.content}>

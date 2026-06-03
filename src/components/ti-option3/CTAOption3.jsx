@@ -13,7 +13,7 @@ import styles from './CTAOption3.module.css';
 
 export default function CTAOption3() {
   return (
-    <section className={styles.section}>
+    <section id="section-cta" className={styles.section}>
       <div className={styles.inner}>
         <p className={styles.eyebrow}>Get Started</p>
         <h2 className={styles.heading}>
