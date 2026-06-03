@@ -18,9 +18,9 @@ function getSectionProgress(el) {
   return Math.min(1, Math.max(0, p));
 }
 
-function NavBars({ activeIdx, progress, onClickSection, side }) {
+function NavItems({ activeIdx, progress, onClickSection }) {
   return (
-    <ul className={`${styles.list} ${styles[side]}`}>
+    <ul className={styles.list}>
       {SECTIONS.map((section, idx) => {
         const isDone = idx < activeIdx;
         const isActive = idx === activeIdx;
@@ -34,33 +34,14 @@ function NavBars({ activeIdx, progress, onClickSection, side }) {
               aria-current={isActive ? 'true' : undefined}
               aria-label={`Go to ${section.label}`}
             >
-              {/* Left side: bar first, then meta */}
-              {side === 'left' && (
-                <span className={styles.track}>
-                  <span
-                    className={styles.fill}
-                    style={isActive ? { width: `${Math.round(progress * 100)}%` } : undefined}
-                  />
-                </span>
-              )}
-
-              {/* Right side meta (label + num) */}
-              {side === 'right' && (
-                <span className={styles.meta}>
-                  <span className={styles.label}>{section.label}</span>
-                  <span className={styles.num}>{section.num}/</span>
-                </span>
-              )}
-
-              {/* Right side: bar after meta */}
-              {side === 'right' && (
-                <span className={styles.track}>
-                  <span
-                    className={styles.fill}
-                    style={isActive ? { width: `${Math.round(progress * 100)}%` } : undefined}
-                  />
-                </span>
-              )}
+              <span
+                className={styles.fillBg}
+                style={isActive ? { height: `${Math.round(progress * 100)}%` } : undefined}
+              />
+              <span className={styles.content}>
+                <span className={styles.label}>{section.label}</span>
+                <span className={styles.num}>{section.num}/</span>
+              </span>
             </button>
           </li>
         );
@@ -102,13 +83,8 @@ export default function SideNavOption3() {
   }, []);
 
   return (
-    <>
-      <nav className={`${styles.nav} ${styles.navLeft}`} aria-hidden="true">
-        <NavBars activeIdx={activeIdx} progress={progress} onClickSection={handleClick} side="left" />
-      </nav>
-      <nav className={`${styles.nav} ${styles.navRight}`} aria-label="Page sections">
-        <NavBars activeIdx={activeIdx} progress={progress} onClickSection={handleClick} side="right" />
-      </nav>
-    </>
+    <nav className={`${styles.nav} ${styles.navRight}`} aria-label="Page sections">
+      <NavItems activeIdx={activeIdx} progress={progress} onClickSection={handleClick} />
+    </nav>
   );
 }

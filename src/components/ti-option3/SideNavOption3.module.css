@@ -5,10 +5,6 @@
   z-index: 100;
 }
 
-.navLeft {
-  left: 20px;
-}
-
 .navRight {
   right: 20px;
 }
@@ -20,59 +16,53 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.list.left {
-  align-items: flex-start;
-}
-
-.list.right {
-  align-items: flex-end;
+  gap: 6px;
+  align-items: center;
 }
 
 .item {
   display: flex;
-  align-items: center;
 }
 
-/* ── button reset ── */
+/* ── unified pill button ── */
 .btn {
   all: unset;
   cursor: pointer;
+  position: relative;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-/* ── bar track ── */
-.track {
-  display: block;
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(128,128,128,0.2);
+  justify-content: center;
   overflow: hidden;
-  flex-shrink: 0;
-  transition: width 0.35s var(--ease-out), background 0.3s var(--ease-out);
+  border-radius: 3px;
+  background: rgba(128, 128, 128, 0.1);
+  padding: 8px 5px;
+  transition: background 0.3s var(--ease-out);
 }
 
-.fill {
-  display: block;
-  height: 100%;
+/* ── fill layer (grows from bottom) ── */
+.fillBg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
   background: var(--color-accent);
-  border-radius: 2px;
-  width: 0%;
-  transition: width 0.12s linear;
+  opacity: 0.2;
+  pointer-events: none;
+  border-radius: 3px;
+  transition: height 0.12s linear;
 }
 
-/* ── text meta ── */
-.meta {
+/* ── text content (vertical) ── */
+.content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
 .num {
@@ -92,29 +82,26 @@
   letter-spacing: 0.06em;
   white-space: nowrap;
   color: var(--color-accent);
-  max-width: 0;
+  max-height: 0;
   overflow: hidden;
   opacity: 0;
   transition:
-    max-width 0.35s var(--ease-out),
+    max-height 0.35s var(--ease-out),
     opacity 0.25s var(--ease-out);
 }
 
 /* ─── done ─── */
-.item.done .track   { width: 20px; }
-.item.done .fill    { width: 100%; opacity: 0.4; }
-.item.done .num     { color: var(--color-accent); opacity: 0.5; }
+.item.done .fillBg { height: 100%; opacity: 0.08; }
+.item.done .num    { color: var(--color-accent); opacity: 0.5; }
 
 /* ─── active ─── */
-.item.active .track { width: 44px; }
 .item.active .num   { color: var(--color-accent); }
-.item.active .label { max-width: 160px; opacity: 1; }
+.item.active .label { max-height: 100px; opacity: 1; }
 
 /* ─── upcoming ─── */
-.item.upcoming .track { width: 14px; background: rgba(128,128,128,0.25); }
-.item.upcoming .num   { color: var(--color-gray-700); }
+.item.upcoming .num { color: var(--color-gray-700); }
 
-.btn:hover .track { background: rgba(255,255,255,0.2); }
+.btn:hover { background: rgba(128, 128, 128, 0.2); }
 
 @media (max-width: 768px) {
   .nav { display: none; }

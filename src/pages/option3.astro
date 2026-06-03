@@ -345,6 +345,7 @@ import BackToHub from '../components/BackToHub.astro';
       document.querySelectorAll<HTMLButtonElement>('.tb-color-btn').forEach(btn =>
         btn.classList.toggle('active', btn.dataset.id === id)
       );
+      window.dispatchEvent(new CustomEvent('themechange'));
     }
 
     function applyFont(id: string) {

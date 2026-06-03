@@ -95,15 +95,16 @@ export default function TrustWallOption3() {
   const bodyRef = useRef(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      document.fonts.ready.then(() => {
+    let ctx;
+
+    function buildAnims() {
+      if (ctx) ctx.revert();
+      ctx = gsap.context(() => {
         const cs = getComputedStyle(document.documentElement);
         const primaryColor = cs.getPropertyValue("--color-primary").trim();
         const accentColor = cs.getPropertyValue("--color-accent").trim();
-        const surfaceColor =
-          cs.getPropertyValue("--surface-page").trim() || "#F8FAFC";
-        const blackColor =
-          cs.getPropertyValue("--color-black").trim() || "#0F172A";
+        const surfaceColor = cs.getPropertyValue("--surface-page").trim() || "#F8FAFC";
+        const blackColor = cs.getPropertyValue("--color-black").trim() || "#0F172A";
 
         const trigger = {
           trigger: sectionRef.current,
@@ -138,10 +139,16 @@ export default function TrustWallOption3() {
           { color: "rgba(255,255,255,0.55)" },
           { color: "rgba(15,23,42,0.72)", scrollTrigger: trigger },
         );
-      });
-    }, sectionRef);
+      }, sectionRef);
+    }
 
-    return () => ctx.revert();
+    document.fonts.ready.then(buildAnims);
+
+    window.addEventListener("themechange", buildAnims);
+    return () => {
+      window.removeEventListener("themechange", buildAnims);
+      ctx?.revert();
+    };
   }, []);
 
   return (
