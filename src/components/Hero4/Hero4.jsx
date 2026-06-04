@@ -44,15 +44,18 @@ const CASCADE_OFFSET = 900       // delays the floor cascade until the building 
 
 // ── Timeline tuning ───────────────────────────────────────────────────────
 // Layers travel -1100/-1500 — that already clears them off the viewport top,
-// so there is NO separate exit lift. The bg2 dark trapezoid does NOT exit fully:
-// it rises until its flat bottom edge sits at the viewport bottom (-150vh, since
-// bg2 is top:100vh / height:150vh), then stops. The pin ends there, so the next
-// (white) TIDifferences section is FLUSH against bg2's bottom edge — the dark
-// background hands straight to the section with no full-white frame between.
+// so there is NO separate exit lift. The bg2 dark trapezoid rides UP with the
+// last floor (l8): it keeps rising until its sloped top edge clears the viewport
+// top, so the dark fills the whole viewport as l8 peels away — no white wedge
+// is ever exposed in the upper-left. bg2 is top:100vh / height:250vh, so at
+// BG2_REST (-185vh) its top-left slope corner sits at 178+(-185)= -7vh (above
+// the viewport) while its bottom edge is still at 165vh (below the viewport).
+// bg2 finishes in lockstep with l8, then the pin ends and the next section
+// scrolls up over the solid dark field — a clean horizontal hand-off.
 const LAYER_DUR = 2400     // visible floor-rise per layer
-const BG2_START = 1800     // dark trapezoid begins rising from below
-const BG2_DUR   = 7400     // settles flush in sync with the last floor (l8)
-const BG2_REST  = '-150vh' // flat bottom edge ends exactly at viewport bottom
+const BG2_START = 1200     // begins rising early so it leads the floor reveal
+const BG2_DUR   = 8200     // finishes at 10300 — exactly in sync with l8
+const BG2_REST  = '-185vh' // sloped top edge ends above the viewport top
 
 const LAYERS = [
   { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
