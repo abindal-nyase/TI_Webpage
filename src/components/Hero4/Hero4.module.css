@@ -23,6 +23,7 @@
 .movehome {
   left: 11vh;
   position: relative;
+  z-index: 5;
 }
 
 /* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
@@ -168,6 +169,48 @@
   top: 0;
 }
 
+/* ── Hero title — drop-cap "TENANT IMPROVEMENTS" ────────────────── */
+.heroTitle {
+  position: absolute;
+  top: 6vh;
+  left: 4vw;
+  z-index: 60;
+  color: #fff;
+  pointer-events: none;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  line-height: 0.85;
+}
+
+.dropCap {
+  font-family: var(--font-display, 'Playfair Display', serif);
+  font-size: 18vw;
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+}
+
+.titleRest {
+  font-family: var(--font-display, 'Playfair Display', serif);
+  font-size: 5.5vw;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  padding-bottom: 1.5vw;
+}
+
+/* ── White fade overlay — fills section, opacity animated to 1 at exit ── */
+.fadeOverlay {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    ANIMATED BACKGROUNDS — verbatim Paveletsky main.css
    bg1/bg2 are siblings to .movehome, both inside .trigger.
@@ -180,10 +223,11 @@
   position: relative;
   top: 1968px;
   width: 100%;
+  z-index: 1;
 }
 
-/* ── bg1 image — starts invisible, fades in during scroll ────────── */
-.bg1Img {
+/* ── bg1 shape — starts invisible, fades in during scroll ────────── */
+.bg1Shape {
   position: absolute;
   width: 100%;
   top: 106vh;
@@ -195,11 +239,34 @@
   position: relative;
   top: 224vh;
   width: 100%;
+  z-index: 1;
 }
 
-/* ── bg2 image ───────────────────────────────────────────────────── */
-.bg2Img {
+/* ── bg2 shape ───────────────────────────────────────────────────── */
+.bg2Shape {
   position: absolute;
   width: 100%;
   top: -252vh;
+}
+
+/* ── SVG background helpers ──────────────────────────────────────── */
+.bgSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Primary fill — responds instantly to theme switcher var changes */
+.bgFill {
+  fill: var(--color-primary, #0B1F3B);
+}
+
+.bgFillMid {
+  fill: var(--color-primary, #0B1F3B);
+  opacity: 0.55;
+}
+
+.bgFillLight {
+  fill: var(--color-primary, #0B1F3B);
+  opacity: 0.25;
 }
