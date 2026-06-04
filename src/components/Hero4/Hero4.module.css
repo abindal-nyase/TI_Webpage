@@ -169,10 +169,32 @@
   top: 0;
 }
 
-/* ── Hero title — drop-cap "TENANT IMPROVEMENTS" ────────────────── */
+/* ── Header bar — dark band, NYA logo left; lifts away on intro ──── */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+  z-index: 60;
+  background: var(--color-primary, #000);
+}
+
+.headerLogo {
+  height: 44px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+}
+
+/* ── Hero title — small-caps "Tenant / Improvements" ─────────────── */
 .heroTitle {
   position: absolute;
-  top: calc(6vh + 40px);
+  top: calc(96px + 3vh);
   left: 4vw;
   z-index: 60;
   color: #fff;
@@ -185,20 +207,29 @@
   line-height: 0.85;
 }
 
-.dropCap {
-  font-family: var(--font-display, 'Playfair Display', serif);
-  font-size: 18vw;
-  font-weight: 400;
-  line-height: 0.85;
-  letter-spacing: -0.02em;
+/* Second line ("Improvements") staggers right + drops down from the first */
+.titleRowIndent {
+  margin-left: 7vw;
+  margin-top: 2.5vh;
 }
 
-.titleRest {
+/* Single word, petite/small-caps. Initial letter enlarged via ::first-letter
+   so "Tenant" → big T + small-cap ENANT, all one word with no gap. */
+.titleWord {
+  display: inline-block;
   font-family: var(--font-display, 'Playfair Display', serif);
-  font-size: 5.5vw;
+  font-variant-caps: small-caps;
+  /* clamp: min · zoom-aware preferred (rem + vw) · max.
+     rem term reacts to browser zoom / root font-size; vw term to viewport. */
+  font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
   font-weight: 400;
   letter-spacing: 0.12em;
-  padding-bottom: 1.5vw;
+  line-height: 0.85;
+}
+
+.titleWord::first-letter {
+  font-size: 1.3em;       /* relative to the 5.5vw word size → ~18vw cap */
+  letter-spacing: 0em;
 }
 
 
@@ -218,11 +249,11 @@
   z-index: 1;
 }
 
-/* ── bg1 shape — flat top, bottom slopes up L→R; left=100vh, right=72vh ─ */
+/* ── bg1 shape — flat top, bottom slopes up L→R; left=120vh, right=72vh ─ */
 .bg1Shape {
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: 120vh;
   top: 0;
   background: var(--color-primary, #000);
   clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%);

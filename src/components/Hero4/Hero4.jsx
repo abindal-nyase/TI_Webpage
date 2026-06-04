@@ -36,9 +36,11 @@ gsap.registerPlugin(ScrollTrigger)
  */
 
 // ── Intro config — tweak these to change the starting offset ──────────────
-const INTRO_OFFSET_X = '180vw'  // leftward start offset (building enters from bottom-left)
-const INTRO_OFFSET_Y = '150vh'   // downward start offset
-const INTRO_DURATION = 800       // timeline units ≈ ½ page scroll at 9000px
+const INTRO_OFFSET_X = '45vw'   // rightward start offset — building peeks in bottom-right
+const INTRO_OFFSET_Y = '45vh'    // downward start offset
+const INTRO_DURATION = 1600      // building glide — longer = more scroll to reach center
+const TEXT_EXIT = 1100           // title + header lift; finishes BEFORE building centers
+const CASCADE_OFFSET = 900       // delays the floor cascade until the building has settled
 
 // ── Timeline tuning ───────────────────────────────────────────────────────
 // Layers travel -1100/-1500 — that already clears them off the viewport top,
@@ -68,6 +70,7 @@ export default function Hero4() {
   const triggerRef = useRef(null);
   const movehomeRef = useRef(null);
   const titleRef = useRef(null);
+  const headerRef = useRef(null);
   const layerRefs = useRef([]);
   const bg1ImgRef = useRef(null);
   const bg2ImgRef = useRef(null);
@@ -79,41 +82,55 @@ export default function Hero4() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: triggerRef.current,
-          start: 'top 20%',
-          end: '+=5600',
+          // 'top top' (not 'top 20%') — pinning at 20% left a transparent
+          // pin-spacer gap above the content at scroll 0 (white strip). Pin
+          // exactly when the hero reaches the viewport top instead.
+          start: "top top",
+          end: "+=7200",
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
         },
-      })
+      });
 
       tl
-        // ── Intro: building glides from bottom-left to center; title moves up ──
+        // ── Intro: building glides from bottom-left to center over a long beat ──
+        // power2.out (not expo.out) keeps it travelling through the whole intro
+        // instead of snapping near-center early, so it genuinely "takes its time".
         .fromTo(
           movehomeRef.current,
           { x: INTRO_OFFSET_X, y: INTRO_OFFSET_Y },
-          { x: 0, y: 0, ease: "expo.out", duration: INTRO_DURATION },
+          // power1.out = soft landing without the long stall of power2.out.
+          // Rests 170px below center so the building's top is fully in view.
+          { x: 0, y: 170, ease: "power1.out", duration: INTRO_DURATION },
           0,
         )
-        // Title lifts off-screen in lockstep with the building slide — no fade
+        // Header bar + title lift off TOGETHER, accelerating up (power1.in), and
+        // finish (TEXT_EXIT) before the building reaches center — no overlap.
         .to(
-          titleRef.current,
+          [headerRef.current, titleRef.current],
           {
             y: "-120vh",
-            ease: "none",
-            duration: INTRO_DURATION,
+            ease: "power1.in",
+            duration: TEXT_EXIT,
           },
           0,
         )
 
         // ── Build cascade — floors peel upward and clear off-screen ───────────
-        .to(l1, { y: -1100, duration: LAYER_DUR }, 700)
+        // power1.in eases the first peel up from rest so it picks up exactly
+        // where the building settles — no velocity jump (was the "shudder").
+        .to(
+          l1,
+          { y: -1100, duration: LAYER_DUR, ease: "power1.in" },
+          700 + CASCADE_OFFSET,
+        )
 
         // bg1: top dark triangle moves up, revealing white below
         .to(
           bg1ImgRef.current,
           { y: "-180vh", duration: 8000, ease: "none" },
-          300,
+          300 + CASCADE_OFFSET,
         )
 
         // bg2: dark trapezoid rises from below and STOPS flush — its flat bottom
@@ -121,16 +138,16 @@ export default function Hero4() {
         .to(
           bg2ImgRef.current,
           { y: BG2_REST, duration: BG2_DUR, ease: "none" },
-          BG2_START,
+          BG2_START + CASCADE_OFFSET,
         )
 
-        .to(l2, { y: -1500, duration: LAYER_DUR }, 1600)
-        .to(l3, { y: -1500, duration: LAYER_DUR }, 2400)
-        .to(l4, { y: -1500, duration: LAYER_DUR }, 3400)
-        .to(l5, { y: -1500, duration: LAYER_DUR }, 4400)
-        .to(l6, { y: -1500, duration: LAYER_DUR }, 5200)
-        .to(l7, { y: -1500, duration: LAYER_DUR }, 6200)
-        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000);
+        .to(l2, { y: -1500, duration: LAYER_DUR }, 1600 + CASCADE_OFFSET)
+        .to(l3, { y: -1500, duration: LAYER_DUR }, 2400 + CASCADE_OFFSET)
+        .to(l4, { y: -1500, duration: LAYER_DUR }, 3400 + CASCADE_OFFSET)
+        .to(l5, { y: -1500, duration: LAYER_DUR }, 4400 + CASCADE_OFFSET)
+        .to(l6, { y: -1500, duration: LAYER_DUR }, 5200 + CASCADE_OFFSET)
+        .to(l7, { y: -1500, duration: LAYER_DUR }, 6200 + CASCADE_OFFSET)
+        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000 + CASCADE_OFFSET);
 
     }, triggerRef)
 
@@ -140,15 +157,23 @@ export default function Hero4() {
   return (
     <section ref={sectionRef} id="hero4" className={s.home}>
       <div ref={triggerRef} className={s.trigger}>
-        {/* Hero title — top-left. Future: NYA logo goes above this, morphs to SideNav */}
+        {/* Header bar — dark band w/ NYA logo. Lifts away with the title on intro. */}
+        <header ref={headerRef} className={s.header}>
+          <img
+            src="/nya-logo.png"
+            alt="Nabih Youssef Associates"
+            className={s.headerLogo}
+            draggable={false}
+          />
+        </header>
+
+        {/* Hero title — top-left, sits below the header bar */}
         <div ref={titleRef} className={s.heroTitle}>
           <div className={s.titleRow}>
-            <span className={s.dropCap}>T</span>
-            <span className={s.titleRest}>ENANT</span>
+            <span className={s.titleWord}>Tenant</span>
           </div>
-          <div className={s.titleRow}>
-            <span className={s.dropCap}>I</span>
-            <span className={s.titleRest}>MPROVEMENTS</span>
+          <div className={`${s.titleRow} ${s.titleRowIndent}`}>
+            <span className={s.titleWord}>Improvements</span>
           </div>
         </div>
 
@@ -186,7 +211,6 @@ export default function Hero4() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
