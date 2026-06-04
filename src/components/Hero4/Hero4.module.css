@@ -7,7 +7,7 @@
 /* ── Outer section — clip boundary ───────────────────────────────── */
 .home {
   overflow: hidden;
-  background: #000;
+  background: #fff;
   position: relative;
   z-index: 35;
 }
@@ -172,7 +172,7 @@
 /* ── Hero title — drop-cap "TENANT IMPROVEMENTS" ────────────────── */
 .heroTitle {
   position: absolute;
-  top: 6vh;
+  top: calc(6vh + 40px);
   left: 4vw;
   z-index: 60;
   color: #fff;
@@ -201,72 +201,51 @@
   padding-bottom: 1.5vw;
 }
 
-/* ── White fade overlay — fills section, opacity animated to 1 at exit ── */
-.fadeOverlay {
-  position: absolute;
-  inset: 0;
-  background: #fff;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 100;
-}
 
 /* ═══════════════════════════════════════════════════════════════════
-   ANIMATED BACKGROUNDS — verbatim Paveletsky main.css
-   bg1/bg2 are siblings to .movehome, both inside .trigger.
-   They start off-screen (clipped by .home overflow:hidden) and
-   animate upward via GSAP y transform.
+   ANIMATED BACKGROUNDS — large triangular shapes covering viewport
+   from start. bg1 covers full viewport and moves up as scroll
+   progresses, revealing white. bg2 is a bottom-right triangle that
+   enters from below.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── bg1 container ───────────────────────────────────────────────── */
+/* ── bg1 container — covers viewport from start ──────────────────── */
 .bg1 {
-  position: relative;
-  top: 1968px;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   z-index: 1;
 }
 
-/* ── bg1 shape — starts invisible, fades in during scroll ────────── */
+/* ── bg1 shape — flat top, bottom slopes up L→R; left=100vh, right=72vh ─ */
 .bg1Shape {
   position: absolute;
   width: 100%;
-  top: 106vh;
-  opacity: 0;
+  height: 100vh;
+  top: 0;
+  background: var(--color-primary, #000);
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%);
 }
 
 /* ── bg2 container ───────────────────────────────────────────────── */
 .bg2 {
-  position: relative;
-  top: 224vh;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   z-index: 1;
 }
 
-/* ── bg2 shape ───────────────────────────────────────────────────── */
+/* ── bg2 shape — y-axis mirror; 150vh container keeps top corners off 0% ─
+   right side = 120vh, left side = 72vh (20% bigger than prev)
+   top-right = (150-120)/150 = 20%, top-left = (150-72)/150 = 52%          */
 .bg2Shape {
   position: absolute;
   width: 100%;
-  top: -252vh;
+  height: 150vh;
+  top: 100vh;
+  background: var(--color-primary, #000);
+  clip-path: polygon(0 52%, 100% 20%, 100% 100%, 0 100%);
 }
 
-/* ── SVG background helpers ──────────────────────────────────────── */
-.bgSvg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Primary fill — responds instantly to theme switcher var changes */
-.bgFill {
-  fill: var(--color-primary, #0B1F3B);
-}
-
-.bgFillMid {
-  fill: var(--color-primary, #0B1F3B);
-  opacity: 0.55;
-}
-
-.bgFillLight {
-  fill: var(--color-primary, #0B1F3B);
-  opacity: 0.25;
-}

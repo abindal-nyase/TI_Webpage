@@ -36,13 +36,21 @@ gsap.registerPlugin(ScrollTrigger)
  */
 
 // ── Intro config — tweak these to change the starting offset ──────────────
-const INTRO_OFFSET_X = '180vw'   // rightward start offset (building barely visible)
-const INTRO_OFFSET_Y = '150vh'   // downward start offset (building barely visible)
-const INTRO_DURATION = 800      // timeline units ≈ ½ page scroll at 9000px
+const INTRO_OFFSET_X = '180vw'  // leftward start offset (building enters from bottom-left)
+const INTRO_OFFSET_Y = '150vh'   // downward start offset
+const INTRO_DURATION = 800       // timeline units ≈ ½ page scroll at 9000px
 
-// ── Exit config — white flash at end ──────────────────────────────────────
-const EXIT_START    = 15430     // right after l8 finishes (10850 + 4580)
-const EXIT_DURATION = 440       // ≈ ¼ page scroll at 9000px
+// ── Timeline tuning ───────────────────────────────────────────────────────
+// Layers travel -1100/-1500 — that already clears them off the viewport top,
+// so there is NO separate exit lift. The bg2 dark trapezoid does NOT exit fully:
+// it rises until its flat bottom edge sits at the viewport bottom (-150vh, since
+// bg2 is top:100vh / height:150vh), then stops. The pin ends there, so the next
+// (white) TIDifferences section is FLUSH against bg2's bottom edge — the dark
+// background hands straight to the section with no full-white frame between.
+const LAYER_DUR = 2400     // visible floor-rise per layer
+const BG2_START = 1800     // dark trapezoid begins rising from below
+const BG2_DUR   = 7400     // settles flush in sync with the last floor (l8)
+const BG2_REST  = '-150vh' // flat bottom edge ends exactly at viewport bottom
 
 const LAYERS = [
   { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
@@ -60,7 +68,6 @@ export default function Hero4() {
   const triggerRef = useRef(null);
   const movehomeRef = useRef(null);
   const titleRef = useRef(null);
-  const fadeOverlayRef = useRef(null);
   const layerRefs = useRef([]);
   const bg1ImgRef = useRef(null);
   const bg2ImgRef = useRef(null);
@@ -73,7 +80,7 @@ export default function Hero4() {
         scrollTrigger: {
           trigger: triggerRef.current,
           start: 'top 20%',
-          end: '+=9000',
+          end: '+=5600',
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
@@ -81,42 +88,49 @@ export default function Hero4() {
       })
 
       tl
-        // ── Intro: building glides from bottom-right to natural center ─────────
+        // ── Intro: building glides from bottom-left to center; title moves up ──
         .fromTo(
           movehomeRef.current,
           { x: INTRO_OFFSET_X, y: INTRO_OFFSET_Y },
           { x: 0, y: 0, ease: "expo.out", duration: INTRO_DURATION },
           0,
         )
-        // Title fades out during second half of intro slide
+        // Title lifts off-screen in lockstep with the building slide — no fade
         .to(
           titleRef.current,
-          { opacity: 0, ease: "power2.in", duration: INTRO_DURATION * 0.5 },
-          INTRO_DURATION * 0.5,
+          {
+            y: "-120vh",
+            ease: "none",
+            duration: INTRO_DURATION,
+          },
+          0,
         )
 
-        // ── Layer animations — unchanged from Paveletsky ───────────────────────
-        .to(l1, { y: -1100, duration: 4580 }, 810)
+        // ── Build cascade — floors peel upward and clear off-screen ───────────
+        .to(l1, { y: -1100, duration: LAYER_DUR }, 700)
 
-        .to(bg1ImgRef.current, { y: -3700, duration: 2950 }, 2650)
-        .to(bg1ImgRef.current, { opacity: 1, duration: 500 }, 5350)
-
-        .to(l2, { y: -1500, duration: 4580 }, 3290)
-        .to(bg2ImgRef.current, { y: -3500, duration: 4580 }, 3710)
-        .to(l3, { y: -1500, duration: 4580 }, 4050)
-        .to(l4, { y: -1500, duration: 4580 }, 5630)
-        .to(l5, { y: -1500, duration: 4580 }, 7170)
-        .to(bg1ImgRef.current, { y: -5500, duration: 4500 }, 8250)
-        .to(l6, { y: -1500, duration: 4580 }, 7890)
-        .to(l7, { y: -1500, duration: 4580 }, 9010)
-        .to(l8, { y: -1500, duration: 4580 }, 10850)
-
-        // ── Fast white exit (≈ ¼ page scroll, fully white) ────────────────────
+        // bg1: top dark triangle moves up, revealing white below
         .to(
-          fadeOverlayRef.current,
-          { opacity: 1, ease: "none", duration: EXIT_DURATION },
-          EXIT_START,
-        );
+          bg1ImgRef.current,
+          { y: "-180vh", duration: 8000, ease: "none" },
+          300,
+        )
+
+        // bg2: dark trapezoid rises from below and STOPS flush — its flat bottom
+        // edge lands at the viewport bottom, where the next section begins.
+        .to(
+          bg2ImgRef.current,
+          { y: BG2_REST, duration: BG2_DUR, ease: "none" },
+          BG2_START,
+        )
+
+        .to(l2, { y: -1500, duration: LAYER_DUR }, 1600)
+        .to(l3, { y: -1500, duration: LAYER_DUR }, 2400)
+        .to(l4, { y: -1500, duration: LAYER_DUR }, 3400)
+        .to(l5, { y: -1500, duration: LAYER_DUR }, 4400)
+        .to(l6, { y: -1500, duration: LAYER_DUR }, 5200)
+        .to(l7, { y: -1500, duration: LAYER_DUR }, 6200)
+        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000);
 
     }, triggerRef)
 
@@ -138,30 +152,13 @@ export default function Hero4() {
           </div>
         </div>
 
-        {/* Animated backgrounds — geometric shapes, color responds to theme switcher */}
+        {/* bg1 — top trapezoid: flat top, vertical sides, bottom slopes up L→R */}
         <div className={s.bg1}>
-          <div ref={bg1ImgRef} className={s.bg1Shape}>
-            <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" className={s.bgSvg}>
-              {/* Main floor plane — angled architectural ground */}
-              <polygon points="0,350 1440,50 1440,800 0,800" className={s.bgFill} />
-              {/* Upper edge highlight band */}
-              <polygon points="0,330 1440,30 1440,70 0,370" className={s.bgFillMid} />
-              {/* Far-right accent triangle */}
-              <polygon points="1100,0 1440,0 1440,40" className={s.bgFillLight} />
-            </svg>
-          </div>
+          <div ref={bg1ImgRef} className={s.bg1Shape} />
         </div>
+        {/* bg2 — inverted trapezoid: top slopes down L→R, flat bottom; enters from below */}
         <div className={s.bg2}>
-          <div ref={bg2ImgRef} className={s.bg2Shape}>
-            <svg viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" className={s.bgSvg}>
-              {/* Secondary depth plane — different pitch */}
-              <polygon points="0,120 1440,0 1440,580 0,700" className={s.bgFillMid} />
-              {/* Left structural column accent */}
-              <polygon points="0,100 180,80 180,700 0,700" className={s.bgFill} />
-              {/* Diagonal accent stripe */}
-              <polygon points="0,90 1440,0 1440,22 0,112" className={s.bgFillLight} />
-            </svg>
-          </div>
+          <div ref={bg2ImgRef} className={s.bg2Shape} />
         </div>
 
         {/* Building layers — rendered after backgrounds so they sit in foreground */}
@@ -190,8 +187,6 @@ export default function Hero4() {
           ))}
         </div>
 
-        {/* White overlay — fades in at end of scroll sequence */}
-        <div ref={fadeOverlayRef} className={s.fadeOverlay} />
       </div>
     </section>
   );
