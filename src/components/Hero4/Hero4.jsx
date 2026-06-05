@@ -103,15 +103,7 @@ export default function Hero4() {
       // cap timeline so scrub maps scroll end → time 9076 (bg2 at -90.9vh, fade complete)
       tl.duration(9076);
 
-      // snap back to hero pin end when scrolling up past TIDifferences top
-      ScrollTrigger.create({
-        trigger: '#section-ti-differences',
-        start: 'top top',
-        onLeaveBack: () => {
-          const end = ScrollTrigger.getById('hero4-pin')?.end ?? 5040
-          window.__lenis?.scrollTo(end - 50, { immediate: true })
-        },
-      });
+
 
       tl
         // ── Intro: building glides from bottom-left to center over a long beat ──
