@@ -42,12 +42,49 @@ import BackToHub from '../components/BackToHub.astro';
        Theme switcher bar
     ───────────────────────────────────── */
     .theme-bar {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 200;
       background: #0a0f1e;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0 40px;
+      /* Auto-hide: slid up out of view; revealed on hover. */
+      transform: translateY(-100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .theme-bar:hover,
+    .theme-bar:focus-within {
+      transform: translateY(0);
+    }
+    /* Invisible catcher strip + handle below the bar so it can be hovered
+       back into view while hidden. */
+    .theme-bar::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 22px;
+    }
+    .theme-bar::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      width: 46px;
+      height: 4px;
+      margin-top: 4px;
+      border-radius: 0 0 3px 3px;
+      background: #0a0f1e;
+      opacity: 0.55;
+      transition: opacity 0.35s ease;
+    }
+    .theme-bar:hover::before,
+    .theme-bar:focus-within::before {
+      opacity: 0;
     }
 
     .theme-bar-inner {

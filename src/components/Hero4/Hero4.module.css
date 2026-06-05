@@ -7,7 +7,7 @@
 /* ── Outer section — clip boundary ───────────────────────────────── */
 .home {
   overflow: hidden;
-  background: #000;
+  background: #fff;
   position: relative;
   z-index: 35;
 }
@@ -23,6 +23,7 @@
 .movehome {
   left: 11vh;
   position: relative;
+  z-index: 5;
 }
 
 /* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
@@ -168,38 +169,127 @@
   top: 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ANIMATED BACKGROUNDS — verbatim Paveletsky main.css
-   bg1/bg2 are siblings to .movehome, both inside .trigger.
-   They start off-screen (clipped by .home overflow:hidden) and
-   animate upward via GSAP y transform.
-   ═══════════════════════════════════════════════════════════════════ */
-
-/* ── bg1 container ───────────────────────────────────────────────── */
-.bg1 {
-  position: relative;
-  top: 1968px;
+/* ── Header bar — dark band, NYA logo left; lifts away on intro ──── */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+  z-index: 60;
+  background: var(--color-primary, #000);
 }
 
-/* ── bg1 image — starts invisible, fades in during scroll ────────── */
-.bg1Img {
+.headerLogo {
+  height: 44px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+}
+
+/* ── Hero title — small-caps "Tenant / Improvements" ─────────────── */
+.heroTitle {
+  position: absolute;
+  top: calc(96px + 3vh);
+  left: 4vw;
+  z-index: 60;
+  color: #fff;
+  pointer-events: none;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  line-height: 0.85;
+}
+
+/* Second line ("Improvements") staggers right + drops down from the first */
+.titleRowIndent {
+  margin-left: 7vw;
+  margin-top: 2.5vh;
+}
+
+/* Single word, petite/small-caps. Initial letter enlarged via ::first-letter
+   so "Tenant" → big T + small-cap ENANT, all one word with no gap. */
+.titleWord {
+  display: inline-block;
+  font-family: var(--font-display, 'Playfair Display', serif);
+  font-variant-caps: small-caps;
+  /* clamp: min · zoom-aware preferred (rem + vw) · max.
+     rem term reacts to browser zoom / root font-size; vw term to viewport. */
+  font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 0.85;
+}
+
+.titleWord::first-letter {
+  font-size: 1.3em;       /* relative to the 5.5vw word size → ~18vw cap */
+  letter-spacing: 0em;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ANIMATED BACKGROUNDS — large triangular shapes covering viewport
+   from start. bg1 covers full viewport and moves up as scroll
+   progresses, revealing white. bg2 is a bottom-right triangle that
+   enters from below.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── bg1 container — covers viewport from start ──────────────────── */
+.bg1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* ── bg1 shape — flat top, bottom slopes up L→R; left=120vh, right=72vh ─ */
+.bg1Shape {
   position: absolute;
   width: 100%;
-  top: 106vh;
-  opacity: 0;
+  height: 120vh;
+  top: 0;
+  background: var(--color-primary, #000);
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%);
 }
 
 /* ── bg2 container ───────────────────────────────────────────────── */
 .bg2 {
-  position: relative;
-  top: 224vh;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  z-index: 1;
 }
 
-/* ── bg2 image ───────────────────────────────────────────────────── */
-.bg2Img {
+/* ── bg2 shape — y-axis mirror, extended downward so it can ride all the
+   way up with l8 and still cover the viewport bottom. The visible slope is
+   unchanged: top-left corner sits 78vh below the shape top, top-right 30vh
+   (same offsets as the old 150vh box). Box is now 250vh tall so when it rises
+   far enough to clear the slope above the viewport top, its bottom edge is
+   still well below the viewport bottom — no white wedge either side.
+   top-left  = 78/250 = 31.2%   top-right = 30/250 = 12%                     */
+.bg2Shape {
   position: absolute;
   width: 100%;
-  top: -252vh;
+  height: 157vh;
+  top: 100vh;
+  background: var(--color-primary, #000);
+  clip-path: polygon(0 31.2%, 100% 12%, 100% 100%, 0 100%);
+}
+
+/* ── exit overlay — scrubbed white fade before pin releases ──────── */
+.exitOverlay {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  z-index: 50;
+  pointer-events: none;
 }

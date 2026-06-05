@@ -15,23 +15,47 @@ gsap.registerPlugin(ScrollTrigger)
  *        GSAP 3: start 'top 20%', end '+=9000', scrub true.
  *
  * Timeline absolute positions (seconds) traced from the GSAP 2 "-=X" chain.
- * Total timeline duration: ~15970 s (scrubbed over 9000 px of scroll).
+ * Total timeline duration: ~15870 s (scrubbed over 9000 px of scroll).
  *
- *  tween             start   duration
- *  l1                810     4580    → y -1100
- *  bg1 (move)        2650    2950    → y -3700
- *  bg1 (opacity)     5350    500     → opacity 1
- *  l2                3290    4580    → y -1500
- *  bg2               3710    4580    → y -3500
- *  l3                4050    4580    → y -1500
- *  l4                5630    4580    → y -1500
- *  l5                7170    4580    → y -1500
- *  bg1 (move2)       8250    4500    → y -5500
- *  l6                7890    4580    → y -1500
- *  l7                9010    4580    → y -1500
- *  l8                10850   4580    → y -1500
- *  section fade      11390   4580    → opacity 0
+ *  tween             start           duration
+ *  intro slide       0               INTRO_DURATION (≈ ½ page scroll)
+ *  title fade        INTRO_DURATION  INTRO_DURATION * 0.5
+ *  l1                810             4580    → y -1100
+ *  bg1 (move)        2650            2950    → y -3700
+ *  bg1 (opacity)     5350            500     → opacity 1
+ *  l2                3290            4580    → y -1500
+ *  bg2               3710            4580    → y -3500
+ *  l3                4050            4580    → y -1500
+ *  l4                5630            4580    → y -1500
+ *  l5                7170            4580    → y -1500
+ *  bg1 (move2)       8250            4500    → y -5500
+ *  l6                7890            4580    → y -1500
+ *  l7                9010            4580    → y -1500
+ *  l8                10850           4580    → y -1500
+ *  white overlay     EXIT_START      EXIT_DURATION (≈ ¼ page scroll)
  */
+
+// ── Intro config — tweak these to change the starting offset ──────────────
+const INTRO_OFFSET_X = '45vw'   // rightward start offset — building peeks in bottom-right
+const INTRO_OFFSET_Y = '45vh'    // downward start offset
+const INTRO_DURATION = 1600      // building glide — longer = more scroll to reach center
+const TEXT_EXIT = 1100           // title + header lift; finishes BEFORE building centers
+const CASCADE_OFFSET = 900       // delays the floor cascade until the building has settled
+
+// ── Timeline tuning ───────────────────────────────────────────────────────
+// Layers travel -1100/-1500 — that already clears them off the viewport top,
+// so there is NO separate exit lift. The bg2 dark trapezoid rides UP with the
+// last floor (l8): it keeps rising until its sloped top edge clears the viewport
+// top, so the dark fills the whole viewport as l8 peels away — no white wedge
+// is ever exposed in the upper-left. bg2 is top:100vh / height:157vh, so at
+// BG2_REST (-156vh) its top-left slope corner sits at 148.98+(-156)= -7vh (above
+// the viewport) while its bottom edge is still at 101vh (below the viewport).
+// bg2 finishes in lockstep with l8, then the pin ends and the next section
+// scrolls up over the solid dark field — a clean horizontal hand-off.
+const LAYER_DUR = 2400     // visible floor-rise per layer
+const BG2_START = 3400     // begins rising early so it leads the floor reveal
+const BG2_DUR   = 8200     // finishes at 10300 — exactly in sync with l8
+const BG2_REST  = '-156vh' // sloped top edge ends above the viewport top
 
 const LAYERS = [
   { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
@@ -45,12 +69,15 @@ const LAYERS = [
 ]
 
 export default function Hero4() {
-  const sectionRef  = useRef(null)
-  const triggerRef  = useRef(null)
-  const movehomeRef = useRef(null)
-  const layerRefs   = useRef([])
-  const bg1ImgRef   = useRef(null)
-  const bg2ImgRef   = useRef(null)
+  const sectionRef = useRef(null);
+  const triggerRef = useRef(null);
+  const movehomeRef = useRef(null);
+  const titleRef = useRef(null);
+  const headerRef = useRef(null);
+  const layerRefs = useRef([]);
+  const bg1ImgRef = useRef(null);
+  const bg2ImgRef = useRef(null);
+  const exitOverlayRef = useRef(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -58,53 +85,92 @@ export default function Hero4() {
 
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: 'hero4-pin',
           trigger: triggerRef.current,
-          start: 'top 20%',
-          end: '+=9000',
+          // 'top top' (not 'top 20%') — pinning at 20% left a transparent
+          // pin-spacer gap above the content at scroll 0 (white strip). Pin
+          // exactly when the hero reaches the viewport top instead.
+          start: "top top",
+          end: "+=5090",
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
+          onLeave: () => {
+            window.__lenis?.scrollTo('#section-ti-differences', { immediate: true, offset: 0 })
+          },
         },
-      })
+      });
+      // cap timeline so scrub maps scroll end → time 9076 (bg2 at -90.9vh, fade complete)
+      tl.duration(9076);
 
-      // Absolute positions (s) from Paveletsky animation.js tlFirstScroll
+      // snap back to hero pin end when scrolling up past TIDifferences top
+      ScrollTrigger.create({
+        trigger: '#section-ti-differences',
+        start: 'top top',
+        onLeaveBack: () => {
+          const end = ScrollTrigger.getById('hero4-pin')?.end ?? 5040
+          window.__lenis?.scrollTo(end - 50, { immediate: true })
+        },
+      });
+
       tl
-        // l1 — front layer, moves less
-        .to(l1,               { y: -1100, duration: 4580 }, 810)
+        // ── Intro: building glides from bottom-left to center over a long beat ──
+        // power2.out (not expo.out) keeps it travelling through the whole intro
+        // instead of snapping near-center early, so it genuinely "takes its time".
+        .fromTo(
+          movehomeRef.current,
+          { x: INTRO_OFFSET_X, y: INTRO_OFFSET_Y },
+          // power1.out = soft landing without the long stall of power2.out.
+          // Rests 170px below center so the building's top is fully in view.
+          { x: 0, y: 170, ease: "power1.out", duration: INTRO_DURATION },
+          0,
+        )
+        // Header bar + title lift off TOGETHER, accelerating up (power1.in), and
+        // finish (TEXT_EXIT) before the building reaches center — no overlap.
+        .to(
+          [headerRef.current, titleRef.current],
+          {
+            y: "-120vh",
+            ease: "power1.in",
+            duration: TEXT_EXIT,
+          },
+          0,
+        )
 
-        // bg1 — background pan upward, then fade in
-        .to(bg1ImgRef.current, { y: -3700, duration: 2950 }, 2650)
-        .to(bg1ImgRef.current, { opacity: 1, duration: 500 }, 5350)
+        // ── Build cascade — floors peel upward and clear off-screen ───────────
+        // power1.in eases the first peel up from rest so it picks up exactly
+        // where the building settles — no velocity jump (was the "shudder").
+        .to(
+          l1,
+          { y: -1100, duration: LAYER_DUR, ease: "power1.in" },
+          700 + CASCADE_OFFSET,
+        )
 
-        // l2 — rises just after l1 starts
-        .to(l2,               { y: -1500, duration: 4580 }, 3290)
+        // bg1: top dark triangle moves up, revealing white below
+        .to(
+          bg1ImgRef.current,
+          { y: "-180vh", duration: 8000, ease: "none" },
+          300 + CASCADE_OFFSET,
+        )
 
-        // bg2 — second background layer
-        .to(bg2ImgRef.current, { y: -3500, duration: 4580 }, 3710)
+        // bg2: dark trapezoid rises from below and STOPS flush — its flat bottom
+        // edge lands at the viewport bottom, where the next section begins.
+        .to(
+          bg2ImgRef.current,
+          { y: BG2_REST, duration: BG2_DUR, ease: "none" },
+          BG2_START + CASCADE_OFFSET,
+        )
 
-        // l3
-        .to(l3,               { y: -1500, duration: 4580 }, 4050)
+        .to(l2, { y: -1500, duration: LAYER_DUR }, 1600 + CASCADE_OFFSET)
+        .to(l3, { y: -1500, duration: LAYER_DUR }, 2400 + CASCADE_OFFSET)
+        .to(l4, { y: -1500, duration: LAYER_DUR }, 3400 + CASCADE_OFFSET)
+        .to(l5, { y: -1500, duration: LAYER_DUR }, 4400 + CASCADE_OFFSET)
+        .to(l6, { y: -1500, duration: LAYER_DUR }, 5200 + CASCADE_OFFSET)
+        .to(l7, { y: -1500, duration: LAYER_DUR }, 6200 + CASCADE_OFFSET)
+        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000 + CASCADE_OFFSET)
 
-        // l4
-        .to(l4,               { y: -1500, duration: 4580 }, 5630)
-
-        // l5
-        .to(l5,               { y: -1500, duration: 4580 }, 7170)
-
-        // bg1 second movement (continues panning)
-        .to(bg1ImgRef.current, { y: -5500, duration: 4500 }, 8250)
-
-        // l6
-        .to(l6,               { y: -1500, duration: 4580 }, 7890)
-
-        // l7
-        .to(l7,               { y: -1500, duration: 4580 }, 9010)
-
-        // l8 — back/ground layer, last to rise
-        .to(l8,               { y: -1500, duration: 4580 }, 10850)
-
-        // Fade out entire section at end of sequence
-        .to(sectionRef.current, { opacity: 0, duration: 4580 }, 11390)
+        // exit fade — white overlay covers hero in last ~400px of scroll (timeline 8139–8833)
+        .to(exitOverlayRef.current, { opacity: 1, duration: 694, ease: "none" }, 8382);
 
     }, triggerRef)
 
@@ -114,14 +180,47 @@ export default function Hero4() {
   return (
     <section ref={sectionRef} id="hero4" className={s.home}>
       <div ref={triggerRef} className={s.trigger}>
+        {/* Header bar — dark band w/ NYA logo. Lifts away with the title on intro. */}
+        <header ref={headerRef} className={s.header}>
+          <img
+            src="/nya-logo.png"
+            alt="Nabih Youssef Associates"
+            className={s.headerLogo}
+            draggable={false}
+          />
+        </header>
 
-        {/* Building layers — exact Paveletsky DOM order */}
+        {/* Hero title — top-left, sits below the header bar */}
+        <div ref={titleRef} className={s.heroTitle}>
+          <div className={s.titleRow}>
+            <span className={s.titleWord}>Tenant</span>
+          </div>
+          <div className={`${s.titleRow} ${s.titleRowIndent}`}>
+            <span className={s.titleWord}>Improvements</span>
+          </div>
+        </div>
+
+        {/* bg1 — top trapezoid: flat top, vertical sides, bottom slopes up L→R */}
+        <div className={s.bg1}>
+          <div ref={bg1ImgRef} className={s.bg1Shape} />
+        </div>
+        {/* bg2 — inverted trapezoid: top slopes down L→R, flat bottom; enters from below */}
+        <div className={s.bg2}>
+          <div ref={bg2ImgRef} className={s.bg2Shape} />
+        </div>
+
+        {/* exit overlay — fades in over last 400px of scroll to hand off to next section */}
+        <div ref={exitOverlayRef} className={s.exitOverlay} />
+
+        {/* Building layers — rendered after backgrounds so they sit in foreground */}
         <div ref={movehomeRef} className={s.movehome}>
           {LAYERS.map((layer, i) => (
             <div
               key={layer.id}
               className={`${s[`l${layer.id}`]} ${s.layer}`}
-              ref={el => { layerRefs.current[i] = el }}
+              ref={(el) => {
+                layerRefs.current[i] = el;
+              }}
             >
               <img
                 src={layer.base}
@@ -138,28 +237,7 @@ export default function Hero4() {
             </div>
           ))}
         </div>
-
-        {/* Animated backgrounds — siblings to movehome, inside trigger */}
-        <div className={s.bg1}>
-          <img
-            ref={bg1ImgRef}
-            src="/pav-img/bg1.png"
-            alt=""
-            draggable={false}
-            className={s.bg1Img}
-          />
-        </div>
-        <div className={s.bg2}>
-          <img
-            ref={bg2ImgRef}
-            src="/pav-img/bg1.png"
-            alt=""
-            draggable={false}
-            className={s.bg2Img}
-          />
-        </div>
-
       </div>
     </section>
-  )
+  );
 }
