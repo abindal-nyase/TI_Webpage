@@ -47,15 +47,15 @@ const CASCADE_OFFSET = 900       // delays the floor cascade until the building 
 // so there is NO separate exit lift. The bg2 dark trapezoid rides UP with the
 // last floor (l8): it keeps rising until its sloped top edge clears the viewport
 // top, so the dark fills the whole viewport as l8 peels away — no white wedge
-// is ever exposed in the upper-left. bg2 is top:100vh / height:250vh, so at
-// BG2_REST (-185vh) its top-left slope corner sits at 178+(-185)= -7vh (above
-// the viewport) while its bottom edge is still at 165vh (below the viewport).
+// is ever exposed in the upper-left. bg2 is top:100vh / height:157vh, so at
+// BG2_REST (-156vh) its top-left slope corner sits at 148.98+(-156)= -7vh (above
+// the viewport) while its bottom edge is still at 101vh (below the viewport).
 // bg2 finishes in lockstep with l8, then the pin ends and the next section
 // scrolls up over the solid dark field — a clean horizontal hand-off.
 const LAYER_DUR = 2400     // visible floor-rise per layer
-const BG2_START = 1200     // begins rising early so it leads the floor reveal
+const BG2_START = 3400     // begins rising early so it leads the floor reveal
 const BG2_DUR   = 8200     // finishes at 10300 — exactly in sync with l8
-const BG2_REST  = '-185vh' // sloped top edge ends above the viewport top
+const BG2_REST  = '-156vh' // sloped top edge ends above the viewport top
 
 const LAYERS = [
   { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
@@ -77,6 +77,7 @@ export default function Hero4() {
   const layerRefs = useRef([]);
   const bg1ImgRef = useRef(null);
   const bg2ImgRef = useRef(null);
+  const exitOverlayRef = useRef(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -84,15 +85,31 @@ export default function Hero4() {
 
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: 'hero4-pin',
           trigger: triggerRef.current,
           // 'top top' (not 'top 20%') — pinning at 20% left a transparent
           // pin-spacer gap above the content at scroll 0 (white strip). Pin
           // exactly when the hero reaches the viewport top instead.
           start: "top top",
-          end: "+=7200",
+          end: "+=5090",
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
+          onLeave: () => {
+            window.__lenis?.scrollTo('#section-ti-differences', { immediate: true, offset: 0 })
+          },
+        },
+      });
+      // cap timeline so scrub maps scroll end → time 9076 (bg2 at -90.9vh, fade complete)
+      tl.duration(9076);
+
+      // snap back to hero pin end when scrolling up past TIDifferences top
+      ScrollTrigger.create({
+        trigger: '#section-ti-differences',
+        start: 'top top',
+        onLeaveBack: () => {
+          const end = ScrollTrigger.getById('hero4-pin')?.end ?? 5040
+          window.__lenis?.scrollTo(end - 50, { immediate: true })
         },
       });
 
@@ -150,7 +167,10 @@ export default function Hero4() {
         .to(l5, { y: -1500, duration: LAYER_DUR }, 4400 + CASCADE_OFFSET)
         .to(l6, { y: -1500, duration: LAYER_DUR }, 5200 + CASCADE_OFFSET)
         .to(l7, { y: -1500, duration: LAYER_DUR }, 6200 + CASCADE_OFFSET)
-        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000 + CASCADE_OFFSET);
+        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000 + CASCADE_OFFSET)
+
+        // exit fade — white overlay covers hero in last ~400px of scroll (timeline 8139–8833)
+        .to(exitOverlayRef.current, { opacity: 1, duration: 694, ease: "none" }, 8382);
 
     }, triggerRef)
 
@@ -188,6 +208,9 @@ export default function Hero4() {
         <div className={s.bg2}>
           <div ref={bg2ImgRef} className={s.bg2Shape} />
         </div>
+
+        {/* exit overlay — fades in over last 400px of scroll to hand off to next section */}
+        <div ref={exitOverlayRef} className={s.exitOverlay} />
 
         {/* Building layers — rendered after backgrounds so they sit in foreground */}
         <div ref={movehomeRef} className={s.movehome}>
