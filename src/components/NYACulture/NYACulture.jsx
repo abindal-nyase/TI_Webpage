@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -12,106 +12,115 @@ const QUOTES = [
   'Every job was a chance to earn a relationship, and do right by a client, not just in a way that met the code, but in a way they could feel.',
 ]
 
-export default function NYACulture() {
-  const wrapperRef  = useRef(null)   // scroll space wrapper (sticky parent)
-  const sectionRef  = useRef(null)   // sticky section (40vh)
-  const photoRef    = useRef(null)
-  const quoteRefs   = useRef([])
-  const sigRefs     = useRef([])
+const INTERVAL_MS = 4000
 
+export default function NYACulture() {
+  const sectionRef = useRef(null)
+  const photoRef   = useRef(null)
+  const quoteRefs  = useRef([])
+  const sigRefs    = useRef([])
+  const current    = useRef(0)
+  const timer      = useRef(null)
+
+  // ── Show a specific quote ───────────────────────────────────────────
+  const showQuote = (idx) => {
+    const qs = quoteRefs.current
+    const ss = sigRefs.current
+
+    // Fade out all
+    gsap.to(qs, { opacity: 0, y: -20, duration: 0.4, ease: 'power2.in' })
+    gsap.to(ss, { opacity: 0, duration: 0.3 })
+
+    // Fade in the selected quote + signature
+    gsap.to(qs[idx], { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', delay: 0.45 })
+    gsap.fromTo(
+      ss[idx],
+      { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
+      { clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: 0.9, ease: 'power2.out', delay: 0.8 },
+    )
+  }
+
+  // ── Entry animation — photo + first quote ──────────────────────────
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const qs = quoteRefs.current.filter(Boolean)
       const ss = sigRefs.current.filter(Boolean)
 
-      // ── Initial state ─────────────────────────────────────────────
+      // Hide all quotes initially
       gsap.set(qs, { opacity: 0, y: 30 })
       gsap.set(ss, { opacity: 0, clipPath: 'inset(0 100% 0 0)' })
 
-      // ── Photo slides in as wrapper enters viewport ────────────────
-      gsap.from(photoRef.current, {
-        x: -40, opacity: 0, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: 'top 80%',
-          once: true,
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top 75%',
+        once: true,
+        onEnter: () => {
+          // Photo slides in
+          gsap.from(photoRef.current, {
+            x: -40, opacity: 0, duration: 0.9, ease: 'power3.out',
+          })
+          // First quote appears
+          gsap.to(qs[0], { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.3 })
+          gsap.fromTo(
+            ss[0],
+            { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
+            { clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: 1, ease: 'power2.out', delay: 0.9 },
+          )
         },
       })
-
-      // ── Scrubbed timeline over the wrapper's scroll space ─────────
-      // No GSAP pin — sticky CSS keeps section visible.
-      // wrapper height = 40vh + 1400px → 12 timeline units over 1400px.
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      })
-
-      // Quote 1 — in at 0.5, sig at 1.6, both out at 3.6
-      tl.to(qs[0], { opacity: 1, y: 0, duration: 1 }, 0.5)
-      tl.to(ss[0], { opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 1.2 }, 1.6)
-      tl.to([qs[0], ss[0]], { opacity: 0, y: -28, duration: 0.6 }, 3.6)
-
-      // Quote 2 — in at 4.5, sig at 5.6, both out at 7.6
-      tl.to(qs[1], { opacity: 1, y: 0, duration: 1 }, 4.5)
-      tl.to(ss[1], { opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 1.2 }, 5.6)
-      tl.to([qs[1], ss[1]], { opacity: 0, y: -28, duration: 0.6 }, 7.6)
-
-      // Quote 3 — in at 8.5, sig at 9.4, stays
-      tl.to(qs[2], { opacity: 1, y: 0, duration: 1 }, 8.5)
-      tl.to(ss[2], { opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 1.2 }, 9.4)
-      tl.to({}, { duration: 1.6 }) // hold at end
-
-    }, wrapperRef)
+    }, sectionRef)
 
     return () => ctx.revert()
   }, [])
 
+  // ── Auto-play interval — cycles quotes ─────────────────────────────
+  useEffect(() => {
+    timer.current = setInterval(() => {
+      current.current = (current.current + 1) % QUOTES.length
+      showQuote(current.current)
+    }, INTERVAL_MS)
+
+    return () => clearInterval(timer.current)
+  }, [])
+
   return (
-    /* Wrapper creates scroll space; section sticks inside it */
-    <div ref={wrapperRef} className={s.scrollWrapper}>
-      <section ref={sectionRef} id="nya-culture" className={s.section}>
-        <div className={s.trigger}>
+    <section ref={sectionRef} id="nya-culture" className={s.section}>
+      <div className={s.inner}>
 
-          {/* ── Left: person photo ── */}
-          <div className={s.left}>
-            <img
-              ref={photoRef}
-              src="/pav-img/Nabih-5-2.png"
-              alt="Nabih Youssef"
-              draggable={false}
-              className={s.photo}
-            />
-          </div>
-
-          {/* ── Right: rotating quotes ── */}
-          <div className={s.right}>
-            <span className={s.openMark}>&ldquo;</span>
-
-            {QUOTES.map((text, i) => (
-              <div key={i} className={s.slide}>
-                <blockquote
-                  ref={el => { quoteRefs.current[i] = el }}
-                  className={s.quote}
-                >
-                  {text}
-                </blockquote>
-                <p
-                  ref={el => { sigRefs.current[i] = el }}
-                  className={s.signature}
-                >
-                  — Nabih Youssef
-                </p>
-              </div>
-            ))}
-          </div>
-
+        {/* ── Left: person photo ── */}
+        <div className={s.left}>
+          <img
+            ref={photoRef}
+            src="/pav-img/Nabih-5-2.png"
+            alt="Nabih Youssef"
+            draggable={false}
+            className={s.photo}
+          />
         </div>
-      </section>
-    </div>
+
+        {/* ── Right: auto-rotating quotes ── */}
+        <div className={s.right}>
+          <span className={s.openMark}>&ldquo;</span>
+
+          {QUOTES.map((text, i) => (
+            <div key={i} className={s.slide}>
+              <blockquote
+                ref={el => { quoteRefs.current[i] = el }}
+                className={s.quote}
+              >
+                {text}
+              </blockquote>
+              <p
+                ref={el => { sigRefs.current[i] = el }}
+                className={s.signature}
+              >
+                — Nabih Youssef
+              </p>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
   )
 }
