@@ -34,7 +34,7 @@
 .eyebrow {
   margin: 0;
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 11px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -103,7 +103,7 @@
 .colHeading {
   margin: 0;
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 11px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -116,12 +116,12 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .link {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px;
+  font-size: 23px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.55);
   text-decoration: none;
@@ -149,7 +149,7 @@
 
 .copy {
   font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 11px;
+  font-size: 22px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.3);
   letter-spacing: 0.06em;

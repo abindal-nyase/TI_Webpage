@@ -4,34 +4,33 @@ const NAV_COLS = [
   {
     heading: 'Navigate',
     links: [
-      { label: 'Home',       href: '#' },
-      { label: 'Services',   href: '#' },
-      { label: 'Projects',   href: '#' },
-      { label: 'Leadership', href: '#' },
-      { label: 'Awards',     href: '#' },
+      { label: 'Home',       href: 'https://www.nyase.com/' },
+      { label: 'Services',   href: 'https://www.nyase.com/expertise/' },
+      { label: 'Projects',   href: 'https://www.nyase.com/projects-2/' },
+      { label: 'Leadership', href: 'https://www.nyase.com/leadership/' },
     ],
   },
   {
     heading: 'Contact',
     links: [
-      { label: 'info@nyase.com',       href: 'mailto:info@nyase.com' },
-      { label: '(213) 362-0707',                          href: 'tel:+12133620707' },
+      { label: 'info@nyase.com',                              href: 'mailto:info@nyase.com' },
+      { label: '(213) 362-0707',                              href: 'tel:+12133620707' },
       { label: '350 S Grand Ave #1600, Los Angeles, CA 90071', href: 'https://maps.google.com/?q=350+S+Grand+Ave+1600+Los+Angeles+CA+90071', external: true },
     ],
   },
   {
     heading: 'Social',
     links: [
-      { label: 'LinkedIn',   href: '#', external: true },
-      { label: 'Instagram',  href: '#', external: true },
-      { label: 'YouTube',    href: '#', external: true },
+      { label: 'LinkedIn',   href: 'https://www.linkedin.com/company/nabih-youssef-associates/', external: true },
+      { label: 'Instagram',  href: 'https://www.instagram.com/nabihyoussefassociates',           external: true },
+      { label: 'YouTube',    href: 'https://www.youtube.com/@NYA_SE',                            external: true },
+      { label: 'X',         href: 'https://x.com/NYandAssociates',                              external: true },
     ],
   },
   {
     heading: 'Resources',
     links: [
-      { label: 'Company Profile', href: '#' },
-      { label: 'Brochure',        href: '#' },
+      { label: 'Company Profile', href: '/resources/company-profile-placeholder.pdf', external: true },
     ],
   },
 ]
@@ -63,9 +62,8 @@ export default function Footer() {
                   <a
                     href={link.href}
                     className={s.link}
-                    {...(link.external
-                      ? { target: '_blank', rel: 'noopener noreferrer' }
-                      : {})}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {link.label}
                   </a>
