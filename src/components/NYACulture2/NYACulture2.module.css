@@ -47,20 +47,18 @@
 }
 
 
-/* ── Row 2 Left — image (sticky) ─────────────────────────────────── */
+/* ── Row 2 Left — image (sticky, fixed height — unaffected by accordion) */
 .leftMain {
   grid-column: 1;
   grid-row: 2;
-  align-self: stretch;
+  align-self: start;
   position: sticky;
   top: 80px;
 }
 
 .img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+  height: auto;
   display: block;
 }
 
@@ -71,6 +69,15 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+.descHeading {
+  margin: 0;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(15px, 1.15vw, 18px);
+  font-weight: 700;
+  color: var(--color-primary, #0B1F3B);
+  line-height: 1.4;
 }
 
 .description {
@@ -151,6 +158,16 @@
 .item:hover .itemBody {
   max-height: 180px;
   opacity: 1;
+}
+
+.itemBenefit {
+  margin: 0;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(12px, 0.9vw, 14px);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--color-primary, #0B1F3B);
 }
 
 .itemContent {
