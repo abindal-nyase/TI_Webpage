@@ -10,12 +10,17 @@
  */
 import '../index.css';
 import GlobalSetup from '../components/GlobalSetup/GlobalSetup';
-import HeroOption3 from '../components/ti-option3/HeroOption3';
-import VideoScrollOption3 from '../components/ti-option3/VideoScrollOption3';
-import TIDifferencesOption3 from '../components/ti-option3/TIDifferencesOption3';
-import CaringFirmOption3 from '../components/ti-option3/CaringFirmOption3';
+import Hero4 from '../components/Hero4/Hero4.jsx';
+import TIDifferencesOption3 from '../components/ti-option3/TIDifferences/TIDifferencesOption3';
 import FirmCultureOption3 from '../components/ti-option3/FirmCultureOption3';
 import CTAOption3 from '../components/ti-option3/CTAOption3';
+import CaringFirmOption3 from '../components/ti-option3/CaringFirmOption3';
+import TrustWallOption3 from '../components/ti-option3/TrustWallOption3';
+import SideNavOption3 from '../components/ti-option3/SideNavOption3';
+import NYACulture from '../components/NYACulture/NYACulture.jsx';
+import NYACulture2 from '../components/NYACulture2/NYACulture2.jsx';
+import Footer from '../components/Footer/Footer.jsx';
+import BackToHub from '../components/BackToHub.astro';
 ---
 
 <!DOCTYPE html>
@@ -40,12 +45,49 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
        Theme switcher bar
     ───────────────────────────────────── */
     .theme-bar {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 200;
       background: #0a0f1e;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0 40px;
+      /* Auto-hide: slid up out of view; revealed on hover. */
+      transform: translateY(-100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .theme-bar:hover,
+    .theme-bar:focus-within {
+      transform: translateY(0);
+    }
+    /* Invisible catcher strip + handle below the bar so it can be hovered
+       back into view while hidden. */
+    .theme-bar::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 22px;
+    }
+    .theme-bar::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      width: 46px;
+      height: 4px;
+      margin-top: 4px;
+      border-radius: 0 0 3px 3px;
+      background: #0a0f1e;
+      opacity: 0.55;
+      transition: opacity 0.35s ease;
+    }
+    .theme-bar:hover::before,
+    .theme-bar:focus-within::before {
+      opacity: 0;
     }
 
     .theme-bar-inner {
@@ -174,6 +216,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
 </head>
 
 <body>
+  <BackToHub />
   <GlobalSetup client:load />
 
   <!-- ── Theme switcher bar ── -->
@@ -196,14 +239,19 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
     </div>
   </div>
 
+  <SideNavOption3 client:load />
+
   <!-- ── Page sections ── -->
-  <main>
-    <HeroOption3 client:load />
-    <VideoScrollOption3 client:visible />
-    <TIDifferencesOption3 client:visible />
+  <main style="margin:0;padding:0">
+    <Hero4 client:load />
+    <TIDifferencesOption3 client:load />
+    <FirmCultureOption3 client:visible />
+    <TrustWallOption3 client:visible />
     <CaringFirmOption3 client:visible />
-    <FirmCultureOption3 client:load />
     <CTAOption3 client:visible />
+    <NYACulture2 client:visible />
+    <NYACulture client:visible />
+    <Footer client:load />
   </main>
 
   <script>
@@ -215,7 +263,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
 
     const SCHEMES = [
       {
-        id: 'navy-blue', name: 'Navy + Blue',
+        id: 'navy-blue', name: 'NB',
         swatches: ['#0B1F3B', '#2F80ED'],
         vars: {
           '--color-primary':       '#0B1F3B',
@@ -227,7 +275,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
         },
       },
       {
-        id: 'slate-amber', name: 'Slate + Amber',
+        id: 'slate-amber', name: 'SA',
         swatches: ['#1F2937', '#D97706'],
         vars: {
           '--color-primary':       '#1F2937',
@@ -239,7 +287,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
         },
       },
       {
-        id: 'charcoal-cyan', name: 'Charcoal + Cyan',
+        id: 'charcoal-cyan', name: 'CC',
         swatches: ['#0F172A', '#06B6D4'],
         vars: {
           '--color-primary':       '#0F172A',
@@ -251,7 +299,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
         },
       },
       {
-        id: 'forest-stone', name: 'Forest + Stone',
+        id: 'forest-stone', name: 'FS',
         swatches: ['#1A2E1A', '#6B9B6B'],
         vars: {
           '--color-primary':       '#1A2E1A',
@@ -263,7 +311,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
         },
       },
       {
-        id: 'violet-gold', name: 'Deep Violet',
+        id: 'violet-gold', name: 'V',
         swatches: ['#1E1B4B', '#7C3AED'],
         vars: {
           '--color-primary':       '#1E1B4B',
@@ -275,7 +323,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
         },
       },
       {
-        id: 'navy-gold', name: 'Navy + Gold',
+        id: 'navy-gold', name: 'NG',
         swatches: ['#1E3A8A', '#B45309'],
         vars: {
           '--color-primary':       '#1E3A8A',
@@ -287,7 +335,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
         },
       },
       {
-        id: 'maroon-gold', name: 'Maroon + Gold',
+        id: 'maroon-gold', name: 'MG',
         swatches: ['#5C0B0B', '#C9953A'],
         vars: {
           '--color-primary':       '#5C0B0B',
@@ -340,6 +388,7 @@ import CTAOption3 from '../components/ti-option3/CTAOption3';
       document.querySelectorAll<HTMLButtonElement>('.tb-color-btn').forEach(btn =>
         btn.classList.toggle('active', btn.dataset.id === id)
       );
+      window.dispatchEvent(new CustomEvent('themechange'));
     }
 
     function applyFont(id: string) {
