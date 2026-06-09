@@ -1,0 +1,143 @@
+/* ─────────────────────────────────────────────────────────────────────
+   NYA Culture — 50vh pinned quote section
+   Photo left, scroll-driven quotes right.
+   Fonts: Cormorant Garamond (quotes) · Great Vibes (signature)
+   ───────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&display=swap');
+
+/* ── Section — natural height, no sticky/scroll wrapper ─────────── */
+.section {
+  background: #faf9f7;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Inner layout ────────────────────────────────────────────────── */
+.inner {
+  position: relative;
+  width: 100%;
+  height: 40vh;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LEFT COLUMN — photo
+   ══════════════════════════════════════════════════════════════════ */
+
+.left {
+  flex: 0 0 38%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  /* purple accent bar on the right edge */
+  border-right: 3px solid #6B2D8B;
+}
+
+.photo {
+  display: block;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: top center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   RIGHT COLUMN — quotes stack
+   ══════════════════════════════════════════════════════════════════ */
+
+.right {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 6vw 0 5vw;
+}
+
+/* Large decorative opening quotation mark — aligned with person's head */
+.openMark {
+  position: absolute;
+  top: 18%;
+  left: 4vw;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(80px, 10vw, 140px);
+  font-style: italic;
+  color: #6B2D8B;
+  opacity: 0.12;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Each quote slide is absolutely stacked in the same space */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 13% 6vw 0 5vw; /* aligned with quote mark */
+  gap: 16px;
+}
+
+/* ── Quote text ──────────────────────────────────────────────────── */
+.quote {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: clamp(16px, 2vw, 28px);
+  font-weight: 500;
+  line-height: 1.6;
+  color: #1a1818;
+  letter-spacing: 0.01em;
+  /* GSAP manages opacity/transform — starts hidden via gsap.set */
+}
+
+/* ── Signature — right-aligned ───────────────────────────────────── */
+.signature {
+  margin: 0;
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: 400;
+  color: #6B2D8B;
+  line-height: 1.2;
+  text-align: right;
+  align-self: flex-end;
+  /* GSAP manages clip-path reveal + opacity — starts hidden */
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .inner {
+    height: auto;
+    flex-direction: column;
+  }
+  .left {
+    flex: 0 0 40vw;
+    border-right: none;
+    border-bottom: 3px solid #6B2D8B;
+    height: 40vw;
+  }
+  .photo {
+    height: 130%;
+    bottom: 0;
+  }
+  .right {
+    padding: 32px 6vw;
+  }
+  .slide {
+    position: relative;
+    inset: auto;
+    padding: 0;
+  }
+}

@@ -1,0 +1,295 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Hero4 — NYA isometric building, exact Paveletsky replica.
+   CSS verbatim from Paveletsky main.css.
+   Animation positions computed from animation.js tlFirstScroll.
+   ───────────────────────────────────────────────────────────────────── */
+
+/* ── Outer section — clip boundary ───────────────────────────────── */
+.home {
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  z-index: 35;
+}
+
+/* ── Pinned wrapper ───────────────────────────────────────────────── */
+.trigger {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+}
+
+/* ── Composition root — verbatim Paveletsky: left: 11vh ──────────── */
+.movehome {
+  left: 11vh;
+  position: relative;
+  z-index: 5;
+}
+
+/* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
+.layer .imgHover         { display: none;  }
+.layer:hover .imgBase    { display: none;  }
+.layer:hover .imgHover   { display: block; }
+
+/* ── Shared image rules ───────────────────────────────────────────── */
+.imgBase,
+.imgHover {
+  position: absolute;
+  height: auto;
+  user-select: none;
+  /* pointer-events left ON so mouse reaches the image → parent .layer gets :hover */
+}
+
+/* ── Layer container — make the whole visible area hoverable ─────── */
+.layer {
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAYER CONTAINERS — verbatim Paveletsky main.css
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── L1  (home1, z 50) ───────────────────────────────────────────── */
+.l1 {
+  position: relative;
+  top: 0vh;
+  left: 29.75vw;
+  width: 60vw;
+  z-index: 50;
+}
+.l1 .imgBase,
+.l1 .imgHover {
+  width: 55.4vw;
+  left: -3.7vw;
+  top: -14.6vh;
+}
+
+/* ── L2  (home2, z 47) ───────────────────────────────────────────── */
+.l2 {
+  position: absolute;
+  top: 25.64vh;
+  left: 20.82vw;
+  width: 60vw;
+  z-index: 47;
+}
+.l2 .imgBase,
+.l2 .imgHover {
+  width: 41vw;
+  left: -7.5vw;
+  top: -32vh;
+}
+
+/* ── L3  (home3, z 47) ───────────────────────────────────────────── */
+.l3 {
+  position: absolute;
+  top: 3.7vw;
+  left: 29.75vw;
+  width: 69.3vw;
+  z-index: 47;
+}
+.l3 .imgBase,
+.l3 .imgHover {
+  width: 55.44vw;
+  left: -3.7vw;
+  top: -8vh;
+}
+
+/* ── L4  (home4, z 46) ───────────────────────────────────────────── */
+.l4 {
+  position: absolute;
+  top: 2vh;
+  left: 13.4vw;
+  width: 85vw;
+  z-index: 46;
+}
+.l4 .imgBase,
+.l4 .imgHover {
+  width: 68vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L5  (home5, z 44) ───────────────────────────────────────────── */
+.l5 {
+  position: absolute;
+  top: 3.2vh;
+  left: 13.44vw;
+  width: 87vw;
+  z-index: 44;
+}
+.l5 .imgBase,
+.l5 .imgHover {
+  width: 35.68vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L6  (home6, z 44) ───────────────────────────────────────────── */
+.l6 {
+  position: absolute;
+  top: 18.3vh;
+  left: 26.3vw;
+  width: 84.8vw;
+  z-index: 44;
+}
+.l6 .imgBase,
+.l6 .imgHover {
+  width: 55.1vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L7  (home7, z 44) ───────────────────────────────────────────── */
+.l7 {
+  position: absolute;
+  top: 33vh;
+  left: 4.7vw;
+  width: 89vw;
+  z-index: 44;
+}
+.l7 .imgBase,
+.l7 .imgHover {
+  width: 57.7vw;
+  left: 0;
+  top: 0;
+}
+
+/* ── L8  (home8, z 42) ───────────────────────────────────────────── */
+.l8 {
+  position: absolute;
+  top: 15.86vh;
+  left: 4.8vw;
+  width: 80.65vw;
+  z-index: 42;
+}
+.l8 .imgBase,
+.l8 .imgHover {
+  width: 95%;
+  left: 0;
+  top: 0;
+}
+
+/* ── Header bar — dark band, NYA logo left; lifts away on intro ──── */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+  z-index: 60;
+  background: var(--color-primary, #000);
+}
+
+.headerLogo {
+  height: 44px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  user-select: none;
+}
+
+/* ── Hero title — small-caps "Tenant / Improvements" ─────────────── */
+.heroTitle {
+  position: absolute;
+  top: calc(96px + 3vh);
+  left: 4vw;
+  z-index: 60;
+  color: #fff;
+  pointer-events: none;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  line-height: 0.85;
+}
+
+/* Second line ("Improvements") staggers right + drops down from the first */
+.titleRowIndent {
+  margin-left: 7vw;
+  margin-top: 2.5vh;
+}
+
+/* Single word, petite/small-caps. Initial letter enlarged via ::first-letter
+   so "Tenant" → big T + small-cap ENANT, all one word with no gap. */
+.titleWord {
+  display: inline-block;
+  font-family: var(--font-display, 'Playfair Display', serif);
+  font-variant-caps: small-caps;
+  /* clamp: min · zoom-aware preferred (rem + vw) · max.
+     rem term reacts to browser zoom / root font-size; vw term to viewport. */
+  font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 0.85;
+}
+
+.titleWord::first-letter {
+  font-size: 1.3em;       /* relative to the 5.5vw word size → ~18vw cap */
+  letter-spacing: 0em;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ANIMATED BACKGROUNDS — large triangular shapes covering viewport
+   from start. bg1 covers full viewport and moves up as scroll
+   progresses, revealing white. bg2 is a bottom-right triangle that
+   enters from below.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── bg1 container — covers viewport from start ──────────────────── */
+.bg1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* ── bg1 shape — flat top, bottom slopes up L→R; left=120vh, right=72vh ─ */
+.bg1Shape {
+  position: absolute;
+  width: 100%;
+  height: 120vh;
+  top: 0;
+  background: var(--color-primary, #000);
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%);
+}
+
+/* ── bg2 container ───────────────────────────────────────────────── */
+.bg2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* ── bg2 shape — y-axis mirror, extended downward so it can ride all the
+   way up with l8 and still cover the viewport bottom. The visible slope is
+   unchanged: top-left corner sits 78vh below the shape top, top-right 30vh
+   (same offsets as the old 150vh box). Box is now 250vh tall so when it rises
+   far enough to clear the slope above the viewport top, its bottom edge is
+   still well below the viewport bottom — no white wedge either side.
+   top-left  = 78/250 = 31.2%   top-right = 30/250 = 12%                     */
+.bg2Shape {
+  position: absolute;
+  width: 100%;
+  height: 157vh;
+  top: 100vh;
+  background: var(--color-primary, #000);
+  clip-path: polygon(0 31.2%, 100% 12%, 100% 100%, 0 100%);
+}
+
+/* ── exit overlay — scrubbed white fade before pin releases ──────── */
+.exitOverlay {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  z-index: 50;
+  pointer-events: none;
+}
