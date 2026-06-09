@@ -5,9 +5,9 @@ const SECTIONS = [
   { id: 'hero4',                   num: '00', label: 'Overview',       dark: true  },
   { id: 'section-ti-differences',  num: '01', label: 'TI Differences', dark: false },
   { id: 'section-firm-culture',    num: '02', label: 'Firm Culture',   dark: true  },
-  { id: 'section-trust-wall',      num: '03', label: 'Trust & Clients',dark: true  },
-  { id: 'section-caring-firm',     num: '04', label: 'Our Ethos',      dark: false },
-  { id: 'section-cta',             num: '05', label: 'Get Started',    dark: true  },
+  { id: 'section-trust-wall',      num: '03', label: 'Trust & Clients',dark: true,
+    spans: ['section-trust-wall', 'nya-culture-2', 'nya-culture'] },
+  { id: 'section-footer',          num: '04', label: 'Get in Touch',  dark: true  },
 ];
 
 // Color endpoint definitions (resolved to RGB at runtime)
@@ -45,11 +45,17 @@ function blendRGBA([lr, lg, lb, la], [dr, dg, db, da], t) {
   return `rgba(${Math.round(lerp(lr, dr, t))},${Math.round(lerp(lg, dg, t))},${Math.round(lerp(lb, db, t))},${lerp(la, da, t).toFixed(3)})`;
 }
 
-function getSectionProgress(el) {
-  if (!el) return 0;
-  const rect = el.getBoundingClientRect();
+function getSectionProgress(section) {
+  const ids = section.spans || [section.id];
+  const first = document.getElementById(ids[0]);
+  const last = document.getElementById(ids[ids.length - 1]);
+  if (!first) return 0;
+  const lastEl = last || first;
+  const firstRect = first.getBoundingClientRect();
+  const lastRect = lastEl.getBoundingClientRect();
+  const totalHeight = lastRect.bottom - firstRect.top;
   const vh = window.innerHeight;
-  return Math.min(1, Math.max(0, -rect.top / (rect.height - vh)));
+  return Math.min(1, Math.max(0, -firstRect.top / (totalHeight - vh)));
 }
 
 // Fraction of pill height covered by dark-background sections
@@ -93,7 +99,7 @@ export default function SideNavOption3() {
         if (el && el.getBoundingClientRect().top <= mid) best = i;
       });
       setActiveIdx(best);
-      setProgress(getSectionProgress(document.getElementById(SECTIONS[best].id)));
+      setProgress(getSectionProgress(SECTIONS[best]));
 
       // Direct DOM update — avoids React re-render on every scroll frame
       const rc = colorsRef.current;
