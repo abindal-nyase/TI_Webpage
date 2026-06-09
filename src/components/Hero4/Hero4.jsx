@@ -185,10 +185,10 @@ export default function Hero4() {
         {/* Hero title — top-left, sits below the header bar */}
         <div ref={titleRef} className={s.heroTitle}>
           <div className={s.titleRow}>
-            <span className={s.titleWord}>Tenant</span>
+            <span className={`${s.titleWord} ${s.titleWordTenant}`}><span className={s.firstLetter}>T</span>enant</span>
           </div>
           <div className={`${s.titleRow} ${s.titleRowIndent}`}>
-            <span className={s.titleWord}>Improvements</span>
+            <span className={`${s.titleWord} ${s.titleWordImprovements}`}><span className={s.firstLetter}>I</span>mprovements</span>
           </div>
         </div>
 

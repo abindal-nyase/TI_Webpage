@@ -219,17 +219,24 @@
   display: inline-block;
   font-family: var(--font-display, 'Playfair Display', serif);
   font-variant-caps: small-caps;
-  /* clamp: min · zoom-aware preferred (rem + vw) · max.
-     rem term reacts to browser zoom / root font-size; vw term to viewport. */
   font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
   font-weight: 400;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   line-height: 0.85;
 }
 
-.titleWord::first-letter {
-  font-size: 1.3em;       /* relative to the 5.5vw word size → ~18vw cap */
-  letter-spacing: 0em;
+.firstLetter {
+  font-size: 1.3em;
+}
+
+/* "T" is wide — pull next letter slightly closer */
+.titleWordTenant .firstLetter {
+  letter-spacing: -0.08em;
+}
+
+/* "I" is narrow — no adjustment needed */
+.titleWordImprovements .firstLetter {
+  letter-spacing: 0.04em;
 }
 
 
