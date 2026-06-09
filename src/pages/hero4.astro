@@ -1,0 +1,28 @@
+---
+import Hero4 from '../components/Hero4/Hero4.jsx'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hero 4 — Layered Scroll</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { background: #000; overflow-x: hidden; }
+
+      /* Define theme variables so bg1/bg2 shapes render correctly
+         without the option3 theme switcher running. */
+      :root {
+        --color-primary:       #0B1F3B;
+        --color-primary-light: #1E3A5F;
+        --color-accent:        #2F80ED;
+      }
+    </style>
+  </head>
+  <body>
+    <Hero4 client:load />
+  </body>
+</html>
