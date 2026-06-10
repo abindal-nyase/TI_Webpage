@@ -87,12 +87,12 @@ export const DISC_VARS = {
 }
 
 // ── CD4 text sizing ──────────────────────────────────────────────────────────
-export const CD4_CAT_FS      = 9.5 * DISCS.fontScale
-export const CD4_RED_DESC_FS = 14  * DISCS.fontScale * DISCS.cd4RedTextScale
-export const CD4_GRN_DESC_FS = 17  * DISCS.fontScale * DISCS.posNegFontRatio * DISCS.cd4GreenTextScale
+export const CD4_CAT_FS      = 9.5 * DISCS.fontScale * CD4_SCALE * 0.64
+export const CD4_RED_DESC_FS = 15  * DISCS.fontScale * DISCS.cd4RedTextScale * CD4_SCALE * 0.64
+export const CD4_GRN_DESC_FS = 15  * DISCS.fontScale * DISCS.posNegFontRatio * DISCS.cd4GreenTextScale * CD4_SCALE * 0.64
 
-export const CD4_TAPE_SIDE_MARGIN    = DISCS.cd4TapeSideMargin
-export const CD4_TAPE_TOPBOT_MARGIN  = DISCS.cd4TapeTopBotMargin
+export const CD4_TAPE_SIDE_MARGIN   = DISCS.cd4TapeSideMargin
+export const CD4_TAPE_TOPBOT_MARGIN = DISCS.cd4TapeTopBotMargin
 export const CD4_TAPE_ARC_F = Math.sqrt(Math.max(0, 4 * CD4_TAPE_SIDE_MARGIN * (1 - CD4_TAPE_SIDE_MARGIN)))
 
 export const CD4_CAT_FS_L      = CD4_CAT_FS      / CD4_SCALE

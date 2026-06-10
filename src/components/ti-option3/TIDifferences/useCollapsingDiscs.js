@@ -3,7 +3,7 @@ import { useScrollProgress } from './useScrollProgress.js'
 import { N, DISC_PHASES } from './geometry.js'
 import { toScreenLeft, toScreenTop, interp } from './utils.js'
 
-export function useCollapsingDiscs(discData, collapseDuration) {
+export function useCollapsingDiscs(discData, collapseDuration, dwellPhases = 0) {
   const driverRef = useRef(null)
   const progress  = useScrollProgress(driverRef)
   const rafRef    = useRef(null)
@@ -11,20 +11,22 @@ export function useCollapsingDiscs(discData, collapseDuration) {
   const [collapseStyles, setCollapseStyles] = useState(null)
   const [autoFall, setAutoFall] = useState(false)
 
-  const phase        = Math.min(DISC_PHASES - 1, Math.floor(progress * DISC_PHASES))
+  const totalPhases  = DISC_PHASES + dwellPhases
+  const phase        = Math.min(totalPhases - 1, Math.floor(progress * totalPhases))
   const dropped      = Math.min(phase, N)
-  const fall         = phase >= N + 1 || autoFall
-  const greenReveal  = phase >= N + 2
-  const droppedGreen = Math.min(N, Math.max(0, phase - (N + 2)))
+  const fall         = phase >= N + 1 + dwellPhases || autoFall
+  const greenReveal  = phase >= N + 2 + dwellPhases
+  const droppedGreen = Math.min(N, Math.max(0, phase - (N + 2 + dwellPhases)))
   const activeI      = (dropped > 0 && !greenReveal) ? dropped - 1 : -1
 
+  // Only start the auto-collapse timer once the user has scrolled past the dwell zone
   useEffect(() => {
-    if (dropped === N) {
+    if (dropped === N && phase >= N + dwellPhases) {
       const id = setTimeout(() => setAutoFall(true), 620)
       return () => clearTimeout(id)
     }
     setAutoFall(false)
-  }, [dropped])
+  }, [dropped, phase])
 
   useEffect(() => {
     if (!fall) {
@@ -48,5 +50,5 @@ export function useCollapsingDiscs(discData, collapseDuration) {
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
   }, [fall])
 
-  return { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles }
+  return { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles, totalPhases }
 }
