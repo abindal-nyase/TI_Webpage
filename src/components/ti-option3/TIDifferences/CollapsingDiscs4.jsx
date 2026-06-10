@@ -1,3 +1,4 @@
+import { useRef, useEffect, useState } from 'react'
 import s from './TIDifferencesOption3.module.css'
 import { DISCS, ITEMS, COPY, DISC_REDS, DISC_GREENS, RED_COLORS, GREEN_COLORS } from './config.js'
 import {
@@ -43,15 +44,15 @@ function renderRedOverlay(disc, i, on) {
         <path id={`cd4r-d1-${i}`}  d={arc_l(CD4_K_RED_D1_L)} />
         <path id={`cd4r-d2-${i}`}  d={arc_l(CD4_K_RED_D2_L)} />
       </defs>
-      <path d={band_l} fill="var(--color-primary)" fillOpacity={DISCS.cd4TapeBgOpacity} stroke={TEXT_REDS} strokeWidth={0.8 / CD4_SCALE} />
+      <path d={band_l} fill="var(--color-primary)" fillOpacity={DISCS.cd4TapeBgOpacity} />
       <text style={{ fontFamily: 'var(--font-body)', fontSize: CD4_CAT_FS_L, fontWeight: 700, letterSpacing: '0.1em', fill: TEXT_REDS }}>
         <textPath href={`#cd4r-cat-${i}`} startOffset="50%" textAnchor="middle">{ITEMS[i].category.toUpperCase()}</textPath>
       </text>
-      <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fontStyle: 'italic', fill: 'rgba(176,168,154,0.92)' }}>
+      <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fill: 'rgba(240,236,227,0.92)' }}>
         <textPath href={`#cd4r-d1-${i}`} startOffset="50%" textAnchor="middle">{desc1}</textPath>
       </text>
       {desc2 && (
-        <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fontStyle: 'italic', fill: 'rgba(176,168,154,0.92)' }}>
+        <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fill: 'rgba(240,236,227,0.92)' }}>
           <textPath href={`#cd4r-d2-${i}`} startOffset="50%" textAnchor="middle">{desc2}</textPath>
         </text>
       )}
@@ -86,7 +87,7 @@ function renderGreenOverlay(disc, i, on) {
         <path id={`cd4g-d1-${i}`}  d={arc_l(CD4_K_GRN_D1_L)} />
         <path id={`cd4g-d2-${i}`}  d={arc_l(CD4_K_GRN_D2_L)} />
       </defs>
-      <path d={band_l} fill="var(--color-primary)" fillOpacity={DISCS.cd4TapeBgOpacity} stroke={TEXT_GREENS} strokeWidth={0.8 / CD4_SCALE} />
+      <path d={band_l} fill="var(--color-primary)" fillOpacity={DISCS.cd4TapeBgOpacity} />
       <text style={{ fontFamily: 'var(--font-body)', fontSize: CD4_CAT_FS_L, fontWeight: 700, letterSpacing: '0.1em', fill: TEXT_GREENS }}>
         <textPath href={`#cd4g-cat-${i}`} startOffset="50%" textAnchor="middle">{ITEMS[i].category.toUpperCase()}</textPath>
       </text>
@@ -103,8 +104,21 @@ function renderGreenOverlay(disc, i, on) {
 }
 
 export function CollapsingDiscs4() {
-  const { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles }
-    = useCollapsingDiscs(cd4RedDiscData, cd4CollapseDuration)
+  const { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles, totalPhases }
+    = useCollapsingDiscs(cd4RedDiscData, cd4CollapseDuration, 1)
+
+  const colRef = useRef(null)
+  const [mobileScale, setMobileScale] = useState(1)
+
+  useEffect(() => {
+    const el = colRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => {
+      setMobileScale(Math.min(1, entry.contentRect.width / cd4TowerPxW))
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   const disc4RiskMaxW = Math.round(
     (DISCS.riskBarMaxW ?? maxDiscPxWidth * CD4_SCALE) * DISCS.riskBarScale
@@ -135,14 +149,15 @@ export function CollapsingDiscs4() {
   const redInitPositions   = cd4RedDiscData.map(disc => ({ left: toScreenLeft(disc.initCX, disc.radius), top: toScreenTop(disc.initCZ) }))
   const greenInitPositions = GREEN_DISC_DATA.map(gd => ({ left: gd.initLeft, top: gd.initTop }))
 
+  const overlapStyle = mobileScale < 1 ? {
+    transform: `scale(${mobileScale})`,
+    transformOrigin: 'top center',
+    marginBottom: `${(mobileScale - 1) * cd4TowerPxH}px`,
+  } : undefined
+
   return (
     <>
-      <div className={s.optionLabel}>
-        <div className={s.optionDivider} />
-        <span>Collapsing Discs 4</span>
-      </div>
-
-      <div ref={driverRef} className={s.discDriver} style={{ height: `${DISC_PHASES * DISCS.scrollVhPerPhase}vh` }}>
+      <div ref={driverRef} className={s.discDriver} style={{ height: `${totalPhases * DISCS.scrollVhPerPhase}vh` }}>
         <div
           className={[s.discScene, s.discSceneCd4, fall && s.discSceneCollapse].filter(Boolean).join(' ')}
           style={{
@@ -153,17 +168,17 @@ export function CollapsingDiscs4() {
             '--tower-col-shift':`${DISCS.towerColShift}px`,
           }}
         >
-          <div className={s.towerColCd4}>
-            <div className={s.towerOverlap}>
+          <div className={s.towerColCd4} ref={colRef}>
+            <div className={s.towerOverlap} style={overlapStyle}>
 
               {/* Red tower — fades out on green reveal */}
               <div className={s.towerSection}
                    style={{ gridArea: '1/1', opacity: greenReveal ? 0 : 1, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'none' : 'auto' }}>
                 <div className={s.towerWithBar}>
-                  <div className={s.valueBarWrap} style={{ marginRight: disc4ValueBarGap }}>
+                  <div className={s.valueBarWrap} style={{ marginRight: disc4ValueBarGap, opacity: dropped > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                     <div className={s.valueBarRow}>
                       <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
-                      <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)', opacity: dropped > 0 ? 1 : 0 }} />
+                      <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)' }} />
                     </div>
                     <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                   </div>
@@ -180,7 +195,7 @@ export function CollapsingDiscs4() {
                       colors={DISC_REDS} discVars={DISC_VARS} isGreen={false}
                       renderOverlay={renderRedOverlay}
                     />
-                    <div className={s.barArea} style={{ width: disc4RiskMaxW }}>
+                    <div className={s.barArea} style={{ width: disc4RiskMaxW, opacity: dropped > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                       <div className={s.riskBarWrap} style={{ alignItems: redRiskLabelAlign }}>
                         <div className={s.riskBarLabel}>
                           <span className={s.riskBarTitle}>{COPY.barRedLabel}</span>
@@ -198,7 +213,7 @@ export function CollapsingDiscs4() {
               <div className={s.towerSection}
                    style={{ gridArea: '1/1', opacity: greenReveal ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'auto' : 'none' }}>
                 <div className={s.towerWithBar}>
-                  <div className={s.valueBarWrap} style={{ marginRight: disc4ValueBarGap, opacity: greenReveal ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+                  <div className={s.valueBarWrap} style={{ marginRight: disc4ValueBarGap, opacity: droppedGreen > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                     <div className={s.valueBarRow}>
                       <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
                       <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: greenValueH, background: droppedGreen === N ? GREEN_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: 'height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s' }} />
@@ -218,7 +233,7 @@ export function CollapsingDiscs4() {
                       colors={DISC_GREENS} discVars={DISC_VARS} isGreen={true}
                       renderOverlay={renderGreenOverlay}
                     />
-                    <div className={s.barArea} style={{ width: disc4RiskMaxW }}>
+                    <div className={s.barArea} style={{ width: disc4RiskMaxW, opacity: droppedGreen > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                       <div className={s.riskBarWrap} style={{ alignItems: greenRiskLabelAlign }}>
                         <div className={s.riskBarLabel}>
                           <span className={s.riskBarTitle}>{COPY.barGreenLabel}</span>

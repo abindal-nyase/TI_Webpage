@@ -11,7 +11,7 @@ import { DiscTower } from './DiscTower.jsx'
 import { DiscTextCol } from './DiscTextCol.jsx'
 
 export function CollapsingDiscsSideBySide({ redDiscData, collapseDuration, label }) {
-  const { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles }
+  const { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles, totalPhases }
     = useCollapsingDiscs(redDiscData, collapseDuration)
 
   const discRiskMaxW = Math.round(
@@ -55,7 +55,7 @@ export function CollapsingDiscsSideBySide({ redDiscData, collapseDuration, label
         </div>
       )}
 
-      <div ref={driverRef} className={s.discDriver} style={{ height: `${DISC_PHASES * DISCS.scrollVhPerPhase}vh` }}>
+      <div ref={driverRef} className={s.discDriver} style={{ height: `${totalPhases * DISCS.scrollVhPerPhase}vh` }}>
         <div
           className={[s.discScene, fall && s.discSceneCollapse].filter(Boolean).join(' ')}
           style={{

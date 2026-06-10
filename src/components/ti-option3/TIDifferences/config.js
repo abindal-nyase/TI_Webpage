@@ -93,23 +93,23 @@ export const COPY = {
 }
 
 export const DISC_REDS = [
-  { face: '#5a1e1e', rim: '#3e1414' },
-  { face: '#6e2222', rim: '#4e1818' },
-  { face: '#822626', rim: '#5e1e1e' },
-  { face: '#962a2a', rim: '#6e2022' },
-  { face: '#aa2c30', rim: '#7e2028' },
-  { face: '#bc2e34', rim: '#8a1e2a' },
-  { face: '#c42535', rim: '#8e1e2c' },
+  { face: '#823232', rim: '#602626' },
+  { face: '#923838', rim: '#6e2c2c' },
+  { face: '#a43e3e', rim: '#7c3030' },
+  { face: '#b44444', rim: '#8c3838' },
+  { face: '#c44a4a', rim: '#9a3e3e' },
+  { face: '#d25050', rim: '#a84444' },
+  { face: '#de5656', rim: '#b44a4a' },
 ]
 
 export const DISC_GREENS = [
-  { face: '#1a5030', rim: '#123820' },
-  { face: '#1a5c38', rim: '#123e28' },
-  { face: '#1c6840', rim: '#144a2e' },
-  { face: '#1a7848', rim: '#125636' },
-  { face: '#168850', rim: '#106040' },
-  { face: '#109858', rim: '#0c6e40' },
-  { face: '#0da85e', rim: '#0a7042' },
+  { face: '#1e6e42', rim: '#155030' },
+  { face: '#1c7c4a', rim: '#145a36' },
+  { face: '#1a8a52', rim: '#12663c' },
+  { face: '#169858', rim: '#107042' },
+  { face: '#12a860', rim: '#0c7c48' },
+  { face: '#0eb868', rim: '#088a50' },
+  { face: '#0aca72', rim: '#069856' },
 ]
 
 export const RED_COLORS = [
