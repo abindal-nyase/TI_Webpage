@@ -107,53 +107,75 @@ export function CollapsingDiscs4() {
   const { driverRef, phase, dropped, fall, greenReveal, droppedGreen, activeI, collapseStyles, totalPhases }
     = useCollapsingDiscs(cd4RedDiscData, cd4CollapseDuration, 1)
 
-  const colRef = useRef(null)
-  const [mobileScale, setMobileScale] = useState(1)
+  const colRef   = useRef(null)
+  const naturalW = disc4ValueBarGap + DISCS.valueBarW + cd4TowerPxW
+
+  // Stacked breakpoint: switch to top/bottom layout when the viewport h/w ratio
+  // exceeds the natural h/w ratio of the two-stack content.
+  //   stacked height = 2 towers + 2 title blocks + 1 gap
+  //   stacked width  = value bar + gap + tower  (= naturalW)
+  // Tune cd4StackTitleH and cd4StackGapH in config.js to match reality.
+  const stackedContentH = 2 * (cd4TowerPxH + DISCS.cd4StackTitleH) + DISCS.cd4StackGapH
+  const STACK_RATIO     = stackedContentH / naturalW
+
+  const computeScale   = (contentW) => Math.min(1, contentW / naturalW)
+  const computeStacked = () => window.innerHeight / window.innerWidth > STACK_RATIO
+
+  const [mobileScale, setMobileScale] = useState(() => {
+    if (typeof window === 'undefined') return 1
+    return computeScale(window.innerWidth * 0.92)
+  })
+  const [isStacked, setIsStacked] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return computeStacked()
+  })
 
   useEffect(() => {
-    const el = colRef.current
-    if (!el) return
+    const col = colRef.current
+    if (!col) return
     const ro = new ResizeObserver(([entry]) => {
-      setMobileScale(Math.min(1, entry.contentRect.width / cd4TowerPxW))
+      const ms = computeScale(entry.contentRect.width)
+      setMobileScale(ms)
+      setIsStacked(computeStacked())
     })
-    ro.observe(el)
+    ro.observe(col)
     return () => ro.disconnect()
   }, [])
 
+  // All pixel values derived from effectiveScale so they shrink proportionally on narrow viewports
+  const effectiveScale  = CD4_SCALE * mobileScale
+  const scaledTowerPxW  = Math.round(cd4TowerPxW  * mobileScale)
+  const scaledTowerPxH  = Math.round(cd4TowerPxH  * mobileScale)
+  const scaledGap       = Math.round(disc4ValueBarGap * mobileScale)
+
   const disc4RiskMaxW = Math.round(
-    (DISCS.riskBarMaxW ?? maxDiscPxWidth * CD4_SCALE) * DISCS.riskBarScale
+    (DISCS.riskBarMaxW ?? maxDiscPxWidth * effectiveScale) * DISCS.riskBarScale
   )
 
   const redTopI   = Math.max(0, dropped - 1)
   const greenTopI = Math.max(0, droppedGreen - 1)
 
   const redBarW = dropped > 0
-    ? Math.round(cd4RedDiscData[dropped - 1].pxWidth * CD4_SCALE * DISCS.riskBarScale)
+    ? Math.round(cd4RedDiscData[dropped - 1].pxWidth * effectiveScale * DISCS.riskBarScale)
     : 0
   const greenBarW = droppedGreen > 0
-    ? Math.round(GREEN_DISC_DATA[droppedGreen - 1].pxWidth * CD4_SCALE * DISCS.riskBarScale)
+    ? Math.round(GREEN_DISC_DATA[droppedGreen - 1].pxWidth * effectiveScale * DISCS.riskBarScale)
     : 0
 
   const redValueH = dropped > 0
-    ? Math.round((TOWER_H - toScreenTop(cd4RedDiscData[dropped - 1].initCZ)) * CD4_SCALE)
+    ? Math.round((TOWER_H - toScreenTop(cd4RedDiscData[dropped - 1].initCZ)) * effectiveScale)
     : 0
   const collapseTopPx = fall && collapseStyles
-    ? Math.round((TOWER_H - collapseStyles[N - 1].top) * CD4_SCALE)
+    ? Math.round((TOWER_H - collapseStyles[N - 1].top) * effectiveScale)
     : null
   const finalRedValueH = collapseTopPx !== null ? collapseTopPx : redValueH
 
   const greenValueH = droppedGreen > 0
-    ? Math.round((TOWER_H - GREEN_DISC_DATA[droppedGreen - 1].initTop) * CD4_SCALE)
+    ? Math.round((TOWER_H - GREEN_DISC_DATA[droppedGreen - 1].initTop) * effectiveScale)
     : 0
 
   const redInitPositions   = cd4RedDiscData.map(disc => ({ left: toScreenLeft(disc.initCX, disc.radius), top: toScreenTop(disc.initCZ) }))
   const greenInitPositions = GREEN_DISC_DATA.map(gd => ({ left: gd.initLeft, top: gd.initTop }))
-
-  const overlapStyle = mobileScale < 1 ? {
-    transform: `scale(${mobileScale})`,
-    transformOrigin: 'top center',
-    marginBottom: `${(mobileScale - 1) * cd4TowerPxH}px`,
-  } : undefined
 
   return (
     <>
@@ -161,21 +183,51 @@ export function CollapsingDiscs4() {
         <div
           className={[s.discScene, s.discSceneCd4, fall && s.discSceneCollapse].filter(Boolean).join(' ')}
           style={{
-            '--font-scale':     DISCS.fontScale,
-            '--pos-neg-ratio':  DISCS.posNegFontRatio,
-            '--drop-dur':       `${DISCS.dropAnimDuration}s`,
-            paddingBottom:      `${DISCS.baselinePct}%`,
-            '--tower-col-shift':`${DISCS.towerColShift}px`,
+            '--font-scale':      DISCS.fontScale,
+            '--pos-neg-ratio':   DISCS.posNegFontRatio,
+            '--drop-dur':        `${DISCS.dropAnimDuration}s`,
+            paddingBottom:       `${DISCS.baselinePct}%`,
+            '--tower-col-shift': '0px',
           }}
         >
-          <div className={s.towerColCd4} ref={colRef}>
-            <div className={s.towerOverlap} style={overlapStyle}>
+          {/* Non-stacked: single crossfading title pinned to top-left */}
+          {!isStacked && (
+            <div className={s.cd4SceneHead}>
+              <div style={{ opacity: greenReveal ? 0 : 1, transition: 'opacity 0.6s ease', position: 'absolute' }}>
+                <p className={s.eyebrowRed}>{COPY.eyebrowRed}</p>
+                <h3 className={s.cd4SceneTitle}>{COPY.titleRed}</h3>
+              </div>
+              <div style={{ opacity: greenReveal ? 1 : 0, transition: 'opacity 0.6s ease', position: 'absolute' }}>
+                <p className={s.eyebrowGreen}>{COPY.eyebrowGreen}</p>
+                <h3 className={s.cd4SceneTitle}>{COPY.titleGreen}</h3>
+              </div>
+              <div aria-hidden="true" style={{ visibility: 'hidden' }}>
+                <p className={s.eyebrowRed}>{COPY.eyebrowRed}</p>
+                <h3 className={s.cd4SceneTitle}>{COPY.titleRed}</h3>
+              </div>
+            </div>
+          )}
 
-              {/* Red tower — fades out on green reveal */}
+          <div
+            className={s.towerColCd4}
+            ref={colRef}
+            style={isStacked ? { paddingTop: 'clamp(3.5rem, 7vh, 5rem)' } : {}}
+          >
+            <div className={isStacked ? s.towerOverlapStacked : s.towerOverlap}>
+
+              {/* Red tower — non-stacked: fades out on green reveal; stacked: always visible */}
               <div className={s.towerSection}
-                   style={{ gridArea: '1/1', opacity: greenReveal ? 0 : 1, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'none' : 'auto' }}>
+                   style={isStacked
+                     ? {}
+                     : { gridArea: '1/1', opacity: greenReveal ? 0 : 1, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'none' : 'auto' }}>
+                {isStacked && (
+                  <div className={s.sectionHead} style={{ textAlign: 'left', alignSelf: 'flex-start', marginBottom: 8 }}>
+                    <p className={s.eyebrowRed}>{COPY.eyebrowRed}</p>
+                    <h3 className={s.cd4SceneTitle}>{COPY.titleRed}</h3>
+                  </div>
+                )}
                 <div className={s.towerWithBar}>
-                  <div className={s.valueBarWrap} style={{ marginRight: disc4ValueBarGap, opacity: dropped > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+                  <div className={s.valueBarWrap} style={{ marginRight: scaledGap, opacity: dropped > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                     <div className={s.valueBarRow}>
                       <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
                       <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)' }} />
@@ -183,13 +235,9 @@ export function CollapsingDiscs4() {
                     <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                    <div className={s.sectionHead}>
-                      <p className={s.eyebrowRed}>{COPY.eyebrowRed}</p>
-                      <h3 className={s.sectionTitle}>{COPY.titleRed}</h3>
-                    </div>
                     <DiscTower
                       discData={cd4RedDiscData}
-                      pxW={cd4TowerPxW} pxH={cd4TowerPxH} scale={CD4_SCALE}
+                      pxW={scaledTowerPxW} pxH={scaledTowerPxH} scale={effectiveScale}
                       initPositions={redInitPositions}
                       dropped={dropped} fall={fall} collapseStyles={collapseStyles} activeI={activeI}
                       colors={DISC_REDS} discVars={DISC_VARS} isGreen={false}
@@ -209,11 +257,19 @@ export function CollapsingDiscs4() {
                 </div>
               </div>
 
-              {/* Green tower — fades in at same position */}
+              {/* Green tower — non-stacked: fades in at same position; stacked: fades in below */}
               <div className={s.towerSection}
-                   style={{ gridArea: '1/1', opacity: greenReveal ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'auto' : 'none' }}>
+                   style={isStacked
+                     ? { opacity: greenReveal ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'auto' : 'none' }
+                     : { gridArea: '1/1', opacity: greenReveal ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: greenReveal ? 'auto' : 'none' }}>
+                {isStacked && (
+                  <div className={s.sectionHead} style={{ textAlign: 'left', alignSelf: 'flex-start', marginBottom: 8 }}>
+                    <p className={s.eyebrowGreen}>{COPY.eyebrowGreen}</p>
+                    <h3 className={s.cd4SceneTitle}>{COPY.titleGreen}</h3>
+                  </div>
+                )}
                 <div className={s.towerWithBar}>
-                  <div className={s.valueBarWrap} style={{ marginRight: disc4ValueBarGap, opacity: droppedGreen > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+                  <div className={s.valueBarWrap} style={{ marginRight: scaledGap, opacity: droppedGreen > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                     <div className={s.valueBarRow}>
                       <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
                       <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: greenValueH, background: droppedGreen === N ? GREEN_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: 'height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s' }} />
@@ -221,13 +277,9 @@ export function CollapsingDiscs4() {
                     <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                    <div className={[s.sectionHead, !greenReveal && s.sectionHeadHidden].filter(Boolean).join(' ')}>
-                      <p className={s.eyebrowGreen}>{COPY.eyebrowGreen}</p>
-                      <h3 className={s.sectionTitle}>{COPY.titleGreen}</h3>
-                    </div>
                     <DiscTower
                       discData={GREEN_DISC_DATA}
-                      pxW={cd4TowerPxW} pxH={cd4TowerPxH} scale={CD4_SCALE}
+                      pxW={scaledTowerPxW} pxH={scaledTowerPxH} scale={effectiveScale}
                       initPositions={greenInitPositions}
                       dropped={droppedGreen} fall={false} collapseStyles={null} activeI={droppedGreen - 1}
                       colors={DISC_GREENS} discVars={DISC_VARS} isGreen={true}

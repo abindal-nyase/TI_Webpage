@@ -13,6 +13,9 @@
   --red:   #c85050;
   --green: #4ab87a;
 
+  position: relative;
+  z-index: 36;          /* sits above Hero4's z-index:35 to cover the section seam */
+  margin-top: -2px;     /* overlaps 2px to eliminate any subpixel gap line */
   background: var(--surface-card, #fff);
   color: var(--color-black, #0F172A);
   font-family: var(--font-display);
@@ -20,19 +23,23 @@
 
 
 /* ── INTRO ───────────────────────────────────────────────────────────────── */
+[data-intro-anim] {
+  will-change: transform;
+}
+
 .intro {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 60vh;
   padding: 6rem 8vw;
-  text-align: center;
+  background: var(--color-primary);
 }
 .introBox {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.6rem;
   max-width: 720px;
 }
@@ -65,19 +72,20 @@
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  color: var(--color-black, #0F172A);
+  color: var(--color-accent);
   margin: 0;
   max-width: none;
   width: max-content;
 }
-.introH em { font-style: italic; color: var(--color-accent); display: block; white-space: normal; }
+/* em inherits color from h2 so GSAP can animate all three lines together */
+.introH em { font-style: italic; display: block; white-space: normal; }
 .introHeadMain { white-space: nowrap; display: block; }
 
 .introSub {
   font-family: var(--font-body);
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   line-height: 1.7;
-  color: var(--color-gray-700, #475569);
+  color: rgba(255, 255, 255, 0.55);
   margin: 0;
 }
 
@@ -108,18 +116,22 @@
 /* CD4: full-width single tower, no text column */
 .discSceneCd4 {
   grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 }
 
-/* CD4 tower column — fills the full scene, centers tower horizontally */
+/* CD4 tower column — fills the full scene, top-aligns tower below the absolute title */
 .towerColCd4 {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2vh 4vw;
+  justify-content: flex-start;
+  /* padding-top clears the absolute cd4SceneHead (title + eyebrow ≈ 4rem tall, starts at ~3.5–5rem) */
+  padding: clamp(8rem, 14vh, 11rem) 4vw 2vh;
   overflow: visible;
+  min-width: 0;
+  height: 100%;
 }
 
 /* CD3 left tower column */
@@ -140,6 +152,13 @@
   display: grid;
   grid-template-rows: 1fr;
   align-items: center;
+}
+/* Stacked mode: both towers visible top-to-bottom */
+.towerOverlapStacked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 5vh, 3.5rem);
 }
 
 /* ── TOWER COLUMN ─────────────────────────────────────────────────────────── */
@@ -173,6 +192,27 @@
 .sectionHeadHidden {
   opacity: 0;
   pointer-events: none;
+}
+
+/* CD4: title lives outside the scaled tower, pinned to top-left of the sticky scene.
+   top clears the fixed BackToHub button (~44px tall at 16px from viewport top). */
+.cd4SceneHead {
+  position: absolute;
+  top: clamp(3.5rem, 7vh, 5rem);
+  left: max(4vw, 1.5rem);
+  text-align: left;
+  pointer-events: none;
+  z-index: 2;
+}
+.cd4SceneTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+  font-weight: 600;
+  color: var(--color-black, #0F172A);
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .eyebrowRed {

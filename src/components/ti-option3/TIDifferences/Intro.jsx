@@ -1,17 +1,94 @@
+import { useRef, useEffect } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './TIDifferencesOption3.module.css'
 import { COPY } from './config.js'
 
+gsap.registerPlugin(ScrollTrigger)
+
 export function Intro() {
+  const sectionRef = useRef(null)
+  const headingRef = useRef(null)
+  const subRef     = useRef(null)
+
+  useEffect(() => {
+    // Rise animation — scroll-driven, not theme-dependent
+    const riseCtx = gsap.context(() => {
+      const targets = sectionRef.current.querySelectorAll('[data-intro-anim]')
+      gsap.from(targets, {
+        y: 80,
+        ease: 'power2.out',
+        stagger: 0.12,
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      })
+    }, sectionRef)
+
+    // Color + background fade — mirrors TrustWallOption3 pattern, rebuilt on themechange
+    let colorCtx
+
+    function buildColorAnims() {
+      if (colorCtx) colorCtx.revert()
+      colorCtx = gsap.context(() => {
+        const cs          = getComputedStyle(document.documentElement)
+        const primaryColor = cs.getPropertyValue('--color-primary').trim()
+        const accentColor  = cs.getPropertyValue('--color-accent').trim()
+        const blackColor   = cs.getPropertyValue('--color-black').trim() || '#0F172A'
+
+        const trigger = {
+          trigger: sectionRef.current,
+          start: 'top 60%',
+          end: 'top 10%',
+          scrub: 1.2,
+          invalidateOnRefresh: true,
+        }
+
+        gsap.fromTo(
+          sectionRef.current,
+          { backgroundColor: primaryColor },
+          { backgroundColor: '#ffffff', scrollTrigger: trigger },
+        )
+
+        gsap.fromTo(
+          headingRef.current,
+          { color: accentColor },
+          { color: blackColor, scrollTrigger: trigger },
+        )
+
+        gsap.fromTo(
+          subRef.current,
+          { color: 'rgba(255,255,255,0.55)' },
+          { color: 'rgba(15,23,42,0.72)', scrollTrigger: trigger },
+        )
+      }, sectionRef)
+    }
+
+    document.fonts.ready.then(buildColorAnims)
+    window.addEventListener('themechange', buildColorAnims)
+
+    return () => {
+      riseCtx.revert()
+      colorCtx?.revert()
+      window.removeEventListener('themechange', buildColorAnims)
+    }
+  }, [])
+
   return (
-    <section className={s.intro}>
+    <section ref={sectionRef} className={s.intro}>
       <div className={s.introBox}>
-        <h2 className={s.introH}>
+        <h2 ref={headingRef} className={s.introH}>
           {COPY.introHeadMain.map((line, i) => (
-            <span key={i} className={s.introHeadMain}>{line}</span>
+            <span key={i} className={s.introHeadMain} data-intro-anim>{line}</span>
           ))}
-          <em>{COPY.introHeadEm}</em>
+          <em data-intro-anim>{COPY.introHeadEm}</em>
         </h2>
-        <p className={s.introSub}>{COPY.introSub}</p>
+        <p ref={subRef} className={s.introSub} data-intro-anim>{COPY.introSub}</p>
       </div>
     </section>
   )

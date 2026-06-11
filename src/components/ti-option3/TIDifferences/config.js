@@ -32,6 +32,8 @@ export const DISCS = {
   cd4TapeSideMargin:  0.075,
   cd4TapeTopBotMargin:0.15,
   cd4TapeBgOpacity:   0.92,
+  cd4StackTitleH: 200,
+  cd4StackGapH:   200,
 }
 
 export const BARS = {

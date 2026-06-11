@@ -55,7 +55,7 @@ const CASCADE_OFFSET = 900       // delays the floor cascade until the building 
 const LAYER_DUR = 2400     // visible floor-rise per layer
 const BG2_START = 3400     // begins rising early so it leads the floor reveal
 const BG2_DUR   = 8200     // finishes at 10300 — exactly in sync with l8
-const BG2_REST  = '-156vh' // sloped top edge ends above the viewport top
+const BG2_REST  = '-90vh'  // sloped top edge ends ~halfway up viewport at pin end
 
 const LAYERS = [
   { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
@@ -91,12 +91,12 @@ export default function Hero4() {
           // pin-spacer gap above the content at scroll 0 (white strip). Pin
           // exactly when the hero reaches the viewport top instead.
           start: "top top",
-          end: "+=5090",
+          end: "+=2500",
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
           onLeave: () => {
-            window.__lenis?.scrollTo('#section-ti-differences', { immediate: true, offset: 0 })
+            window.__lenis?.scrollTo('#section-ti-differences', { duration: 0.9, offset: 0 })
           },
         },
       });
@@ -161,8 +161,6 @@ export default function Hero4() {
         .to(l7, { y: -1500, duration: LAYER_DUR }, 6200 + CASCADE_OFFSET)
         .to(l8, { y: -1500, duration: LAYER_DUR }, 7000 + CASCADE_OFFSET)
 
-        // exit fade — white overlay covers hero in last ~400px of scroll (timeline 8139–8833)
-        .to(exitOverlayRef.current, { opacity: 1, duration: 694, ease: "none" }, 8382);
 
     }, triggerRef)
 
