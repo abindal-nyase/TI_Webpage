@@ -53,8 +53,8 @@ const CASCADE_OFFSET = 900       // delays the floor cascade until the building 
 // bg2 finishes in lockstep with l8, then the pin ends and the next section
 // scrolls up over the solid dark field — a clean horizontal hand-off.
 const LAYER_DUR = 2400     // visible floor-rise per layer
-const BG2_START = 3400     // begins rising early so it leads the floor reveal
-const BG2_DUR   = 8200     // finishes at 10300 — exactly in sync with l8
+const LAYER_GAP = 0        // pause between one layer finishing and next starting
+const BG2_DUR   = 8200     // finishes in sync with l8
 const BG2_REST  = '-90vh'  // sloped top edge ends ~halfway up viewport at pin end
 
 const LAYERS = [
@@ -100,8 +100,15 @@ export default function Hero4() {
           },
         },
       });
-      // cap timeline so scrub maps scroll end → time 9076 (bg2 at -90.9vh, fade complete)
-      tl.duration(9076);
+      // Layer cascade is fully sequential — each layer clears the viewport
+      // (LAYER_DUR) + a pause (LAYER_GAP) before the next starts. l1..l8
+      // occupy [CASCADE_START, CASCADE_START + 8*LAYER_DUR + 7*LAYER_GAP].
+      const CASCADE_START = 700 + CASCADE_OFFSET
+      const LAYER_STEP = LAYER_DUR + LAYER_GAP
+      const cascadeEnd = CASCADE_START + 8 * LAYER_DUR + 7 * LAYER_GAP
+
+      // cap timeline so scrub maps scroll end → cascadeEnd (bg2 at -90.9vh, fade complete)
+      tl.duration(cascadeEnd);
 
 
 
@@ -113,8 +120,8 @@ export default function Hero4() {
           movehomeRef.current,
           { x: INTRO_OFFSET_X, y: INTRO_OFFSET_Y },
           // power1.out = soft landing without the long stall of power2.out.
-          // Rests 170px below center so the building's top is fully in view.
-          { x: 0, y: 170, ease: "power1.out", duration: INTRO_DURATION },
+          // Rests near viewport bottom-center instead of mid-screen.
+          { x: 0, y: "45dvh", ease: "power1.out", duration: INTRO_DURATION },
           0,
         )
         // Header bar + title lift off TOGETHER, accelerating up (power1.in), and
@@ -135,31 +142,46 @@ export default function Hero4() {
         .to(
           l1,
           { y: -1100, duration: LAYER_DUR, ease: "power1.in" },
-          700 + CASCADE_OFFSET,
+          CASCADE_START,
         )
 
-        // bg1: top dark triangle moves up, revealing white below
+        // bg1: top dark triangle moves up, revealing white below — spans the
+        // whole cascade so the reveal stays in sync with the floor peel-off.
         .to(
           bg1ImgRef.current,
-          { y: "-180dvh", duration: 8000, ease: "none" },
+          { y: "-180dvh", duration: cascadeEnd - (300 + CASCADE_OFFSET), ease: "none" },
           300 + CASCADE_OFFSET,
         )
 
         // bg2: dark trapezoid rises from below and STOPS flush — its flat bottom
         // edge lands at the viewport bottom, where the next section begins.
+        // Finishes in lockstep with l8 (cascadeEnd).
         .to(
           bg2ImgRef.current,
           { y: BG2_REST, duration: BG2_DUR, ease: "none" },
-          BG2_START + CASCADE_OFFSET,
+          cascadeEnd - BG2_DUR,
         )
 
-        .to(l2, { y: -1500, duration: LAYER_DUR }, 1600 + CASCADE_OFFSET)
-        .to(l3, { y: -1500, duration: LAYER_DUR }, 2400 + CASCADE_OFFSET)
-        .to(l4, { y: -1500, duration: LAYER_DUR }, 3400 + CASCADE_OFFSET)
-        .to(l5, { y: -1500, duration: LAYER_DUR }, 4400 + CASCADE_OFFSET)
-        .to(l6, { y: -1500, duration: LAYER_DUR }, 5200 + CASCADE_OFFSET)
-        .to(l7, { y: -1500, duration: LAYER_DUR }, 6200 + CASCADE_OFFSET)
-        .to(l8, { y: -1500, duration: LAYER_DUR }, 7000 + CASCADE_OFFSET)
+        // l2..l8: each starts only after the previous layer has fully cleared
+        // the viewport (sequential, no overlap). Same ease as l1 (power1.in)
+        // so every layer's peel-off has a matching fast finish — keeps the
+        // handoff between layers feeling consistent.
+        .to(l2, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 1 * LAYER_STEP)
+        .to(l3, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 2 * LAYER_STEP)
+        .to(l4, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 3 * LAYER_STEP)
+        .to(l5, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 4 * LAYER_STEP)
+        .to(l6, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 5 * LAYER_STEP)
+        .to(l7, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 6 * LAYER_STEP)
+        .to(l8, { y: -1500, duration: LAYER_DUR, ease: "power1.in" }, CASCADE_START + 7 * LAYER_STEP)
+
+        // Building drifts gently upward over the whole cascade — small parallax
+        // lift so the structure feels alive while floors peel off, on top of
+        // its settled position from the intro.
+        .to(
+          movehomeRef.current,
+          { y: "-=8vh", duration: cascadeEnd - CASCADE_START, ease: "none" },
+          CASCADE_START,
+        );
 
 
     }, triggerRef)
