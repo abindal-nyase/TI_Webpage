@@ -2,35 +2,70 @@ import s from './FooterOption3.module.css';
 
 const NAV_COLS = [
   {
-    heading: 'Navigate',
+    heading: "Navigate",
     links: [
-      { label: 'Home',       href: 'https://www.nyase.com/' },
-      { label: 'Services',   href: 'https://www.nyase.com/expertise/' },
-      { label: 'Projects',   href: 'https://www.nyase.com/projects-2/' },
-      { label: 'Leadership', href: 'https://www.nyase.com/leadership/' },
+      { label: "Home", href: "https://www.nyase.com/" },
+      { label: "Services", href: "https://www.nyase.com/expertise/" },
+      { label: "Projects", href: "https://www.nyase.com/projects-2/" },
+      { label: "Leadership", href: "https://www.nyase.com/leadership/" },
     ],
   },
   {
-    heading: 'Contact',
+    heading: "Contact",
     links: [
-      { label: 'info@nyase.com',                               href: 'mailto:info@nyase.com' },
-      { label: '(213) 362-0707',                               href: 'tel:+12133620707' },
-      { label: '350 S Grand Ave #1600, Los Angeles, CA 90071', href: 'https://maps.google.com/?q=350+S+Grand+Ave+1600+Los+Angeles+CA+90071', external: true },
+      { label: "info@nyase.com", href: "mailto:info@nyase.com" },
+      { label: "(213) 362-0707", href: "tel:+12133620707" },
+      {
+        label: "350 S Grand Ave #1600, Los Angeles, CA 90071",
+        href: "https://maps.google.com/?q=350+S+Grand+Ave+1600+Los+Angeles+CA+90071",
+        external: true,
+      },
     ],
   },
   {
-    heading: 'Social',
+    heading: "Social",
     links: [
-      { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/nabih-youssef-associates/', external: true },
-      { label: 'Instagram', href: 'https://www.instagram.com/nabihyoussefassociates',           external: true },
-      { label: 'YouTube',   href: 'https://www.youtube.com/@NYA_SE',                            external: true },
-      { label: 'X',         href: 'https://x.com/NYandAssociates',                              external: true },
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/company/nabih-youssef-associates/",
+        external: true,
+      },
+      {
+        label: "Instagram",
+        href: "https://www.instagram.com/nabihyoussefassociates",
+        external: true,
+      },
+      {
+        label: "YouTube",
+        href: "https://www.youtube.com/@NYA_SE",
+        external: true,
+      },
+      { label: "X", href: "https://x.com/NYandAssociates", external: true },
     ],
   },
   {
-    heading: 'Resources',
+    heading: "Resources",
     links: [
-      { label: 'Company Profile', href: '/resources/company-profile-placeholder.pdf', external: true },
+      {
+        label: "Firm Profile",
+        href: "/resources/firm-profile.pdf",
+        external: true,
+      },
+      {
+        label: "Selected TI Projects",
+        href: "/resources/nya-ti.pdf",
+        external: true,
+      },
+      {
+        label: "Corporate Complexes",
+        href: "/resources/nya-corporate.pdf",
+        external: true,
+      },
+      {
+        label: "Commercial Spaces",
+        href: "/resources/nya-commercial.pdf",
+        external: true,
+      },
     ],
   },
 ];
