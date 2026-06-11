@@ -36,8 +36,8 @@ gsap.registerPlugin(ScrollTrigger)
  */
 
 // ── Intro config — tweak these to change the starting offset ──────────────
-const INTRO_OFFSET_X = '45vw'   // rightward start offset — building peeks in bottom-right
-const INTRO_OFFSET_Y = '45vh'    // downward start offset
+const INTRO_OFFSET_X = '45dvw'   // rightward start offset — building peeks in bottom-right
+const INTRO_OFFSET_Y = '45dvh'    // downward start offset
 const INTRO_DURATION = 1600      // building glide — longer = more scroll to reach center
 const TEXT_EXIT = 1100           // title + header lift; finishes BEFORE building centers
 const CASCADE_OFFSET = 900       // delays the floor cascade until the building has settled
@@ -141,7 +141,7 @@ export default function Hero4() {
         // bg1: top dark triangle moves up, revealing white below
         .to(
           bg1ImgRef.current,
-          { y: "-180vh", duration: 8000, ease: "none" },
+          { y: "-180dvh", duration: 8000, ease: "none" },
           300 + CASCADE_OFFSET,
         )
 
@@ -173,7 +173,7 @@ export default function Hero4() {
         {/* Header bar — dark band w/ NYA logo. Lifts away with the title on intro. */}
         <header ref={headerRef} className={s.header}>
           <img
-            src="/nya-logo.png"
+            src="/nya-logo/nya-white.png"
             alt="Nabih Youssef Associates"
             className={s.headerLogo}
             draggable={false}
@@ -183,10 +183,14 @@ export default function Hero4() {
         {/* Hero title — top-left, sits below the header bar */}
         <div ref={titleRef} className={s.heroTitle}>
           <div className={s.titleRow}>
-            <span className={`${s.titleWord} ${s.titleWordTenant}`}><span className={s.firstLetter}>T</span>enant</span>
+            <span className={`${s.titleWord} ${s.titleWordTenant}`}>
+              <span className={s.firstLetter}>T</span>enant
+            </span>
           </div>
           <div className={`${s.titleRow} ${s.titleRowIndent}`}>
-            <span className={`${s.titleWord} ${s.titleWordImprovements}`}><span className={s.firstLetter}>I</span>mprovements</span>
+            <span className={`${s.titleWord} ${s.titleWordImprovements}`}>
+              <span className={s.firstLetter}>I</span>mprovements
+            </span>
           </div>
         </div>
 
