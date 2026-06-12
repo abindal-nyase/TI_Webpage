@@ -77,6 +77,7 @@ export default function Hero4() {
   const layerRefs = useRef([]);
   const bg1ImgRef = useRef(null);
   const bg2ImgRef = useRef(null);
+  const bg2BackingRef = useRef(null);
   const exitOverlayRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -189,6 +190,49 @@ export default function Hero4() {
     return () => ctx.revert()
   }, [])
 
+  // bg2Backing color fade — mirrors TIDifferences/Intro.jsx's primary→white
+  // fade exactly (same trigger element, same start/end), so the color
+  // revealed through bg2Shape's transparent mask always matches the next
+  // section's current background. Rebuilt on themechange.
+  useLayoutEffect(() => {
+    let colorCtx
+
+    function buildBackingFade() {
+      if (colorCtx) colorCtx.revert()
+      const introSection = document.querySelector('#section-ti-differences > section')
+      if (!introSection || !bg2BackingRef.current) return
+
+      colorCtx = gsap.context(() => {
+        const primaryColor = getComputedStyle(document.documentElement)
+          .getPropertyValue('--color-primary')
+          .trim()
+
+        gsap.fromTo(
+          bg2BackingRef.current,
+          { backgroundColor: primaryColor },
+          {
+            backgroundColor: '#ffffff',
+            scrollTrigger: {
+              trigger: introSection,
+              start: 'top 50%',
+              end: 'top 20%',
+              scrub: 1.2,
+              invalidateOnRefresh: true,
+            },
+          },
+        )
+      })
+    }
+
+    document.fonts.ready.then(buildBackingFade)
+    window.addEventListener('themechange', buildBackingFade)
+
+    return () => {
+      colorCtx?.revert()
+      window.removeEventListener('themechange', buildBackingFade)
+    }
+  }, [])
+
   return (
     <section ref={sectionRef} id="hero4" className={s.home}>
       <div ref={triggerRef} className={s.trigger}>
@@ -222,9 +266,11 @@ export default function Hero4() {
         </div>
         {/* bg2 — inverted trapezoid: top slopes down L→R, flat bottom; enters from below */}
         <div className={s.bg2}>
-          <div ref={bg2ImgRef} className={s.bg2Shape} />
+          <div ref={bg2ImgRef} className={s.bg2ImgWrap}>
+            <div ref={bg2BackingRef} className={s.bg2Backing} />
+            <div className={s.bg2Shape} />
+          </div>
         </div>
-
         {/* exit overlay — fades in over last 400px of scroll to hand off to next section */}
         <div ref={exitOverlayRef} className={s.exitOverlay} />
 

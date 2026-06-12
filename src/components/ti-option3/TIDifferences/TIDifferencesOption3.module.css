@@ -16,7 +16,9 @@
   position: relative;
   z-index: 36;          /* sits above Hero4's z-index:35 to cover the section seam */
   margin-top: -2px;     /* overlaps 2px to eliminate any subpixel gap line */
-  background: var(--surface-card, #fff);
+  /* Starts matching Hero4's bg2 (primary) — no seam — then GSAP fades this
+     to white over the first half-viewport of scroll (see Intro.jsx). */
+  background: var(--color-primary);
   color: var(--color-black, #0F172A);
   font-family: var(--font-display);
 }
@@ -34,7 +36,7 @@
   justify-content: flex-start;
   min-height: 60vh;
   padding: 6rem 8vw;
-  background: var(--color-primary);
+  /* background comes from .root — shared fade across the whole section */
 }
 .introBox {
   display: flex;
@@ -109,7 +111,8 @@
   display: grid;
   grid-template-columns: var(--tower-col-pct, 44%) 1fr;
   overflow: hidden;
-  background: var(--surface-card, #fff);
+  /* background comes from .root — already white by the time this is in view */
+  background: transparent;
 }
 .discSceneCollapse { overflow: clip; }
 

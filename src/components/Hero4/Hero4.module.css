@@ -285,13 +285,59 @@
    far enough to clear the slope above the viewport top, its bottom edge is
    still well below the viewport bottom — no white wedge either side.
    top-left  = 78/250 = 31.2%   top-right = 30/250 = 12%                     */
-.bg2Shape {
+/* ── bg2 wrapper — carries the GSAP y transform; both children below
+   share its geometry and clip-path so they stay perfectly aligned ──── */
+.bg2ImgWrap {
   position: absolute;
   width: 100%;
-  height: 157vh;
+  /* height doubled (with clip-path % halved) vs the visual shape — gives the
+     blurred slope edge room to fade out before reaching the bottom edge,
+     so the bottom (which abuts .root, same primary color) stays solid */
+  height: 200vh;
   top: 100vh;
+}
+
+.bg2Shape,
+.bg2Backing {
+  position: absolute;
+  inset: 0;
   background: var(--color-primary, #000);
-  clip-path: polygon(0 31.2%, 100% 12%, 100% 100%, 0 100%);
+  clip-path: polygon(0 15.6%, 100% 6%, 100% 50%, 0 50%);
+}
+
+/* bg2Backing — solid, unmasked. Its background-color is animated via GSAP
+   (primary → white) synced to TIDifferences' own fade, so wherever
+   bg2Shape fades to transparent, the revealed color always matches the
+   next section's current background — no seam at any scroll position. */
+.bg2Backing {
+  z-index: 0;
+}
+
+/* bg2Shape — fades its flat bottom edge to transparent so it dissolves
+   into .bg2Backing (and through it, the next section) instead of cutting
+   it off with a hard line. Wide eased ramp (25%→50%, i.e. 50vh) avoids the
+   Mach-band "hard edge" a short/linear mask stop produces. Sloped top edge
+   stays fully opaque — no blur there. */
+.bg2Shape {
+  z-index: 1;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 25%,
+    rgba(0, 0, 0, 0.85) 32%,
+    rgba(0, 0, 0, 0.55) 39%,
+    rgba(0, 0, 0, 0.25) 45%,
+    transparent 50%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 25%,
+    rgba(0, 0, 0, 0.85) 32%,
+    rgba(0, 0, 0, 0.55) 39%,
+    rgba(0, 0, 0, 0.25) 45%,
+    transparent 50%
+  );
 }
 
 /* ── exit overlay — scrubbed white fade before pin releases ──────── */

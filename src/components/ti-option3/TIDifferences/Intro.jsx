@@ -43,14 +43,17 @@ export function Intro() {
 
         const trigger = {
           trigger: sectionRef.current,
-          start: 'top 60%',
-          end: 'top 10%',
+          start: 'top 50%',
+          end: 'top 20%',
           scrub: 1.2,
           invalidateOnRefresh: true,
         }
 
+        // Whole section (.root, Intro's parent) shares one background —
+        // fades primary → white starting at the Hero4 seam, finishing
+        // within half a viewport of scroll.
         gsap.fromTo(
-          sectionRef.current,
+          sectionRef.current.parentElement,
           { backgroundColor: primaryColor },
           { backgroundColor: '#ffffff', scrollTrigger: trigger },
         )
