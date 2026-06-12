@@ -95,9 +95,6 @@ export default function Hero4() {
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
-          onLeave: () => {
-            window.__lenis?.scrollTo('#section-ti-differences', { duration: 0.9, offset: 0 })
-          },
         },
       });
       // Layer cascade is fully sequential — each layer clears the viewport

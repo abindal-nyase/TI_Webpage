@@ -14,8 +14,7 @@ export function Intro() {
   useEffect(() => {
     // Rise animation — scroll-driven, not theme-dependent
     const riseCtx = gsap.context(() => {
-      const targets = sectionRef.current.querySelectorAll('[data-intro-anim]')
-      gsap.from(targets, {
+      gsap.from([headingRef.current, subRef.current], {
         y: 80,
         ease: 'power2.out',
         stagger: 0.12,
@@ -43,9 +42,9 @@ export function Intro() {
 
         const trigger = {
           trigger: sectionRef.current,
-          start: 'top 60%',
-          end: 'top 10%',
-          scrub: 1.2,
+          start: 'top 70%',
+          end: 'top top',
+          scrub: 0.6,
           invalidateOnRefresh: true,
         }
 
@@ -82,11 +81,11 @@ export function Intro() {
   return (
     <section ref={sectionRef} className={s.intro}>
       <div className={s.introBox}>
-        <h2 ref={headingRef} className={s.introH}>
+        <h2 ref={headingRef} className={s.introH} data-intro-anim>
           {COPY.introHeadMain.map((line, i) => (
-            <span key={i} className={s.introHeadMain} data-intro-anim>{line}</span>
+            <span key={i} className={s.introHeadMain}>{line}</span>
           ))}
-          <em data-intro-anim>{COPY.introHeadEm}</em>
+          <em>{COPY.introHeadEm}</em>
         </h2>
         <p ref={subRef} className={s.introSub} data-intro-anim>{COPY.introSub}</p>
       </div>
