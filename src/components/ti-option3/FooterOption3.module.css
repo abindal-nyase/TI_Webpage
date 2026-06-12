@@ -5,13 +5,14 @@
   padding: 80px 8vw 0;
 }
 
-.footer::before {
-  content: '';
+.logo {
+  height: 56px;
+  width: auto;
   display: block;
-  width: 48px;
-  height: 3px;
-  background: var(--color-accent);
+  object-fit: contain;
   margin-bottom: 56px;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
 }
 
 /* ── Top ──────────────────────────────────────────────────────────── */

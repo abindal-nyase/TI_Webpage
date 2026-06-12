@@ -5,7 +5,7 @@ const NAV_COLS = [
     heading: "Navigate",
     links: [
       { label: "Home", href: "https://www.nyase.com/" },
-      { label: "Services", href: "https://www.nyase.com/expertise/" },
+      { label: "Expertise / Specialties", href: "https://www.nyase.com/expertise/" },
       { label: "Projects", href: "https://www.nyase.com/projects-2/" },
       { label: "Leadership", href: "https://www.nyase.com/leadership/" },
     ],
@@ -16,7 +16,8 @@ const NAV_COLS = [
       { label: "info@nyase.com", href: "mailto:info@nyase.com" },
       { label: "(213) 362-0707", href: "tel:+12133620707" },
       {
-        label: "350 S Grand Ave #1600, Los Angeles, CA 90071",
+        label: "350 S Grand Ave #1600",
+        label2: "Los Angeles, CA 90071",
         href: "https://maps.google.com/?q=350+S+Grand+Ave+1600+Los+Angeles+CA+90071",
         external: true,
       },
@@ -74,9 +75,11 @@ export default function FooterOption3() {
   return (
     <footer id="section-footer" className={s.footer}>
 
+      {/* ── NYA Logo ── */}
+      <img src="/nya-logo.png" alt="Nabih Youssef Associates" className={s.logo} />
+
       {/* ── Top — headline + CTA ── */}
       <div className={s.top}>
-        <p className={s.eyebrow}>Nabih Youssef &amp; Associates</p>
         <h2 className={s.headline}>Always Within Reach</h2>
         <a href="mailto:info@nyase.com" className={s.cta}>
           Send Us an Email
@@ -98,7 +101,7 @@ export default function FooterOption3() {
                     className={s.link}
                     {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   >
-                    {link.label}
+                    {link.label2 ? <>{link.label}<br />{link.label2}</> : link.label}
                   </a>
                 </li>
               ))}
@@ -112,7 +115,6 @@ export default function FooterOption3() {
         <span className={s.copy}>
           &copy; {new Date().getFullYear()} Nabih Youssef &amp; Associates. All rights reserved.
         </span>
-        <span className={s.copy}>Tenant Improvement Specialists · Los Angeles, CA</span>
       </div>
 
     </footer>
