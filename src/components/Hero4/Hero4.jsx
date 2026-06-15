@@ -87,8 +87,6 @@ export default function Hero4() {
 
         const fromX = isDesktop ? INTRO_OFFSET_X : MOBILE_FROM_X;
         const fromY = isDesktop ? INTRO_OFFSET_Y : MOBILE_FROM_Y;
-        // tiny phones: build visible higher — 40dvh instead of 55dvh
-        const restY = isDesktop ? '45dvh' : isTiny ? '40dvh' : MOBILE_REST_Y;
 
         const [l1, l2, l3, l4, l5, l6, l7, l8] = layerRefs.current;
 
@@ -96,6 +94,11 @@ export default function Hero4() {
           scale: sc,
           transformOrigin: 'top left',
         });
+
+        // Compute restY from actual scaled building height — adapts to any viewport/sc
+        const buildingH = movehomeRef.current.getBoundingClientRect().height;
+        const vh = getVH();
+        const restY = Math.max(0, vh - buildingH * 0.9);
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
         const LAYER_STEP    = LAYER_DUR + LAYER_GAP;
