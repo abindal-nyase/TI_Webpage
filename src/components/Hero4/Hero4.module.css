@@ -24,9 +24,15 @@
   left: 11vh;
   position: relative;
   z-index: 5;
-  /* match GSAP intro start (INTRO_OFFSET_X/Y) so pre-hydration paint
-     doesn't flash the building at its natural (center) position */
+  /* matches GSAP desktop intro start so pre-hydration paint is correct */
   transform: translate(45dvw, 45dvh);
+}
+
+/* On mobile GSAP starts at x:0, y:8dvh — match that here */
+@media (max-width: 1023px) {
+  .movehome {
+    transform: translate(0, 8dvh);
+  }
 }
 
 /* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
