@@ -13,6 +13,11 @@ const INTRO_DURATION = 1600
 const TEXT_EXIT      = 1100
 const CASCADE_OFFSET = 900
 
+// Mobile intro — building enters from bottom-right, lands bottom-center
+const MOBILE_FROM_X  = '30dvw'   // adjust if clipped on entry
+const MOBILE_FROM_Y  = '60dvh'   // adjust if too high/low on entry
+const MOBILE_REST_Y  = '55dvh'   // adjust until building sits at screen bottom
+
 // ── Timeline tuning ────────────────────────────────────────────────────────
 const LAYER_DUR = 2400
 const LAYER_GAP = 0
@@ -71,17 +76,19 @@ export default function Hero4() {
     mm.add(
       {
         isDesktop: '(min-width: 1024px)',
-        isMobile: '(max-width: 1023px)',
+        isMobile:  '(min-width: 480px) and (max-width: 1023px)',
+        isTiny:    '(max-width: 479px)',
       },
       (context) => {
-        const { isDesktop } = context.conditions;
+        const { isDesktop, isTiny } = context.conditions;
 
         const vw = window.innerWidth;
-        const sc = Math.min(1, vw / NATURAL_W);
+        const sc = Math.max(0.28, Math.min(1, vw / NATURAL_W));
 
-        const fromX = isDesktop ? INTRO_OFFSET_X : '30dvw';
-        const fromY = isDesktop ? INTRO_OFFSET_Y : '60dvh';
-        const restY = isDesktop ? '45dvh'        : '55dvh';
+        const fromX = isDesktop ? INTRO_OFFSET_X : MOBILE_FROM_X;
+        const fromY = isDesktop ? INTRO_OFFSET_Y : MOBILE_FROM_Y;
+        // tiny phones: build visible higher — 40dvh instead of 55dvh
+        const restY = isDesktop ? '45dvh' : isTiny ? '40dvh' : MOBILE_REST_Y;
 
         const [l1, l2, l3, l4, l5, l6, l7, l8] = layerRefs.current;
 
@@ -147,8 +154,37 @@ export default function Hero4() {
             CASCADE_START,
           );
 
+        // iOS Safari: visualViewport.resize fires when toolbar collapses/expands
+        const onVisualResize = () => {
+          ScrollTrigger.refresh();
+        };
+        window.visualViewport?.addEventListener('resize', onVisualResize);
+
+        // Orientation change: force refresh after settle delay
+        let orientationTimer;
+        const onOrientationChange = () => {
+          clearTimeout(orientationTimer);
+          orientationTimer = setTimeout(() => {
+            ScrollTrigger.refresh();
+          }, 150);
+        };
+
+        if (screen.orientation) {
+          screen.orientation.addEventListener('change', onOrientationChange);
+        } else {
+          window.addEventListener('orientationchange', onOrientationChange);
+        }
+
         // matchMedia cleanup — return function is called when context reverts
-        return () => {};
+        return () => {
+          clearTimeout(orientationTimer);
+          window.visualViewport?.removeEventListener('resize', onVisualResize);
+          if (screen.orientation) {
+            screen.orientation.removeEventListener('change', onOrientationChange);
+          } else {
+            window.removeEventListener('orientationchange', onOrientationChange);
+          }
+        };
       },
     );
 

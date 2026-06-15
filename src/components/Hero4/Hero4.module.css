@@ -28,10 +28,24 @@
   transform: translate(45dvw, 45dvh);
 }
 
-/* On mobile GSAP starts at x:0, y:8dvh — match that here */
+/* On mobile GSAP starts at x:30dvw, y:60dvh — match here to prevent FOUC */
 @media (max-width: 1023px) {
   .movehome {
-    transform: translate(0, 8dvh);
+    transform: translate(30dvw, 60dvh);
+  }
+}
+
+/* Landscape mobile: building stack taller than viewport — scale down further */
+@media (max-width: 1023px) and (orientation: landscape) {
+  .movehome {
+    transform: translate(30dvw, 35dvh);
+  }
+}
+
+/* Tiny phones (≤479px) — building starts higher to stay visible */
+@media (max-width: 479px) {
+  .movehome {
+    transform: translate(30dvw, 40dvh);
   }
 }
 
