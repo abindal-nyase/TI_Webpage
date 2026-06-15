@@ -24,6 +24,11 @@ const BG2_REST  = '-90vh'
 // CollapsingDiscs4's mobileScale = min(1, containerW / naturalW)).
 const NATURAL_W = 1024
 
+// iOS Safari: window.innerHeight changes when the toolbar collapses.
+// visualViewport.height is the stable visible content height.
+const getVH = () =>
+  window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
 const LAYERS = [
   { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
   { id: 2, base: '/nya-img/i2.png',  hover: '/nya-img/i2I.png' },
@@ -46,35 +51,44 @@ export default function Hero4() {
   const bg2ImgRef      = useRef(null);
   const bg2BackingRef  = useRef(null);
   const exitOverlayRef = useRef(null);
-  const ctxRef         = useRef(null);
+  const mmRef          = useRef(null);
 
   useLayoutEffect(() => {
-    const build = () => {
-      const vw       = window.innerWidth;
-      const sc       = Math.min(1, vw / NATURAL_W);
-      const isMobile = sc < 1;
+    const mm = gsap.matchMedia();
+    mmRef.current = mm;
 
-      ctxRef.current = gsap.context(() => {
+    // saveStyles prevents inline-style bleed when context reverts across breakpoints
+    ScrollTrigger.saveStyles([
+      movehomeRef.current,
+      titleRef.current,
+      headerRef.current,
+      bg1ImgRef.current,
+      bg2ImgRef.current,
+      exitOverlayRef.current,
+      ...layerRefs.current,
+    ]);
+
+    mm.add(
+      {
+        isDesktop: '(min-width: 1024px)',
+        isMobile: '(max-width: 1023px)',
+      },
+      (context) => {
+        const { isDesktop } = context.conditions;
+
+        const vw = window.innerWidth;
+        const sc = Math.min(1, vw / NATURAL_W);
+
+        const fromX = isDesktop ? INTRO_OFFSET_X : '30dvw';
+        const fromY = isDesktop ? INTRO_OFFSET_Y : '60dvh';
+        const restY = isDesktop ? '45dvh'        : '55dvh';
+
         const [l1, l2, l3, l4, l5, l6, l7, l8] = layerRefs.current;
 
-        // Scale the building proportionally on narrow viewports — same principle
-        // as CollapsingDiscs4: mobileScale = min(1, containerW / naturalW).
-        // Layer CSS is vw/vh-based so sizes are already viewport-proportional;
-        // this sc additionally shrinks the whole composition when the viewport
-        // is narrower than NATURAL_W. Child GSAP y-values (e.g. -1100) are in
-        // the element's local space and visually travel sc× less on screen,
-        // so they remain proportionate to the scaled building.
         gsap.set(movehomeRef.current, {
           scale: sc,
           transformOrigin: 'top left',
         });
-
-        // Desktop: building slides in diagonally from bottom-right.
-        // Mobile: building drops in from directly above — no horizontal offset
-        // that would push the scaled composition off the narrow viewport.
-        const fromX = isMobile ? 0           : INTRO_OFFSET_X;
-        const fromY = isMobile ? '8dvh'      : INTRO_OFFSET_Y;
-        const restY = isMobile ? '2dvh'      : '45dvh';
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
         const LAYER_STEP    = LAYER_DUR + LAYER_GAP;
@@ -85,7 +99,7 @@ export default function Hero4() {
             id: 'hero4-pin',
             trigger: triggerRef.current,
             start: 'top top',
-            end: '+=2500',
+            end: () => '+=' + getVH() * 2.5,
             pin: true,
             scrub: true,
             invalidateOnRefresh: true,
@@ -106,7 +120,7 @@ export default function Hero4() {
             0,
           )
 
-          .to(l1, { y: -1100, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START)
+          .to(l1, { y: () => -(getVH() * 1.1) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START)
 
           .to(
             bg1ImgRef.current,
@@ -119,42 +133,27 @@ export default function Hero4() {
             cascadeEnd - BG2_DUR,
           )
 
-          .to(l2, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 1 * LAYER_STEP)
-          .to(l3, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 2 * LAYER_STEP)
-          .to(l4, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 3 * LAYER_STEP)
-          .to(l5, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 4 * LAYER_STEP)
-          .to(l6, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 5 * LAYER_STEP)
-          .to(l7, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 6 * LAYER_STEP)
-          .to(l8, { y: -1500, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 7 * LAYER_STEP)
+          .to(l2, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 1 * LAYER_STEP)
+          .to(l3, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 2 * LAYER_STEP)
+          .to(l4, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 3 * LAYER_STEP)
+          .to(l5, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 4 * LAYER_STEP)
+          .to(l6, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 5 * LAYER_STEP)
+          .to(l7, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 6 * LAYER_STEP)
+          .to(l8, { y: () => -(getVH() * 1.5) / sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 7 * LAYER_STEP)
 
           .to(
             movehomeRef.current,
-            { y: '-=8vh', duration: cascadeEnd - CASCADE_START, ease: 'none' },
+            { y: () => `+=${-(getVH() * 0.08) / sc}`, duration: cascadeEnd - CASCADE_START, ease: 'none' },
             CASCADE_START,
           );
 
-      }, triggerRef);
-    };
+        // matchMedia cleanup — return function is called when context reverts
+        return () => {};
+      },
+    );
 
-    build();
-
-    // Rebuild on resize (e.g. orientation change) — same pattern as
-    // CollapsingDiscs4's ResizeObserver: revert, refresh, rebuild.
-    let resizeTimer;
-    const onResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        ctxRef.current?.revert();
-        ScrollTrigger.refresh();
-        build();
-      }, 200);
-    };
-
-    window.addEventListener('resize', onResize);
     return () => {
-      clearTimeout(resizeTimer);
-      window.removeEventListener('resize', onResize);
-      ctxRef.current?.revert();
+      mm.revert();
     };
   }, []);
 
