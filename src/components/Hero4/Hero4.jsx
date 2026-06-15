@@ -95,10 +95,8 @@ export default function Hero4() {
           transformOrigin: 'top left',
         });
 
-        // Compute restY from actual scaled building height — adapts to any viewport/sc
-        const buildingH = movehomeRef.current.getBoundingClientRect().height;
-        const vh = getVH();
-        const restY = Math.max(0, vh - buildingH * 0.9);
+        // restY tuned per breakpoint to position building at screen bottom
+        const restY = isDesktop ? '45dvh' : isTiny ? '40dvh' : '55dvh';
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
         const LAYER_STEP    = LAYER_DUR + LAYER_GAP;
