@@ -36,7 +36,7 @@
   font-size: clamp(16px, 1.25vw, 18px);
   line-height: 1.7;
   /* GSAP animates from rgba(255,255,255,0.55) → rgba(15,23,42,0.72) */
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0);
   margin: 0;
   max-width: 520px;
 }
