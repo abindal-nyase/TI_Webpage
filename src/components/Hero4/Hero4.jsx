@@ -104,20 +104,23 @@ export default function Hero4() {
         gsap.set(l7, { top: 20.625 + 'vw' }); // 33vh
         gsap.set(l8, { top: 9.9125 + 'vw' }); // 15.86vh
 
-        // ── Bottom-centre anchor ─────────────────────────────────────────
+        // ── Contain-fit + bottom-centre anchor ───────────────────────────
         // Matches paveletsky.org: the assembled building sits stacked at the
         // BOTTOM-CENTRE of the viewport (ground floor near the bottom edge,
-        // roof up top, title above it), then layers fly up one-by-one on
-        // scroll. Because every layer offset/width is now in vw, the building
-        // is a rigid unit that already fills the same fraction of the viewport
-        // width at any size — so no per-axis contain-fit is needed; a single
-        // uniform SCALE holds the proportions identical on every device, and
-        // we only translate to centre horizontally + anchor to the bottom.
-        // Measured live so invalidateOnRefresh + a refreshInit recompute keep
-        // it correct across resize / orientation / toolbar changes.
-        const SCALE  = 1.0;    // building width vs natural vw widths (fills ~width)
-        const BOTTOM = -0.02;  // nudge union bottom this fraction of vh above the edge (ground sits just inside)
-        const fit = { sc: SCALE, x: 0, y: 0 };
+        // roof up top, title above it), then layers fly up one-by-one.
+        //
+        // The building must always fit WHOLLY inside the viewport, then be
+        // anchored to the bottom. Filling width alone overflows the top on
+        // short laptop viewports (building height ≈ 0.68×width > a short vh →
+        // roof cut off). So scale to the binding axis (contain-fit): width
+        // binds on portrait (fills width), height binds on short/wide laptops
+        // (fits height). FILL > 1 lets the transparent PNG padding bleed off
+        // so the visible building fills the frame rather than floating small.
+        // Measured live; invalidateOnRefresh + a refreshInit recompute keep it
+        // correct across resize / orientation / toolbar changes.
+        const FILL   = 1.06;   // overscan past the binding axis (trims PNG padding)
+        const BOTTOM = -0.015; // nudge union bottom this fraction of vh above the edge
+        const fit = { sc: 1, x: 0, y: 0 };
 
         const unionRect = () => {
           let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
@@ -134,14 +137,17 @@ export default function Hero4() {
           const cx = gsap.getProperty(mh, 'x');
           const cy = gsap.getProperty(mh, 'y');
           const cs = gsap.getProperty(mh, 'scale');
-          gsap.set(mh, { scale: SCALE, x: 0, y: 0 });
-          const r = unionRect();
-          if (!r.width || !r.height) { gsap.set(mh, { scale: cs, x: cx, y: cy }); return; }
+          gsap.set(mh, { scale: 1, x: 0, y: 0 });
+          const r1 = unionRect();
+          if (!r1.width || !r1.height) { gsap.set(mh, { scale: cs, x: cx, y: cy }); return; }
           const vw = window.innerWidth;
           const vh = getVH();
-          fit.sc = SCALE;
-          fit.x = (vw - r.width) / 2 - r.left;          // centre horizontally
-          fit.y = (vh - r.height) - r.top + vh * BOTTOM; // anchor union bottom to viewport bottom (+bias)
+          // contain-fit: whichever axis binds keeps the building fully on-screen
+          fit.sc = Math.min((FILL * vw) / r1.width, (FILL * vh) / r1.height);
+          gsap.set(mh, { scale: fit.sc, x: 0, y: 0 });
+          const r = unionRect();
+          fit.x = (vw - r.width) / 2 - r.left;           // centre horizontally
+          fit.y = (vh - r.height) - r.top + vh * BOTTOM; // anchor union bottom near viewport bottom
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
         };
 
