@@ -14,14 +14,11 @@
   --green: #4ab87a;
 
   position: relative;
-  z-index: 36;          /* sits above Hero4's z-index:35 to cover the section seam */
-  /* Pull the section up so its top edge enters the viewport bottom exactly as
-     Hero4's last layer (l8) begins flying up — so section 1 rises WITH l8
-     instead of only after the pin fully releases. The offset equals l8's scroll
-     window: pin distance (2.5vh) × l8's 11.5% slice of the cascade ≈ 28.7vh.
-     z-index:36 already keeps it above the (blue) hero exit, so the rise shows
-     over the seam with no gap. */
-  margin-top: -28.7vh;
+  z-index: 36;          /* above Hero4 (z-index:35). Hero4 is one stacking context,
+                           so this section paints over ALL of it — bg2 and the
+                           building base (l8) included (bg2 < l8 < section). */
+  margin-top: -50vh;    /* pulled up so the section top sits at ~50% viewport
+                           exactly when l8 finishes flying up (pin release) */
   /* Starts matching Hero4's bg2 (primary) — no seam — then GSAP fades this
      to white over the first half-viewport of scroll (see Intro.jsx). */
   background: var(--color-primary);

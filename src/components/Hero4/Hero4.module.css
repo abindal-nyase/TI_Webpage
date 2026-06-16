@@ -9,10 +9,10 @@
   overflow: hidden;
   background: #fff;
   position: relative;
-  /* Above TIDifferences (z-index:36) so the building base (l8) paints in FRONT
-     of the rising navy section. l8 sits in .movehome inside .home, so its own
-     z-index caps at .home's — the whole group must clear 36. Seam stays clean
-     because .bg2Backing fills primary→white down the overlap band. */
+  /* Below TIDifferences (z-index:36). Everything in Hero4 — bg1, bg2 AND the
+     building (movehome/l8) — lives inside this stacking context, so the whole
+     hero paints under the section. The rising navy section therefore covers
+     bg2 and the building base. */
   z-index: 37;
 }
 

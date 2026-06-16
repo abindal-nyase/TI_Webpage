@@ -42,8 +42,11 @@ export function Intro() {
 
         const trigger = {
           trigger: sectionRef.current,
+          // Section top at 50% viewport (bottom half filled, l8 just finished)
+          // → section top at viewport top (full viewport). Color fades across
+          // that 50%→100% growth.
           start: 'top 50%',
-          end: 'top 20%',
+          end: 'top top',
           scrub: 1.2,
           invalidateOnRefresh: true,
         }

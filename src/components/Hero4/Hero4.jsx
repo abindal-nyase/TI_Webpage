@@ -44,13 +44,18 @@ const TEXT_EXIT      = 1100
 const CASCADE_OFFSET = 900
 
 // ── Timeline tuning ────────────────────────────────────────────────────────
-const LAYER_DUR = 2400
+const LAYER_DUR = 3600
+// l8 (ground floor / last layer) gets a much longer window than the others.
+// The next section moves 1:1 with scroll, so for it to travel a full half-
+// viewport between "l8 half-up" and "l8 fully up", l8's own scroll window must
+// be ≈ one viewport. With this duration l8 occupies ≈1vh of the pin distance.
+const L8_DUR    = 8000
 const LAYER_GAP = 0
 const BG2_REST  = '-135vh'
 // Scroll distance (in viewport heights) the hero pin scrubs the whole cascade
 // over. Total scroll from hero top to the intro section reaching the viewport
 // top = PIN_LENGTH + 1 (the pinned trigger's own viewport scrolls out after).
-const PIN_LENGTH = 2.5
+const PIN_LENGTH = 4.35
 
 // Provisional first-paint scale before the building is measured (see below).
 const NATURAL_W = 1024
@@ -263,7 +268,8 @@ export default function Hero4() {
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
         const LAYER_STEP = LAYER_DUR + LAYER_GAP;
-        const cascadeEnd = CASCADE_START + 8 * LAYER_DUR + 7 * LAYER_GAP;
+        // l1..l7 use LAYER_DUR; l8 uses the longer L8_DUR and ends the cascade.
+        const cascadeEnd = CASCADE_START + 7 * LAYER_STEP + L8_DUR;
 
         let tl = null;
         let cancelled = false;
@@ -397,7 +403,7 @@ export default function Hero4() {
               l8,
               {
                 y: () => -(getVH() * l2Mult()) / fit.sc,
-                duration: LAYER_DUR,
+                duration: L8_DUR,
                 ease: "power1.in",
               },
               CASCADE_START + 7 * LAYER_STEP,
@@ -554,7 +560,7 @@ export default function Hero4() {
             scrollTrigger: {
               trigger: introSection,
               start: 'top 50%',
-              end: 'top 20%',
+              end: 'top top',
               scrub: 1.2,
               invalidateOnRefresh: true,
             },
