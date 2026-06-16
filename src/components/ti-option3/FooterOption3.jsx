@@ -5,7 +5,7 @@ const NAV_COLS = [
     heading: "Navigate",
     links: [
       { label: "Home", href: "https://www.nyase.com/" },
-      { label: "Expertise / Specialties", href: "https://www.nyase.com/expertise/" },
+      { label: "Specialties", href: "https://www.nyase.com/expertise/" },
       { label: "Projects", href: "https://www.nyase.com/projects-2/" },
       { label: "Leadership", href: "https://www.nyase.com/leadership/" },
     ],
@@ -16,7 +16,7 @@ const NAV_COLS = [
       { label: "info@nyase.com", href: "mailto:info@nyase.com" },
       { label: "(213) 362-0707", href: "tel:+12133620707" },
       {
-        label: "350 S Grand Ave #1600",
+        label: "HQ: 350 S Grand Ave #1600",
         label2: "Los Angeles, CA 90071",
         href: "https://maps.google.com/?q=350+S+Grand+Ave+1600+Los+Angeles+CA+90071",
         external: true,
@@ -36,12 +36,12 @@ const NAV_COLS = [
         href: "https://www.instagram.com/nabihyoussefassociates",
         external: true,
       },
+      { label: "X", href: "https://x.com/NYandAssociates", external: true },
       {
         label: "YouTube",
         href: "https://www.youtube.com/@NYA_SE",
         external: true,
       },
-      { label: "X", href: "https://x.com/NYandAssociates", external: true },
     ],
   },
   {
