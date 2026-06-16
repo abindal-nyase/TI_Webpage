@@ -2,16 +2,16 @@ import { useRef, useEffect, useState } from 'react'
 import s from './Innovation.module.css'
 
 // ── Images (served from /public/innovation/) ──────────────────────────────────
-const imgStairSide    = '/innovation/Under construction image from side.jpg'
-const imgStairAngle   = '/innovation/Under construction image from top angle.jpg'
-const imgStairTop     = '/innovation/Under construction image from top.png'
-const imgJewelBefore  = '/innovation/Before showing columns and braces.JPG'
-const imgJewelAfter1  = '/innovation/During construction showing hanged floors 1.jpg'
-const imgJewelBefore2 = '/innovation/Before showing braces zoomed.JPG'
-const imgJewelAfter2  = '/innovation/During construction showing hanged floors 2.jpg'
-const imgCatPan       = '/innovation/Interior PAN.jpg'
-const imgCatFrame     = '/innovation/Christ Cathedral - Space Frame.JPG'
-const imgCatFrames    = '/innovation/Christ Cathedral - frames.JPG'
+const imgStairSide    = '/innovation/Under construction image from side.webp'
+const imgStairAngle   = '/innovation/Under construction image from top angle.webp'
+const imgStairTop     = '/innovation/Under construction image from top.webp'
+const imgJewelBefore  = '/innovation/Before showing columns and braces.webp'
+const imgJewelAfter1  = '/innovation/During construction showing hanged floors 1.webp'
+const imgJewelBefore2 = '/innovation/Before showing braces zoomed.webp'
+const imgJewelAfter2  = '/innovation/During construction showing hanged floors 2.webp'
+const imgCatPan       = '/innovation/Interior PAN.webp'
+const imgCatFrame     = '/innovation/Christ Cathedral - Space Frame.webp'
+const imgCatFrames    = '/innovation/Christ Cathedral - frames.webp'
 
 // ── Reveal wrapper ────────────────────────────────────────────────────────────
 function Reveal({ children, className = '', delay = 0, style }) {
