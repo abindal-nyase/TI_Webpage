@@ -6,6 +6,18 @@ import s from './Hero4.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// ── Building rest position (USER-TUNABLE) ──────────────────────────────────
+// Where the stacked building rests, as an offset from the viewport CENTRE,
+// in fractions of the viewport. The building is clamped so it never falls
+// below a clean bottom-centre anchor, so:
+//   • default 0.5  → bottom-centre on every device (clamp pins it to bottom)
+//   • smaller      → lifts the building up toward centre
+//   • 0            → dead-centre
+//   • negative     → above centre
+// X: +ve = right of centre, -ve = left.
+const BUILDING_OFFSET_Y = 0.5;
+const BUILDING_OFFSET_X = 0;
+
 // ── Intro config ───────────────────────────────────────────────────────────
 const INTRO_DURATION = 1600   // settle-into-rest before the cascade
 const TEXT_EXIT      = 1100
@@ -119,7 +131,7 @@ export default function Hero4() {
         // Measured live; invalidateOnRefresh + a refreshInit recompute keep it
         // correct across resize / orientation / toolbar changes.
         const FILL   = 1.06;   // overscan past the binding axis (trims PNG padding)
-        const BOTTOM = -0.015; // nudge union bottom this fraction of vh above the edge
+        const BOTTOM = -0.015; // bottom-anchor fine-nudge: union bottom this fraction of vh above the edge
         const fit = { sc: 1, x: 0, y: 0 };
 
         const unionRect = () => {
@@ -146,8 +158,12 @@ export default function Hero4() {
           fit.sc = Math.min((FILL * vw) / r1.width, (FILL * vh) / r1.height);
           gsap.set(mh, { scale: fit.sc, x: 0, y: 0 });
           const r = unionRect();
-          fit.x = (vw - r.width) / 2 - r.left;           // centre horizontally
-          fit.y = (vh - r.height) - r.top + vh * BOTTOM; // anchor union bottom near viewport bottom
+          const yCenter = (vh - r.height) / 2 - r.top;            // dead-centre
+          const yBottom = (vh - r.height) - r.top + vh * BOTTOM;  // bottom-anchored
+          // Offset from centre by the user knob, but never drop below the
+          // bottom anchor — so the default reads bottom-centre everywhere.
+          fit.x = (vw - r.width) / 2 - r.left + vw * BUILDING_OFFSET_X;
+          fit.y = Math.min(yCenter + vh * BUILDING_OFFSET_Y, yBottom);
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
         };
 
