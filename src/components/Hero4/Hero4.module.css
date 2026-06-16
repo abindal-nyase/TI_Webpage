@@ -13,7 +13,7 @@
      building (movehome/l8) — lives inside this stacking context, so the whole
      hero paints under the section. The rising navy section therefore covers
      bg2 and the building base. */
-  z-index: 37;
+  z-index: 35;
 }
 
 /* ── Pinned wrapper ───────────────────────────────────────────────── */
