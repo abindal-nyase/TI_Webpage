@@ -9,7 +9,11 @@
   overflow: hidden;
   background: #fff;
   position: relative;
-  z-index: 35;
+  /* Above TIDifferences (z-index:36) so the building base (l8) paints in FRONT
+     of the rising navy section. l8 sits in .movehome inside .home, so its own
+     z-index caps at .home's — the whole group must clear 36. Seam stays clean
+     because .bg2Backing fills primary→white down the overlap band. */
+  z-index: 37;
 }
 
 /* ── Pinned wrapper ───────────────────────────────────────────────── */
@@ -209,6 +213,11 @@
    next section's current background — no seam at any scroll position. */
 .bg2Backing {
   z-index: 0;
+  /* Solid blue fill from the sloped top edge ALL THE WAY DOWN (not the short
+     band the shape uses). When bg2 rides up at the seam, this keeps the whole
+     area below the diagonal solid primary — no white wedge appears below as
+     the shape's masked band rises past the viewport bottom. */
+  clip-path: polygon(0 15.6%, 100% 6%, 100% 100%, 0 100%);
 }
 
 /* bg2Shape — fades its flat bottom edge to transparent so it dissolves

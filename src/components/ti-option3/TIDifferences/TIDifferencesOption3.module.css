@@ -15,7 +15,13 @@
 
   position: relative;
   z-index: 36;          /* sits above Hero4's z-index:35 to cover the section seam */
-  margin-top: -2px;     /* overlaps 2px to eliminate any subpixel gap line */
+  /* Pull the section up so its top edge enters the viewport bottom exactly as
+     Hero4's last layer (l8) begins flying up — so section 1 rises WITH l8
+     instead of only after the pin fully releases. The offset equals l8's scroll
+     window: pin distance (2.5vh) × l8's 11.5% slice of the cascade ≈ 28.7vh.
+     z-index:36 already keeps it above the (blue) hero exit, so the rise shows
+     over the seam with no gap. */
+  margin-top: -28.7vh;
   /* Starts matching Hero4's bg2 (primary) — no seam — then GSAP fades this
      to white over the first half-viewport of scroll (see Intro.jsx). */
   background: var(--color-primary);

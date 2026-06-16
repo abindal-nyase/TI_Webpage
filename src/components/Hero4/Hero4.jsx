@@ -35,7 +35,7 @@ const BUILDING_OFFSET_Y = 0.56; // landscape/desktop: dropped below bottom-centr
 // Portrait phones are tall + the building is width-bound, so the big landscape
 // drop pushes the whole building off the bottom edge. Use a small portrait
 // offset so it rests in view. 0 = union bottom at the edge; +ve nudges lower.
-const BUILDING_OFFSET_Y_PORTRAIT = 0.0;
+const BUILDING_OFFSET_Y_PORTRAIT = 0.25;
 const BUILDING_OFFSET_X = 0;
 
 // ── Intro config ───────────────────────────────────────────────────────────
@@ -46,8 +46,11 @@ const CASCADE_OFFSET = 900
 // ── Timeline tuning ────────────────────────────────────────────────────────
 const LAYER_DUR = 2400
 const LAYER_GAP = 0
-const BG2_DUR   = 8200
-const BG2_REST  = '-90vh'
+const BG2_REST  = '-135vh'
+// Scroll distance (in viewport heights) the hero pin scrubs the whole cascade
+// over. Total scroll from hero top to the intro section reaching the viewport
+// top = PIN_LENGTH + 1 (the pinned trigger's own viewport scrolls out after).
+const PIN_LENGTH = 2.5
 
 // Provisional first-paint scale before the building is measured (see below).
 const NATURAL_W = 1024
@@ -281,7 +284,7 @@ export default function Hero4() {
               id: "hero4-pin",
               trigger: triggerRef.current,
               start: "top top",
-              end: () => "+=" + getVH() * 2.5,
+              end: () => "+=" + getVH() * PIN_LENGTH,
               pin: true,
               scrub: true,
               invalidateOnRefresh: true,
@@ -332,8 +335,8 @@ export default function Hero4() {
             )
             .to(
               bg2ImgRef.current,
-              { y: BG2_REST, duration: BG2_DUR, ease: "none" },
-              cascadeEnd - BG2_DUR,
+              { y: BG2_REST, duration: LAYER_DUR, ease: "power1.in" },
+              CASCADE_START + 7 * LAYER_STEP,
             )
 
             .to(
