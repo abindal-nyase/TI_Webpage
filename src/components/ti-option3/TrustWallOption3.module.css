@@ -26,8 +26,8 @@
   font-weight: 700;
   line-height: 1.0;
   letter-spacing: -0.03em;
-  /* GSAP animates from --color-accent → --color-black */
-  color: var(--color-accent);
+  /* GSAP animates from --color-white → --color-black */
+  color: var(--color-white);
   margin: 0 0 28px 0;
 }
 

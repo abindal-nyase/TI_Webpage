@@ -105,6 +105,7 @@ export default function TrustWallOption3() {
         const accentColor = cs.getPropertyValue("--color-accent").trim();
         const surfaceColor = cs.getPropertyValue("--surface-page").trim() || "#F8FAFC";
         const blackColor = cs.getPropertyValue("--color-black").trim() || "#0F172A";
+        const whiteColor = cs.getPropertyValue("--color-white").trim() || "#FFFFFF";
 
         const trigger = {
           trigger: sectionRef.current,
@@ -130,7 +131,7 @@ export default function TrustWallOption3() {
 
         gsap.fromTo(
           headingRef.current,
-          { color: accentColor },
+          { color: whiteColor },
           { color: blackColor, scrollTrigger: trigger },
         );
 
