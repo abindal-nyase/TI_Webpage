@@ -13,7 +13,11 @@ gsap.registerPlugin(ScrollTrigger)
 //   • +ve   → drops the building lower (past the bottom edge)
 //   • -ve   → lifts it up toward centre (≈ -0.5 ≈ centred)
 // X: +ve = right of centre, -ve = left.
-const BUILDING_OFFSET_Y = 0.5; // dropped 25% below bottom-centre
+const BUILDING_OFFSET_Y = 0.5; // landscape/desktop: dropped below bottom-centre
+// Portrait phones are tall + the building is width-bound, so the big landscape
+// drop pushes the whole building off the bottom edge. Use a small portrait
+// offset so it rests in view. 0 = union bottom at the edge; +ve nudges lower.
+const BUILDING_OFFSET_Y_PORTRAIT = 0.0;
 const BUILDING_OFFSET_X = 0;
 
 // ── Intro config ───────────────────────────────────────────────────────────
@@ -103,10 +107,9 @@ export default function Hero4() {
         isTablet:  '(min-width: 768px) and (max-width: 1023px)',
         isMobile:  '(min-width: 480px) and (max-width: 767px)',
         isTiny:    '(max-width: 479px)',
-        isPortrait: '(orientation: portrait)',
       },
       (context) => {
-        const { isDesktop, isTablet, isMobile, isTiny, isPortrait } = context.conditions;
+        const { isDesktop, isTablet, isMobile, isTiny } = context.conditions;
 
         const mh = movehomeRef.current;
         const [l1, l2, l3, l4, l5, l6, l7, l8] = layerRefs.current;
@@ -192,16 +195,25 @@ export default function Hero4() {
           const r = unionRect();
           const yBottom = vh - r.height - r.top + vh * BOTTOM; // bottom-centre anchor
           // Offset from the bottom anchor by the user knob (+ve drops lower).
+          // Live orientation read so a flip re-fits via invalidateOnRefresh
+          // without a matchMedia rebuild (which parks the building hidden).
+          const offsetY = window.matchMedia('(orientation: portrait)').matches
+            ? BUILDING_OFFSET_Y_PORTRAIT
+            : BUILDING_OFFSET_Y;
           fit.x = (vw - r.width) / 2 - r.left + vw * BUILDING_OFFSET_X;
-          fit.y = yBottom + vh * BUILDING_OFFSET_Y;
+          fit.y = yBottom + vh * offsetY;
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
         };
 
-        // Portrait screens travel further up; landscape unchanged.
-        // Tune portraitBoost: 1 = no change, 1.4 = 40% more travel.
-        const portraitBoost = isPortrait ? 1.4 : 1;
-        const l1Mult = (isDesktop ? 1.1 : 0.9) * portraitBoost;
-        const l2Mult = (isDesktop ? 1.5 : isTablet ? 1.2 : 1.0) * portraitBoost;
+        // Portrait screens travel further up; landscape unchanged. Read live
+        // (not via matchMedia) so an orientation flip on resize re-evaluates
+        // through invalidateOnRefresh instead of reverting the whole context
+        // (which parked the building hidden until a page refresh).
+        // Tune the 1.4: 1 = no change, 1.4 = 40% more travel in portrait.
+        const portraitBoost = () =>
+          window.matchMedia('(orientation: portrait)').matches ? 1.4 : 1;
+        const l1Mult = () => (isDesktop ? 1.1 : 0.9) * portraitBoost();
+        const l2Mult = () => (isDesktop ? 1.5 : isTablet ? 1.2 : 1.0) * portraitBoost();
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
         const LAYER_STEP = LAYER_DUR + LAYER_GAP;
@@ -259,7 +271,7 @@ export default function Hero4() {
             .to(
               l1,
               {
-                y: () => -(getVH() * l1Mult) / fit.sc,
+                y: () => -(getVH() * l1Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -284,7 +296,7 @@ export default function Hero4() {
             .to(
               l2,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -293,7 +305,7 @@ export default function Hero4() {
             .to(
               l3,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -302,7 +314,7 @@ export default function Hero4() {
             .to(
               l4,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -311,7 +323,7 @@ export default function Hero4() {
             .to(
               l5,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -320,7 +332,7 @@ export default function Hero4() {
             .to(
               l6,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -329,7 +341,7 @@ export default function Hero4() {
             .to(
               l7,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -338,7 +350,7 @@ export default function Hero4() {
             .to(
               l8,
               {
-                y: () => -(getVH() * l2Mult) / fit.sc,
+                y: () => -(getVH() * l2Mult()) / fit.sc,
                 duration: LAYER_DUR,
                 ease: "power1.in",
               },
@@ -357,8 +369,15 @@ export default function Hero4() {
         };;
 
         // Recompute fit before ScrollTrigger re-reads function-based values.
+        // The timeline animates mh x/y (function-based, re-read on refresh) but
+        // NOT scale — fit.sc is applied once in buildTimeline. On resize the
+        // binding axis can change, so re-push the fresh scale here or the
+        // building keeps its stale size and looks broken until a page refresh.
         const onRefreshInit = () => {
-          if (tl) computeFit();
+          if (tl) {
+            computeFit();
+            gsap.set(mh, { scale: fit.sc });
+          }
         };
         ScrollTrigger.addEventListener("refreshInit", onRefreshInit);
 
