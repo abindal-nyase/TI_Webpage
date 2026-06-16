@@ -181,10 +181,22 @@ export default function Hero4() {
           const cx = gsap.getProperty(mh, "x");
           const cy = gsap.getProperty(mh, "y");
           const cs = gsap.getProperty(mh, "scale");
+          // Layers carry their own cascade y-transforms. getBoundingClientRect
+          // on the imgs sees ALL ancestor transforms — so we must zero the
+          // layers too, not just mh. Otherwise a refresh mid-scroll (resize
+          // while scrolled in, or jumping to a section past hero4's start)
+          // measures LIFTED layers → garbage union rect → fit.sc/x/y wrong →
+          // building scaled tiny / flung off-screen until a manual page reload.
+          const layerEls = layerRefs.current.filter(Boolean);
+          const layerY = layerEls.map((el) => gsap.getProperty(el, "y"));
+          const restoreLayers = () =>
+            layerEls.forEach((el, i) => gsap.set(el, { y: layerY[i] }));
+          gsap.set(layerEls, { y: 0 });
           gsap.set(mh, { scale: 1, x: 0, y: 0 });
           const r1 = unionRect();
           if (!r1.width || !r1.height) {
             gsap.set(mh, { scale: cs, x: cx, y: cy });
+            restoreLayers();
             return;
           }
           const vw = window.innerWidth;
@@ -203,6 +215,7 @@ export default function Hero4() {
           fit.x = (vw - r.width) / 2 - r.left + vw * BUILDING_OFFSET_X;
           fit.y = yBottom + vh * offsetY;
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
+          restoreLayers();
         };
 
         // Portrait screens travel further up; landscape unchanged. Read live
@@ -357,12 +370,23 @@ export default function Hero4() {
               CASCADE_START + 7 * LAYER_STEP,
             )
 
-            .to(
+            // Slow building drift during the cascade. ABSOLUTE fromTo (not a
+            // relative +=) because mh.y is ALSO driven by the intro fromTo
+            // above — two tweens on one property is GSAP gotcha #2: relative
+            // values cache a baseline at creation and bake the WRONG start when
+            // the playhead is SEEKED (jumping sections via Lenis scrollTo),
+            // leaving mh stuck off-screen → whole building vanishes until a
+            // page reload. Absolute fromTo + immediateRender:false reverses
+            // cleanly on any seek. Starts at fit.y exactly where the intro
+            // fromTo lands (CASCADE_START == INTRO_DURATION), so it's seamless.
+            .fromTo(
               mh,
+              { y: () => fit.y },
               {
-                y: () => `+=${-(getVH() * 0.08) / fit.sc}`,
+                y: () => fit.y - (getVH() * 0.08) / fit.sc,
                 duration: cascadeEnd - CASCADE_START,
                 ease: "none",
+                immediateRender: false,
               },
               CASCADE_START,
             );
