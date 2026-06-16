@@ -4,6 +4,24 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Hero4.module.css'
 
+import i1 from '../../assets/i1.webp?url'
+import i1I from '../../assets/i1I.webp?url'
+import i2 from '../../assets/i2.webp?url'
+import i2I from '../../assets/i2I.webp?url'
+import i3 from '../../assets/i3.webp?url'
+import i3I from '../../assets/i3I.webp?url'
+import i4 from '../../assets/i4.webp?url'
+import i4I from '../../assets/i4I.webp?url'
+import i5 from '../../assets/i5.webp?url'
+import i5I from '../../assets/i5I.webp?url'
+import i6 from '../../assets/i6.webp?url'
+import i6I from '../../assets/i6I.webp?url'
+import i7 from '../../assets/i7.webp?url'
+import i7I from '../../assets/i7I.webp?url'
+import i8 from '../../assets/i8.webp?url'
+import i8I from '../../assets/i8I.webp?url'
+import nyaWhite from '../../assets/nya-white.webp?url'
+
 gsap.registerPlugin(ScrollTrigger)
 
 // ── Building rest position (USER-TUNABLE) ──────────────────────────────────
@@ -13,7 +31,7 @@ gsap.registerPlugin(ScrollTrigger)
 //   • +ve   → drops the building lower (past the bottom edge)
 //   • -ve   → lifts it up toward centre (≈ -0.5 ≈ centred)
 // X: +ve = right of centre, -ve = left.
-const BUILDING_OFFSET_Y = 0.5; // landscape/desktop: dropped below bottom-centre
+const BUILDING_OFFSET_Y = 0.56; // landscape/desktop: dropped below bottom-centre
 // Portrait phones are tall + the building is width-bound, so the big landscape
 // drop pushes the whole building off the bottom edge. Use a small portrait
 // offset so it rests in view. 0 = union bottom at the edge; +ve nudges lower.
@@ -40,14 +58,14 @@ const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 const LAYERS = [
-  { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
-  { id: 2, base: '/nya-img/i2.png',  hover: '/nya-img/i2I.png' },
-  { id: 3, base: '/nya-img/i3.png',  hover: '/nya-img/i3I.png' },
-  { id: 4, base: '/nya-img/i4.png',  hover: '/nya-img/i4I.png' },
-  { id: 5, base: '/nya-img/i5.png',  hover: '/nya-img/i5I.png' },
-  { id: 6, base: '/nya-img/i6.png',  hover: '/nya-img/i6I.png' },
-  { id: 7, base: '/nya-img/i7.png',  hover: '/nya-img/i7I.png' },
-  { id: 8, base: '/nya-img/i8.png',  hover: '/nya-img/i8I.png' },
+  { id: 1, base: i1,  hover: i1I },
+  { id: 2, base: i2,  hover: i2I },
+  { id: 3, base: i3,  hover: i3I },
+  { id: 4, base: i4,  hover: i4I },
+  { id: 5, base: i5,  hover: i5I },
+  { id: 6, base: i6,  hover: i6I },
+  { id: 7, base: i7,  hover: i7I },
+  { id: 8, base: i8,  hover: i8I },
 ]
 
 // ── Layer layout (USER-TUNABLE — SINGLE SOURCE OF TRUTH) ────────────────────
@@ -205,14 +223,26 @@ export default function Hero4() {
           fit.sc = Math.min((FILL * vw) / r1.width, (FILL * vh) / r1.height);
           gsap.set(mh, { scale: fit.sc, x: 0, y: 0 });
           const r = unionRect();
-          const yBottom = vh - r.height - r.top + vh * BOTTOM; // bottom-centre anchor
+          // SCROLL-INDEPENDENT anchor. getBoundingClientRect is viewport-
+          // relative, so r.top/r.left carry the current scroll offset. A
+          // ScrollTrigger.refresh() fired while scrolled away from the top
+          // (e.g. client:visible sections hydrating after a section jump) would
+          // then bake the scroll offset into fit.y → building parked thousands
+          // of px off-screen even though scrollY is 0. Measure relative to the
+          // building's own trigger container instead: (r.top - trig.top)
+          // cancels the shared scroll offset, so the anchor is identical at any
+          // scroll position. (trig is the pinned 100vh box that holds mh.)
+          const trig = triggerRef.current.getBoundingClientRect();
+          const relTop = r.top - trig.top;
+          const relLeft = r.left - trig.left;
+          const yBottom = vh - r.height - relTop + vh * BOTTOM; // bottom-centre anchor
           // Offset from the bottom anchor by the user knob (+ve drops lower).
           // Live orientation read so a flip re-fits via invalidateOnRefresh
           // without a matchMedia rebuild (which parks the building hidden).
           const offsetY = window.matchMedia('(orientation: portrait)').matches
             ? BUILDING_OFFSET_Y_PORTRAIT
             : BUILDING_OFFSET_Y;
-          fit.x = (vw - r.width) / 2 - r.left + vw * BUILDING_OFFSET_X;
+          fit.x = (vw - r.width) / 2 - relLeft + vw * BUILDING_OFFSET_X;
           fit.y = yBottom + vh * offsetY;
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
           restoreLayers();
@@ -405,6 +435,26 @@ export default function Hero4() {
         };
         ScrollTrigger.addEventListener("refreshInit", onRefreshInit);
 
+        // Self-healing rest guarantee (defense-in-depth). Runs AFTER every
+        // refresh recalculation. Two jobs:
+        //  1. Force visibility:visible — a matchMedia breakpoint rebuild
+        //     restores the parked CSS `visibility:hidden`; without this the
+        //     building can stay hidden after a resize across a breakpoint.
+        //  2. When the timeline is parked at the top (progress ~0, i.e. not
+        //     scrubbed in), re-assert the freshly-measured rest transform so
+        //     the building is GUARANTEED on-screen at rest regardless of what
+        //     state any earlier code path left it in. Mid-scroll we leave x/y
+        //     to the scrub (forcing them would fight the playhead).
+        const onRefresh = () => {
+          if (!tl) return;
+          gsap.set(mh, { scale: fit.sc, visibility: "visible" });
+          const st = tl.scrollTrigger;
+          if (st && st.progress <= 0.0001) {
+            gsap.set(mh, { x: fit.x, y: fit.y });
+          }
+        };
+        ScrollTrigger.addEventListener("refresh", onRefresh);
+
         // getBoundingClientRect height is only real once images have loaded
         // (height:auto = 0 before load) — gate the build on it.
         const imgReady = (im) => im.complete && im.naturalHeight;
@@ -451,6 +501,7 @@ export default function Hero4() {
         return () => {
           cancelled = true;
           ScrollTrigger.removeEventListener("refreshInit", onRefreshInit);
+          ScrollTrigger.removeEventListener("refresh", onRefresh);
           tl?.scrollTrigger?.kill();
           tl?.kill();
           clearTimeout(orientationTimer);
@@ -523,7 +574,7 @@ export default function Hero4() {
       <div ref={triggerRef} className={s.trigger}>
         <header ref={headerRef} className={s.header}>
           <img
-            src="/nya-logo/nya-white.png"
+            src={nyaWhite}
             alt="Nabih Youssef Associates"
             className={s.headerLogo}
             draggable={false}
