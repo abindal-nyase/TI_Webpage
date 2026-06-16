@@ -24,29 +24,10 @@
   left: 11vh;
   position: relative;
   z-index: 5;
-  /* matches GSAP desktop intro start so pre-hydration paint is correct */
-  transform: translate(45dvw, 45dvh);
-}
-
-/* On mobile GSAP starts at x:30dvw, y:60dvh — match here to prevent FOUC */
-@media (max-width: 1023px) {
-  .movehome {
-    transform: translate(30dvw, 60dvh);
-  }
-}
-
-/* Landscape mobile: building stack taller than viewport — scale down further */
-@media (max-width: 1023px) and (orientation: landscape) {
-  .movehome {
-    transform: translate(30dvw, 35dvh);
-  }
-}
-
-/* Tiny phones (≤479px) — building starts higher to stay visible */
-@media (max-width: 479px) {
-  .movehome {
-    transform: translate(30dvw, 40dvh);
-  }
+  /* Pre-hydration paint: park the building below the fold so the first frame
+     matches the GSAP rise-from-below intro (JS centres + bottom-anchors it in
+     useLayoutEffect before paint). Avoids a wrong-corner flash. */
+  transform: translateY(90dvh);
 }
 
 /* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
@@ -84,7 +65,7 @@
 .l1 .imgHover {
   width: 55.4vw;
   left: -3.7vw;
-  top: -14.6vh;
+  top: -9.125vw; /* -14.6vh @ desktop aspect; vw so it tracks building width */
 }
 
 /* ── L2  (home2, z 47) ───────────────────────────────────────────── */
@@ -99,7 +80,7 @@
 .l2 .imgHover {
   width: 41vw;
   left: -7.5vw;
-  top: -32vh;
+  top: -20vw; /* -32vh @ desktop aspect; vw so it tracks building width */
 }
 
 /* ── L3  (home3, z 47) ───────────────────────────────────────────── */
@@ -114,7 +95,7 @@
 .l3 .imgHover {
   width: 55.44vw;
   left: -3.7vw;
-  top: -8vh;
+  top: -5vw; /* -8vh @ desktop aspect; vw so it tracks building width */
 }
 
 /* ── L4  (home4, z 46) ───────────────────────────────────────────── */
