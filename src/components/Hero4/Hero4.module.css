@@ -24,29 +24,14 @@
   left: 11vh;
   position: relative;
   z-index: 5;
-  /* matches GSAP desktop intro start so pre-hydration paint is correct */
-  transform: translate(45dvw, 45dvh);
-}
-
-/* On mobile GSAP starts at x:30dvw, y:60dvh — match here to prevent FOUC */
-@media (max-width: 1023px) {
-  .movehome {
-    transform: translate(30dvw, 60dvh);
-  }
-}
-
-/* Landscape mobile: building stack taller than viewport — scale down further */
-@media (max-width: 1023px) and (orientation: landscape) {
-  .movehome {
-    transform: translate(30dvw, 35dvh);
-  }
-}
-
-/* Tiny phones (≤479px) — building starts higher to stay visible */
-@media (max-width: 479px) {
-  .movehome {
-    transform: translate(30dvw, 40dvh);
-  }
+  /* Pre-hydration paint: park the building below the fold so the first frame
+     matches the GSAP rise-from-below intro (JS centres + bottom-anchors it in
+     useLayoutEffect before paint). Avoids a wrong-corner flash. */
+  transform: translateY(90dvh);
+  /* Layer sizes/positions now come from the LAYOUT table in Hero4.jsx (applied
+     in useLayoutEffect). Stay hidden until JS sizes the layers so the
+     pre-hydration frame (unsized imgs) never flashes. JS sets visibility back. */
+  visibility: hidden;
 }
 
 /* ── Hover swap — Paveletsky tactic (display, not opacity) ────────── */
@@ -69,128 +54,21 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   LAYER CONTAINERS — verbatim Paveletsky main.css
+   LAYER CONTAINERS — stacking + positioning context only.
+   All sizes/offsets (container top/left/width + inner-img width/left/top)
+   live in the LAYOUT table in Hero4.jsx (single source of truth) and are
+   applied via gsap.set in useLayoutEffect. Only position + z-index — which
+   establish the absolute-positioning context and paint order — stay here.
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── L1  (home1, z 50) ───────────────────────────────────────────── */
-.l1 {
-  position: relative;
-  top: 0vh;
-  left: 29.75vw;
-  width: 60vw;
-  z-index: 50;
-}
-.l1 .imgBase,
-.l1 .imgHover {
-  width: 55.4vw;
-  left: -3.7vw;
-  top: -14.6vh;
-}
-
-/* ── L2  (home2, z 47) ───────────────────────────────────────────── */
-.l2 {
-  position: absolute;
-  top: 25.64vh;
-  left: 20.82vw;
-  width: 60vw;
-  z-index: 47;
-}
-.l2 .imgBase,
-.l2 .imgHover {
-  width: 41vw;
-  left: -7.5vw;
-  top: -32vh;
-}
-
-/* ── L3  (home3, z 47) ───────────────────────────────────────────── */
-.l3 {
-  position: absolute;
-  top: 3.7vw;
-  left: 29.75vw;
-  width: 69.3vw;
-  z-index: 47;
-}
-.l3 .imgBase,
-.l3 .imgHover {
-  width: 55.44vw;
-  left: -3.7vw;
-  top: -8vh;
-}
-
-/* ── L4  (home4, z 46) ───────────────────────────────────────────── */
-.l4 {
-  position: absolute;
-  top: 2vh;
-  left: 13.4vw;
-  width: 85vw;
-  z-index: 46;
-}
-.l4 .imgBase,
-.l4 .imgHover {
-  width: 68vw;
-  left: 0;
-  top: 0;
-}
-
-/* ── L5  (home5, z 44) ───────────────────────────────────────────── */
-.l5 {
-  position: absolute;
-  top: 3.2vh;
-  left: 13.44vw;
-  width: 87vw;
-  z-index: 44;
-}
-.l5 .imgBase,
-.l5 .imgHover {
-  width: 35.68vw;
-  left: 0;
-  top: 0;
-}
-
-/* ── L6  (home6, z 44) ───────────────────────────────────────────── */
-.l6 {
-  position: absolute;
-  top: 18.3vh;
-  left: 26.3vw;
-  width: 84.8vw;
-  z-index: 44;
-}
-.l6 .imgBase,
-.l6 .imgHover {
-  width: 55.1vw;
-  left: 0;
-  top: 0;
-}
-
-/* ── L7  (home7, z 44) ───────────────────────────────────────────── */
-.l7 {
-  position: absolute;
-  top: 33vh;
-  left: 4.7vw;
-  width: 89vw;
-  z-index: 44;
-}
-.l7 .imgBase,
-.l7 .imgHover {
-  width: 57.7vw;
-  left: 0;
-  top: 0;
-}
-
-/* ── L8  (home8, z 42) ───────────────────────────────────────────── */
-.l8 {
-  position: absolute;
-  top: 15.86vh;
-  left: 4.8vw;
-  width: 80.65vw;
-  z-index: 42;
-}
-.l8 .imgBase,
-.l8 .imgHover {
-  width: 95%;
-  left: 0;
-  top: 0;
-}
+.l1 { position: relative; z-index: 50; }
+.l2 { position: absolute; z-index: 47; }
+.l3 { position: absolute; z-index: 47; }
+.l4 { position: absolute; z-index: 46; }
+.l5 { position: absolute; z-index: 44; }
+.l6 { position: absolute; z-index: 44; }
+.l7 { position: absolute; z-index: 44; }
+.l8 { position: absolute; z-index: 42; }
 
 /* ── Header bar — dark band, NYA logo left; lifts away on intro ──── */
 .header {
