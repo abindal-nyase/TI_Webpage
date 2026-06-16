@@ -12,6 +12,9 @@ coverage
 .superpowers/
 try1/
 test-results/
+playwright-report/
+blob-report/
+.playwright/
 .worktrees/
 .astro/
 *.zip

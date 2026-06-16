@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 //   • +ve   → drops the building lower (past the bottom edge)
 //   • -ve   → lifts it up toward centre (≈ -0.5 ≈ centred)
 // X: +ve = right of centre, -ve = left.
-const BUILDING_OFFSET_Y = 0.5; // landscape/desktop: dropped below bottom-centre
+const BUILDING_OFFSET_Y = 0.56; // landscape/desktop: dropped below bottom-centre
 // Portrait phones are tall + the building is width-bound, so the big landscape
 // drop pushes the whole building off the bottom edge. Use a small portrait
 // offset so it rests in view. 0 = union bottom at the edge; +ve nudges lower.
@@ -205,14 +205,26 @@ export default function Hero4() {
           fit.sc = Math.min((FILL * vw) / r1.width, (FILL * vh) / r1.height);
           gsap.set(mh, { scale: fit.sc, x: 0, y: 0 });
           const r = unionRect();
-          const yBottom = vh - r.height - r.top + vh * BOTTOM; // bottom-centre anchor
+          // SCROLL-INDEPENDENT anchor. getBoundingClientRect is viewport-
+          // relative, so r.top/r.left carry the current scroll offset. A
+          // ScrollTrigger.refresh() fired while scrolled away from the top
+          // (e.g. client:visible sections hydrating after a section jump) would
+          // then bake the scroll offset into fit.y → building parked thousands
+          // of px off-screen even though scrollY is 0. Measure relative to the
+          // building's own trigger container instead: (r.top - trig.top)
+          // cancels the shared scroll offset, so the anchor is identical at any
+          // scroll position. (trig is the pinned 100vh box that holds mh.)
+          const trig = triggerRef.current.getBoundingClientRect();
+          const relTop = r.top - trig.top;
+          const relLeft = r.left - trig.left;
+          const yBottom = vh - r.height - relTop + vh * BOTTOM; // bottom-centre anchor
           // Offset from the bottom anchor by the user knob (+ve drops lower).
           // Live orientation read so a flip re-fits via invalidateOnRefresh
           // without a matchMedia rebuild (which parks the building hidden).
           const offsetY = window.matchMedia('(orientation: portrait)').matches
             ? BUILDING_OFFSET_Y_PORTRAIT
             : BUILDING_OFFSET_Y;
-          fit.x = (vw - r.width) / 2 - r.left + vw * BUILDING_OFFSET_X;
+          fit.x = (vw - r.width) / 2 - relLeft + vw * BUILDING_OFFSET_X;
           fit.y = yBottom + vh * offsetY;
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
           restoreLayers();
@@ -405,6 +417,26 @@ export default function Hero4() {
         };
         ScrollTrigger.addEventListener("refreshInit", onRefreshInit);
 
+        // Self-healing rest guarantee (defense-in-depth). Runs AFTER every
+        // refresh recalculation. Two jobs:
+        //  1. Force visibility:visible — a matchMedia breakpoint rebuild
+        //     restores the parked CSS `visibility:hidden`; without this the
+        //     building can stay hidden after a resize across a breakpoint.
+        //  2. When the timeline is parked at the top (progress ~0, i.e. not
+        //     scrubbed in), re-assert the freshly-measured rest transform so
+        //     the building is GUARANTEED on-screen at rest regardless of what
+        //     state any earlier code path left it in. Mid-scroll we leave x/y
+        //     to the scrub (forcing them would fight the playhead).
+        const onRefresh = () => {
+          if (!tl) return;
+          gsap.set(mh, { scale: fit.sc, visibility: "visible" });
+          const st = tl.scrollTrigger;
+          if (st && st.progress <= 0.0001) {
+            gsap.set(mh, { x: fit.x, y: fit.y });
+          }
+        };
+        ScrollTrigger.addEventListener("refresh", onRefresh);
+
         // getBoundingClientRect height is only real once images have loaded
         // (height:auto = 0 before load) — gate the build on it.
         const imgReady = (im) => im.complete && im.naturalHeight;
@@ -451,6 +483,7 @@ export default function Hero4() {
         return () => {
           cancelled = true;
           ScrollTrigger.removeEventListener("refreshInit", onRefreshInit);
+          ScrollTrigger.removeEventListener("refresh", onRefresh);
           tl?.scrollTrigger?.kill();
           tl?.kill();
           clearTimeout(orientationTimer);
