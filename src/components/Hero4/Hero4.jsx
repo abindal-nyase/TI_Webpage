@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 //   • +ve   → drops the building lower (past the bottom edge)
 //   • -ve   → lifts it up toward centre (≈ -0.5 ≈ centred)
 // X: +ve = right of centre, -ve = left.
-const BUILDING_OFFSET_Y = 0.05; // dropped 25% below bottom-centre
+const BUILDING_OFFSET_Y = 0.5; // dropped 25% below bottom-centre
 const BUILDING_OFFSET_X = 0;
 
 // ── Intro config ───────────────────────────────────────────────────────────
@@ -59,15 +59,15 @@ const LAYERS = [
 // inner-image split is merged into these single numbers.
 const LAYOUT = {
   //   top       left     width
-  1: { top: -9.125, left: 26.05, width: 55.4    },
-  2: { top: -4.875, left: 13.32, width: 41      },
-  3: { top: -1.95,  left: 26.05, width: 55.44   },
-  4: { top: -0.4,   left: 13.4,  width: 68      },
-  5: { top: 1.0,    left: 13.44, width: 35.68   },
-  6: { top: 7.9,    left: 26.55, width: 55.1    },
-  7: { top: 16.625, left: 4.7,   width: 57.7    },
-  8: { top: 7.9125, left: 4.8,   width: 76.6175 },
-}
+  1: { top: -9, left: 26.05, width: 55.4 },
+  2: { top: -4.875, left: 13.32, width: 41 },
+  3: { top: -1.95, left: 26.05, width: 55.44 },
+  4: { top: -0.4, left: 13.4, width: 68 },
+  5: { top: 1.0, left: 13.44, width: 35.68 },
+  6: { top: 7.9, left: 26.55, width: 55.1 },
+  7: { top: 18.625, left: 4.7, width: 54 },
+  8: { top: 7.9125, left: 4.8, width: 76.6175 },
+};
 
 export default function Hero4() {
   const sectionRef     = useRef(null);
@@ -103,9 +103,10 @@ export default function Hero4() {
         isTablet:  '(min-width: 768px) and (max-width: 1023px)',
         isMobile:  '(min-width: 480px) and (max-width: 767px)',
         isTiny:    '(max-width: 479px)',
+        isPortrait: '(orientation: portrait)',
       },
       (context) => {
-        const { isDesktop, isTablet, isMobile, isTiny } = context.conditions;
+        const { isDesktop, isTablet, isMobile, isTiny, isPortrait } = context.conditions;
 
         const mh = movehomeRef.current;
         const [l1, l2, l3, l4, l5, l6, l7, l8] = layerRefs.current;
@@ -196,8 +197,11 @@ export default function Hero4() {
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
         };
 
-        const l1Mult = isDesktop ? 1.1 : 0.9;
-        const l2Mult = isDesktop ? 1.5 : isTablet ? 1.2 : 1.0;
+        // Portrait screens travel further up; landscape unchanged.
+        // Tune portraitBoost: 1 = no change, 1.4 = 40% more travel.
+        const portraitBoost = isPortrait ? 1.4 : 1;
+        const l1Mult = (isDesktop ? 1.1 : 0.9) * portraitBoost;
+        const l2Mult = (isDesktop ? 1.5 : isTablet ? 1.2 : 1.0) * portraitBoost;
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
         const LAYER_STEP = LAYER_DUR + LAYER_GAP;
