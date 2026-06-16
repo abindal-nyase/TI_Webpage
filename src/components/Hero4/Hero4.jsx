@@ -4,6 +4,24 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Hero4.module.css'
 
+import i1 from '../../assets/i1.webp?url'
+import i1I from '../../assets/i1I.webp?url'
+import i2 from '../../assets/i2.webp?url'
+import i2I from '../../assets/i2I.webp?url'
+import i3 from '../../assets/i3.webp?url'
+import i3I from '../../assets/i3I.webp?url'
+import i4 from '../../assets/i4.webp?url'
+import i4I from '../../assets/i4I.webp?url'
+import i5 from '../../assets/i5.webp?url'
+import i5I from '../../assets/i5I.webp?url'
+import i6 from '../../assets/i6.webp?url'
+import i6I from '../../assets/i6I.webp?url'
+import i7 from '../../assets/i7.webp?url'
+import i7I from '../../assets/i7I.webp?url'
+import i8 from '../../assets/i8.webp?url'
+import i8I from '../../assets/i8I.webp?url'
+import nyaWhite from '../../assets/nya-white.webp?url'
+
 gsap.registerPlugin(ScrollTrigger)
 
 // ── Building rest position (USER-TUNABLE) ──────────────────────────────────
@@ -40,14 +58,14 @@ const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 const LAYERS = [
-  { id: 1, base: '/nya-img/i1.png',  hover: '/nya-img/i1I.png' },
-  { id: 2, base: '/nya-img/i2.png',  hover: '/nya-img/i2I.png' },
-  { id: 3, base: '/nya-img/i3.png',  hover: '/nya-img/i3I.png' },
-  { id: 4, base: '/nya-img/i4.png',  hover: '/nya-img/i4I.png' },
-  { id: 5, base: '/nya-img/i5.png',  hover: '/nya-img/i5I.png' },
-  { id: 6, base: '/nya-img/i6.png',  hover: '/nya-img/i6I.png' },
-  { id: 7, base: '/nya-img/i7.png',  hover: '/nya-img/i7I.png' },
-  { id: 8, base: '/nya-img/i8.png',  hover: '/nya-img/i8I.png' },
+  { id: 1, base: i1,  hover: i1I },
+  { id: 2, base: i2,  hover: i2I },
+  { id: 3, base: i3,  hover: i3I },
+  { id: 4, base: i4,  hover: i4I },
+  { id: 5, base: i5,  hover: i5I },
+  { id: 6, base: i6,  hover: i6I },
+  { id: 7, base: i7,  hover: i7I },
+  { id: 8, base: i8,  hover: i8I },
 ]
 
 // ── Layer layout (USER-TUNABLE — SINGLE SOURCE OF TRUTH) ────────────────────
@@ -556,7 +574,7 @@ export default function Hero4() {
       <div ref={triggerRef} className={s.trigger}>
         <header ref={headerRef} className={s.header}>
           <img
-            src="/nya-logo/nya-white.png"
+            src={nyaWhite}
             alt="Nabih Youssef Associates"
             className={s.headerLogo}
             draggable={false}
