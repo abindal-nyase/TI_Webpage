@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 //   • +ve   → drops the building lower (past the bottom edge)
 //   • -ve   → lifts it up toward centre (≈ -0.5 ≈ centred)
 // X: +ve = right of centre, -ve = left.
-const BUILDING_OFFSET_Y = 0.5; // dropped 25% below bottom-centre
+const BUILDING_OFFSET_Y = 0.05; // dropped 25% below bottom-centre
 const BUILDING_OFFSET_X = 0;
 
 // ── Intro config ───────────────────────────────────────────────────────────
@@ -45,6 +45,29 @@ const LAYERS = [
   { id: 7, base: '/nya-img/i7.png',  hover: '/nya-img/i7I.png' },
   { id: 8, base: '/nya-img/i8.png',  hover: '/nya-img/i8I.png' },
 ]
+
+// ── Layer layout (USER-TUNABLE — SINGLE SOURCE OF TRUTH) ────────────────────
+// One row per building layer, one knob per axis. To move or resize a layer,
+// edit its row:
+//   top   → vertical position   (higher number = lower on screen)
+//   left  → horizontal position (higher number = further right)
+//   width → artwork size        (the layer's "scale" knob)
+//
+// All values are vw, and the parent `scale` shrinks them proportionally so the
+// gaps track building WIDTH (vh gaps balloon on portrait and the layers fly
+// apart). top/left place the artwork directly — the old container-box vs
+// inner-image split is merged into these single numbers.
+const LAYOUT = {
+  //   top       left     width
+  1: { top: -9.125, left: 26.05, width: 55.4    },
+  2: { top: -4.875, left: 13.32, width: 41      },
+  3: { top: -1.95,  left: 26.05, width: 55.44   },
+  4: { top: -0.4,   left: 13.4,  width: 68      },
+  5: { top: 1.0,    left: 13.44, width: 35.68   },
+  6: { top: 7.9,    left: 26.55, width: 55.1    },
+  7: { top: 16.625, left: 4.7,   width: 57.7    },
+  8: { top: 7.9125, left: 4.8,   width: 76.6175 },
+}
 
 export default function Hero4() {
   const sectionRef     = useRef(null);
@@ -87,32 +110,34 @@ export default function Hero4() {
         const mh = movehomeRef.current;
         const [l1, l2, l3, l4, l5, l6, l7, l8] = layerRefs.current;
         const baseImgs = layerRefs.current
-          .map((l) => l && l.querySelector('img'))
+          .map((l) => l && l.querySelector("img"))
           .filter(Boolean);
 
         // Provisional scale so first paint isn't full-size before measurement.
         gsap.set(mh, {
           scale: Math.max(0.28, Math.min(1, window.innerWidth / NATURAL_W)),
-          transformOrigin: 'top left',
+          transformOrigin: "top left",
         });
 
-        // Vertical layer spacing must track building WIDTH, not viewport
-        // height. The building scales with viewport width, so the gaps between
-        // layers must too — otherwise on portrait aspects (tall viewport,
-        // narrow building) vh-based gaps balloon and the layers explode into
-        // floating slices. Express every offset in vw and let the parent
-        // `scale` shrink them proportionally.
-        //
-        // Verbatim Paveletsky values were authored at desktop 1440x900, mixing
-        // vh and vw. Convert the vh ones to vw at that aspect (900/1440 =
-        // 0.625) so desktop renders pixel-identical to the original.
-        gsap.set(l2, { top: 16.025 + 'vw' }); // 25.64vh
-        gsap.set(l3, { top: 3.7    + 'vw' }); // already vw
-        gsap.set(l4, { top: 1.25   + 'vw' }); // 2vh
-        gsap.set(l5, { top: 2.0    + 'vw' }); // 3.2vh
-        gsap.set(l6, { top: 11.4375 + 'vw' }); // 18.3vh
-        gsap.set(l7, { top: 20.625 + 'vw' }); // 33vh
-        gsap.set(l8, { top: 9.9125 + 'vw' }); // 15.86vh
+        // Apply the static layout from the LAYOUT table (single source of
+        // truth — see top of file). Must run BEFORE computeFit() measures the
+        // union rect. The container box carries top/left/width; the artwork
+        // sits flush at its origin (left/top 0) so one row = one position.
+        LAYERS.forEach((layer, i) => {
+          const cfg = LAYOUT[layer.id];
+          const el = layerRefs.current[i];
+          if (!el || !cfg) return;
+          gsap.set(el, {
+            top: cfg.top + "vw",
+            left: cfg.left + "vw",
+            width: cfg.width + "vw",
+          });
+          gsap.set(el.querySelectorAll("img"), {
+            width: cfg.width + "vw",
+            left: 0,
+            top: 0,
+          });
+        });
 
         // ── Contain-fit + bottom-centre anchor ───────────────────────────
         // Matches paveletsky.org: the assembled building sits stacked at the
@@ -128,17 +153,22 @@ export default function Hero4() {
         // so the visible building fills the frame rather than floating small.
         // Measured live; invalidateOnRefresh + a refreshInit recompute keep it
         // correct across resize / orientation / toolbar changes.
-        const FILL   = 1.06;   // overscan past the binding axis (trims PNG padding)
+        const FILL = 1.06; // overscan past the binding axis (trims PNG padding)
         const BOTTOM = -0.015; // bottom-anchor fine-nudge: union bottom this fraction of vh above the edge
         const fit = { sc: 1, x: 0, y: 0 };
 
         const unionRect = () => {
-          let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+          let x0 = Infinity,
+            y0 = Infinity,
+            x1 = -Infinity,
+            y1 = -Infinity;
           for (const im of baseImgs) {
             const r = im.getBoundingClientRect();
             if (!r.width && !r.height) continue;
-            x0 = Math.min(x0, r.left);  y0 = Math.min(y0, r.top);
-            x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom);
+            x0 = Math.min(x0, r.left);
+            y0 = Math.min(y0, r.top);
+            x1 = Math.max(x1, r.right);
+            y1 = Math.max(y1, r.bottom);
           }
           return { left: x0, top: y0, width: x1 - x0, height: y1 - y0 };
         };
@@ -170,8 +200,8 @@ export default function Hero4() {
         const l2Mult = isDesktop ? 1.5 : isTablet ? 1.2 : 1.0;
 
         const CASCADE_START = 700 + CASCADE_OFFSET;
-        const LAYER_STEP    = LAYER_DUR + LAYER_GAP;
-        const cascadeEnd    = CASCADE_START + 8 * LAYER_DUR + 7 * LAYER_GAP;
+        const LAYER_STEP = LAYER_DUR + LAYER_GAP;
+        const cascadeEnd = CASCADE_START + 8 * LAYER_DUR + 7 * LAYER_GAP;
 
         let tl = null;
         let cancelled = false;
@@ -179,14 +209,20 @@ export default function Hero4() {
         const buildTimeline = () => {
           if (cancelled) return;
           computeFit();
-          gsap.set(mh, { scale: fit.sc, transformOrigin: 'top left' });
+          // Reveal now that layers are sized/positioned. Parked hidden in CSS
+          // so the pre-hydration frame (unsized imgs) never flashes.
+          gsap.set(mh, {
+            scale: fit.sc,
+            transformOrigin: "top left",
+            visibility: "visible",
+          });
 
           tl = gsap.timeline({
             scrollTrigger: {
-              id: 'hero4-pin',
+              id: "hero4-pin",
               trigger: triggerRef.current,
-              start: 'top top',
-              end: () => '+=' + getVH() * 2.5,
+              start: "top top",
+              end: () => "+=" + getVH() * 2.5,
               pin: true,
               scrub: true,
               invalidateOnRefresh: true,
@@ -202,46 +238,125 @@ export default function Hero4() {
             .fromTo(
               mh,
               { x: () => fit.x, y: () => fit.y + getVH() * 0.04 },
-              { x: () => fit.x, y: () => fit.y, ease: 'power1.out', duration: INTRO_DURATION },
+              {
+                x: () => fit.x,
+                y: () => fit.y,
+                ease: "power1.out",
+                duration: INTRO_DURATION,
+              },
               0,
             )
             .to(
               [headerRef.current, titleRef.current],
-              { y: '-120vh', ease: 'power1.in', duration: TEXT_EXIT },
+              { y: "-120vh", ease: "power1.in", duration: TEXT_EXIT },
               0,
             )
 
-            .to(l1, { y: () => -(getVH() * l1Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START)
+            .to(
+              l1,
+              {
+                y: () => -(getVH() * l1Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START,
+            )
 
             .to(
               bg1ImgRef.current,
-              { y: '-180dvh', duration: cascadeEnd - (300 + CASCADE_OFFSET), ease: 'none' },
+              {
+                y: "-180dvh",
+                duration: cascadeEnd - (300 + CASCADE_OFFSET),
+                ease: "none",
+              },
               300 + CASCADE_OFFSET,
             )
             .to(
               bg2ImgRef.current,
-              { y: BG2_REST, duration: BG2_DUR, ease: 'none' },
+              { y: BG2_REST, duration: BG2_DUR, ease: "none" },
               cascadeEnd - BG2_DUR,
             )
 
-            .to(l2, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 1 * LAYER_STEP)
-            .to(l3, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 2 * LAYER_STEP)
-            .to(l4, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 3 * LAYER_STEP)
-            .to(l5, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 4 * LAYER_STEP)
-            .to(l6, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 5 * LAYER_STEP)
-            .to(l7, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 6 * LAYER_STEP)
-            .to(l8, { y: () => -(getVH() * l2Mult) / fit.sc, duration: LAYER_DUR, ease: 'power1.in' }, CASCADE_START + 7 * LAYER_STEP)
+            .to(
+              l2,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 1 * LAYER_STEP,
+            )
+            .to(
+              l3,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 2 * LAYER_STEP,
+            )
+            .to(
+              l4,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 3 * LAYER_STEP,
+            )
+            .to(
+              l5,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 4 * LAYER_STEP,
+            )
+            .to(
+              l6,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 5 * LAYER_STEP,
+            )
+            .to(
+              l7,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 6 * LAYER_STEP,
+            )
+            .to(
+              l8,
+              {
+                y: () => -(getVH() * l2Mult) / fit.sc,
+                duration: LAYER_DUR,
+                ease: "power1.in",
+              },
+              CASCADE_START + 7 * LAYER_STEP,
+            )
 
             .to(
               mh,
-              { y: () => `+=${-(getVH() * 0.08) / fit.sc}`, duration: cascadeEnd - CASCADE_START, ease: 'none' },
+              {
+                y: () => `+=${-(getVH() * 0.08) / fit.sc}`,
+                duration: cascadeEnd - CASCADE_START,
+                ease: "none",
+              },
               CASCADE_START,
             );
-        };
+        };;
 
         // Recompute fit before ScrollTrigger re-reads function-based values.
-        const onRefreshInit = () => { if (tl) computeFit(); };
-        ScrollTrigger.addEventListener('refreshInit', onRefreshInit);
+        const onRefreshInit = () => {
+          if (tl) computeFit();
+        };
+        ScrollTrigger.addEventListener("refreshInit", onRefreshInit);
 
         // getBoundingClientRect height is only real once images have loaded
         // (height:auto = 0 before load) — gate the build on it.
@@ -254,8 +369,8 @@ export default function Hero4() {
               imgReady(im)
                 ? Promise.resolve()
                 : new Promise((res) => {
-                    im.addEventListener('load', res, { once: true });
-                    im.addEventListener('error', res, { once: true });
+                    im.addEventListener("load", res, { once: true });
+                    im.addEventListener("error", res, { once: true });
                   }),
             ),
           ).then(() => {
@@ -268,7 +383,7 @@ export default function Hero4() {
         const onVisualResize = () => {
           ScrollTrigger.refresh();
         };
-        window.visualViewport?.addEventListener('resize', onVisualResize);
+        window.visualViewport?.addEventListener("resize", onVisualResize);
 
         // Orientation change: force refresh after settle delay
         let orientationTimer;
@@ -280,23 +395,29 @@ export default function Hero4() {
         };
 
         if (screen.orientation) {
-          screen.orientation.addEventListener('change', onOrientationChange);
+          screen.orientation.addEventListener("change", onOrientationChange);
         } else {
-          window.addEventListener('orientationchange', onOrientationChange);
+          window.addEventListener("orientationchange", onOrientationChange);
         }
 
         // matchMedia cleanup — return function is called when context reverts
         return () => {
           cancelled = true;
-          ScrollTrigger.removeEventListener('refreshInit', onRefreshInit);
+          ScrollTrigger.removeEventListener("refreshInit", onRefreshInit);
           tl?.scrollTrigger?.kill();
           tl?.kill();
           clearTimeout(orientationTimer);
-          window.visualViewport?.removeEventListener('resize', onVisualResize);
+          window.visualViewport?.removeEventListener("resize", onVisualResize);
           if (screen.orientation) {
-            screen.orientation.removeEventListener('change', onOrientationChange);
+            screen.orientation.removeEventListener(
+              "change",
+              onOrientationChange,
+            );
           } else {
-            window.removeEventListener('orientationchange', onOrientationChange);
+            window.removeEventListener(
+              "orientationchange",
+              onOrientationChange,
+            );
           }
         };
       },
