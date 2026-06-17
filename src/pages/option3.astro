@@ -18,7 +18,49 @@ import SideNavOption3 from '../components/ti-option3/SideNavOption3';
 import NYACulture from '../components/NYACulture/NYACulture.jsx';
 import NYACulture2 from '../components/NYACulture2/NYACulture2.jsx';
 import FooterOption3 from '../components/ti-option3/FooterOption3';
+import SectionTheme from '../components/ti-option3/SectionTheme.astro';
 import BackToHub from '../components/BackToHub.astro';
+
+/*
+ * Single source of truth for the theme switcher.
+ * These drive BOTH the scoped CSS rules (generated below) and the client-side
+ * switcher script (passed via define:vars) — edit values here only.
+ */
+const SCHEMES = [
+  { id: 'navy-blue',     name: 'NB', swatches: ['#0B1F3B', '#2F80ED'],
+    vars: { '--color-primary': '#0B1F3B', '--color-primary-light': '#1E3A5F', '--color-accent': '#2F80ED', '--color-accent-hover': '#1C6ED5', '--border-accent': 'rgba(47,128,237,0.25)', '--shadow-accent': '0 8px 28px rgba(47,128,237,0.28)' } },
+  { id: 'slate-amber',   name: 'SA', swatches: ['#1F2937', '#D97706'],
+    vars: { '--color-primary': '#1F2937', '--color-primary-light': '#374151', '--color-accent': '#D97706', '--color-accent-hover': '#B45309', '--border-accent': 'rgba(217,119,6,0.25)', '--shadow-accent': '0 8px 28px rgba(217,119,6,0.28)' } },
+  { id: 'charcoal-cyan', name: 'CC', swatches: ['#0F172A', '#06B6D4'],
+    vars: { '--color-primary': '#0F172A', '--color-primary-light': '#1E293B', '--color-accent': '#06B6D4', '--color-accent-hover': '#0891B2', '--border-accent': 'rgba(6,182,212,0.25)', '--shadow-accent': '0 8px 28px rgba(6,182,212,0.28)' } },
+  { id: 'forest-stone',  name: 'FS', swatches: ['#1A2E1A', '#6B9B6B'],
+    vars: { '--color-primary': '#1A2E1A', '--color-primary-light': '#2D4A2D', '--color-accent': '#6B9B6B', '--color-accent-hover': '#5A8A5A', '--border-accent': 'rgba(107,155,107,0.25)', '--shadow-accent': '0 8px 28px rgba(107,155,107,0.28)' } },
+  { id: 'violet-gold',   name: 'V',  swatches: ['#1E1B4B', '#7C3AED'],
+    vars: { '--color-primary': '#1E1B4B', '--color-primary-light': '#4C1D95', '--color-accent': '#7C3AED', '--color-accent-hover': '#6D28D9', '--border-accent': 'rgba(124,58,237,0.25)', '--shadow-accent': '0 8px 28px rgba(124,58,237,0.28)' } },
+  { id: 'navy-gold',     name: 'NG', swatches: ['#1E3A8A', '#B45309'],
+    vars: { '--color-primary': '#1E3A8A', '--color-primary-light': '#1E40AF', '--color-accent': '#B45309', '--color-accent-hover': '#92400E', '--border-accent': 'rgba(180,83,9,0.25)', '--shadow-accent': '0 8px 28px rgba(180,83,9,0.28)' } },
+  { id: 'maroon-gold',   name: 'MG', swatches: ['#5C0B0B', '#C9953A'],
+    vars: { '--color-primary': '#5C0B0B', '--color-primary-light': '#7A1515', '--color-accent': '#C9953A', '--color-accent-hover': '#B07E28', '--border-accent': 'rgba(201,149,58,0.25)', '--shadow-accent': '0 8px 28px rgba(201,149,58,0.28)' } },
+];
+
+const FONTS = [
+  { id: 'playfair-inter',       label: 'Playfair + Inter',       vars: { '--font-display': "'Playfair Display', Georgia, serif", '--font-body': "'Inter', system-ui, sans-serif" } },
+  { id: 'fraunces-jakarta',     label: 'Fraunces + Jakarta',     vars: { '--font-display': "'Fraunces', Georgia, serif", '--font-body': "'Plus Jakarta Sans', system-ui, sans-serif" } },
+  { id: 'cormorant-montserrat', label: 'Cormorant + Montserrat', vars: { '--font-display': "'Cormorant Garamond', Georgia, serif", '--font-body': "'Montserrat', system-ui, sans-serif" } },
+  { id: 'baskerville-source',   label: 'Baskerville + Source',   vars: { '--font-display': "'Libre Baskerville', Georgia, serif", '--font-body': "'Source Sans 3', system-ui, sans-serif" } },
+  { id: 'spectral-work',        label: 'Spectral + Work',        vars: { '--font-display': "'Spectral', Georgia, serif", '--font-body': "'Work Sans', system-ui, sans-serif" } },
+];
+
+const DEFAULT_SCHEME = 'charcoal-cyan';
+const DEFAULT_FONT = 'spectral-work';
+
+// Generate the per-section override rules from the data above (see SectionTheme.astro).
+const ruleFor = (attr, id, vars) =>
+  `[data-${attr}="${id}"]{${Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';')}}`;
+const themeOverrideCss = [
+  ...SCHEMES.map((s) => ruleFor('scheme', s.id, s.vars)),
+  ...FONTS.map((f) => ruleFor('font', f.id, f.vars)),
+].join('\n');
 ---
 
 <!DOCTYPE html>
@@ -211,6 +253,14 @@ import BackToHub from '../components/BackToHub.astro';
       .tb-scheme-name { display: none; }
     }
   </style>
+
+  <!--
+    Per-section theme overrides (see SectionTheme.astro).
+    The switcher sets the GLOBAL default on :root; a section wrapped in
+    <SectionTheme scheme="…" font="…"> re-declares the theme variables on its
+    own subtree via these attribute rules. Generated from SCHEMES/FONTS above.
+  -->
+  <style is:global set:html={themeOverrideCss}></style>
 </head>
 
 <body>
@@ -239,215 +289,101 @@ import BackToHub from '../components/BackToHub.astro';
 
   <SideNavOption3 client:load />
 
-  <!-- ── Page sections ── -->
+  <!--
+    ── Page sections ──
+    Each section is wrapped in <SectionTheme>. Add scheme="…" and/or font="…"
+    to override the global theme for that section; omit to inherit the global.
+    Scheme ids:  navy-blue | slate-amber | charcoal-cyan | forest-stone
+                 violet-gold | navy-gold | maroon-gold
+    Font ids:    playfair-inter | fraunces-jakarta | cormorant-montserrat
+                 baskerville-source | spectral-work
+    Section overrides (e.g. section="hero") are defined in SectionTheme.astro.
+  -->
   <main style="margin:0;padding:0">
-    <Hero4 client:load />
-    <TIDifferencesOption3 client:load />
-    <FirmCultureOption3 client:visible />
-    <TrustWallOption3 client:visible />
-    <NYACulture2 client:visible />
-    <NYACulture client:visible />
-    <FooterOption3 client:load />
+    <SectionTheme>
+      <Hero4 client:load />
+    </SectionTheme>
+    <SectionTheme section="ti-differences">
+      <TIDifferencesOption3 client:load />
+    </SectionTheme>
+    <SectionTheme>
+      <FirmCultureOption3 client:visible />
+    </SectionTheme>
+    <SectionTheme>
+      <TrustWallOption3 client:visible />
+    </SectionTheme>
+    <SectionTheme>
+      <NYACulture2 client:visible />
+    </SectionTheme>
+    <SectionTheme>
+      <NYACulture client:visible />
+    </SectionTheme>
+    <SectionTheme>
+      <FooterOption3 client:load />
+    </SectionTheme>
   </main>
 
-  <script>
+  <script define:vars={{ SCHEMES, FONTS, DEFAULT_SCHEME, DEFAULT_FONT }}>
     /*
-     * Theme switcher — sets CSS custom properties on :root.
-     * All components use var(--color-primary), var(--font-display), etc.
-     * Adding a new scheme: add an entry to SCHEMES below. No other changes needed.
+     * Theme switcher — sets CSS custom properties on :root from the SCHEMES /
+     * FONTS data defined in this file's frontmatter (single source of truth).
      */
-
-    const SCHEMES = [
-      {
-        id: 'selected', name: 'JP',
-        swatches: ['#0F172A', '#06B6D4'],
-        vars: {
-          '--color-primary':       '#0F172A',
-          '--color-primary-hero':  '#0F172A',
-          '--color-primary-light': '#1E293B',
-          '--color-accent':        '#06B6D4',
-          '--color-accent-hover':  '#0891B2',
-          '--border-accent':       'rgba(6,182,212,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(6,182,212,0.28)',
-        },
-      },
-      {
-        id: 'navy-blue', name: 'NB',
-        swatches: ['#0B1F3B', '#2F80ED'],
-        vars: {
-          '--color-primary':       '#0B1F3B',
-          '--color-primary-light': '#1E3A5F',
-          '--color-accent':        '#2F80ED',
-          '--color-accent-hover':  '#1C6ED5',
-          '--border-accent':       'rgba(47,128,237,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(47,128,237,0.28)',
-        },
-      },
-      {
-        id: 'slate-amber', name: 'SA',
-        swatches: ['#1F2937', '#D97706'],
-        vars: {
-          '--color-primary':       '#1F2937',
-          '--color-primary-light': '#374151',
-          '--color-accent':        '#D97706',
-          '--color-accent-hover':  '#B45309',
-          '--border-accent':       'rgba(217,119,6,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(217,119,6,0.28)',
-        },
-      },
-      {
-        id: 'charcoal-cyan', name: 'CC',
-        swatches: ['#0F172A', '#06B6D4'],
-        vars: {
-          '--color-primary':       '#0F172A',
-          '--color-primary-light': '#1E293B',
-          '--color-accent':        '#06B6D4',
-          '--color-accent-hover':  '#0891B2',
-          '--border-accent':       'rgba(6,182,212,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(6,182,212,0.28)',
-        },
-      },
-      {
-        id: 'forest-stone', name: 'FS',
-        swatches: ['#1A2E1A', '#6B9B6B'],
-        vars: {
-          '--color-primary':       '#1A2E1A',
-          '--color-primary-light': '#2D4A2D',
-          '--color-accent':        '#6B9B6B',
-          '--color-accent-hover':  '#5A8A5A',
-          '--border-accent':       'rgba(107,155,107,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(107,155,107,0.28)',
-        },
-      },
-      {
-        id: 'violet-gold', name: 'V',
-        swatches: ['#1E1B4B', '#7C3AED'],
-        vars: {
-          '--color-primary':       '#1E1B4B',
-          '--color-primary-light': '#4C1D95',
-          '--color-accent':        '#7C3AED',
-          '--color-accent-hover':  '#6D28D9',
-          '--border-accent':       'rgba(124,58,237,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(124,58,237,0.28)',
-        },
-      },
-      {
-        id: 'navy-gold', name: 'NG',
-        swatches: ['#1E3A8A', '#B45309'],
-        vars: {
-          '--color-primary':       '#1E3A8A',
-          '--color-primary-light': '#1E40AF',
-          '--color-accent':        '#B45309',
-          '--color-accent-hover':  '#92400E',
-          '--border-accent':       'rgba(180,83,9,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(180,83,9,0.28)',
-        },
-      },
-      {
-        id: 'maroon-gold', name: 'MG',
-        swatches: ['#5C0B0B', '#C9953A'],
-        vars: {
-          '--color-primary':       '#5C0B0B',
-          '--color-primary-light': '#7A1515',
-          '--color-accent':        '#C9953A',
-          '--color-accent-hover':  '#B07E28',
-          '--border-accent':       'rgba(201,149,58,0.25)',
-          '--shadow-accent':       '0 8px 28px rgba(201,149,58,0.28)',
-        },
-      },
-    ];
-
-    const FONTS = [
-      {
-        id: 'selected', label: 'JP',
-        displayFamily: "'Spectral', Georgia, serif",
-        displayFamilyHero: "'Spectral', Georgia, serif",
-        bodyFamily:    "'Work Sans', system-ui, sans-serif",
-      },
-      {
-        id: 'playfair-inter', label: 'Playfair + Inter',
-        displayFamily: "'Playfair Display', Georgia, serif",
-        bodyFamily:    "'Inter', system-ui, sans-serif",
-      },
-      {
-        id: 'fraunces-jakarta', label: 'Fraunces + Jakarta',
-        displayFamily: "'Fraunces', Georgia, serif",
-        bodyFamily:    "'Plus Jakarta Sans', system-ui, sans-serif",
-      },
-      {
-        id: 'cormorant-montserrat', label: 'Cormorant + Montserrat',
-        displayFamily: "'Cormorant Garamond', Georgia, serif",
-        bodyFamily:    "'Montserrat', system-ui, sans-serif",
-      },
-      {
-        id: 'baskerville-source', label: 'Baskerville + Source',
-        displayFamily: "'Libre Baskerville', Georgia, serif",
-        bodyFamily:    "'Source Sans 3', system-ui, sans-serif",
-      },
-      {
-        id: 'spectral-work', label: 'Spectral + Work',
-        displayFamily: "'Spectral', Georgia, serif",
-        bodyFamily:    "'Work Sans', system-ui, sans-serif",
-      },
-    ];
-
-    let activeScheme = 'selected';
-    let activeFont   = 'selected';
-
-    function applyScheme(id: string) {
-      const scheme = SCHEMES.find(s => s.id === id);
-      if (!scheme) return;
-      const root = document.documentElement;
-      Object.entries(scheme.vars).forEach(([k, v]) => root.style.setProperty(k, v));
-      activeScheme = id;
-      document.querySelectorAll<HTMLButtonElement>('.tb-color-btn').forEach(btn =>
+    function setActive(btnClass, id) {
+      document.querySelectorAll('.' + btnClass).forEach((btn) =>
         btn.classList.toggle('active', btn.dataset.id === id)
       );
+    }
+
+    function applyVars(list, id) {
+      const item = list.find((x) => x.id === id);
+      if (!item) return null;
+      const root = document.documentElement;
+      Object.entries(item.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+      return item;
+    }
+
+    function applyScheme(id) {
+      if (!applyVars(SCHEMES, id)) return;
+      setActive('tb-color-btn', id);
       window.dispatchEvent(new CustomEvent('themechange'));
     }
 
-    function applyFont(id: string) {
-      const font = FONTS.find(f => f.id === id);
-      if (!font) return;
-      const root = document.documentElement;
-      root.style.setProperty('--font-display', font.displayFamily);
-      root.style.setProperty('--font-display-hero', font.displayFamilyHero);
-      root.style.setProperty('--font-body',    font.bodyFamily);
-      activeFont = id;
-      document.querySelectorAll<HTMLButtonElement>('.tb-font-btn').forEach(btn =>
-        btn.classList.toggle('active', btn.dataset.id === id)
-      );
+    function applyFont(id) {
+      if (!applyVars(FONTS, id)) return;
+      setActive('tb-font-btn', id);
+    }
+
+    function addButton(parent, item, btnClass, onClick, decorate) {
+      const btn = document.createElement('button');
+      btn.className = btnClass;
+      btn.dataset.id = item.id;
+      decorate(btn);
+      btn.addEventListener('click', onClick);
+      parent.appendChild(btn);
     }
 
     function buildSwitcher() {
       const colorsEl = document.getElementById('tb-colors');
-      const fontsEl  = document.getElementById('tb-fonts');
+      const fontsEl = document.getElementById('tb-fonts');
       if (!colorsEl || !fontsEl) return;
 
-      SCHEMES.forEach(scheme => {
-        const btn = document.createElement('button');
-        btn.className = 'tb-color-btn';
-        btn.dataset.id = scheme.id;
-        btn.title = scheme.name;
-        btn.innerHTML = scheme.swatches.map(c =>
-          `<span class="tb-swatch" style="background:${c};"></span>`
-        ).join('') + `<span class="tb-scheme-name">${scheme.name}</span>`;
-        btn.addEventListener('click', () => applyScheme(scheme.id));
-        colorsEl.appendChild(btn);
-      });
+      SCHEMES.forEach((scheme) =>
+        addButton(colorsEl, scheme, 'tb-color-btn', () => applyScheme(scheme.id), (btn) => {
+          btn.title = scheme.name;
+          btn.innerHTML =
+            scheme.swatches.map((c) => `<span class="tb-swatch" style="background:${c};"></span>`).join('') +
+            `<span class="tb-scheme-name">${scheme.name}</span>`;
+        })
+      );
 
-      FONTS.forEach(font => {
-        const btn = document.createElement('button');
-        btn.className = 'tb-font-btn';
-        btn.dataset.id = font.id;
-        btn.textContent = font.label;
-        btn.addEventListener('click', () => applyFont(font.id));
-        fontsEl.appendChild(btn);
-      });
+      FONTS.forEach((font) =>
+        addButton(fontsEl, font, 'tb-font-btn', () => applyFont(font.id), (btn) => {
+          btn.textContent = font.label;
+        })
+      );
 
-      // Apply defaults
-      applyScheme(activeScheme);
-      applyFont(activeFont);
+      applyScheme(DEFAULT_SCHEME);
+      applyFont(DEFAULT_FONT);
     }
 
     if (document.readyState === 'loading') {

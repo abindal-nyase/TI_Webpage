@@ -28,6 +28,43 @@ background: #2F80ED;
 
 **DO NOT create new color schemes.** The six schemes below are the complete set. Design decisions happen in the switcher data in `option3.astro`, not in component CSS.
 
+### Per-section theme overrides
+
+The theme switcher sets the **global default** on `:root`. To give a section a
+different color scheme or font, wrap it in `SectionTheme.astro`:
+
+```astro
+<SectionTheme scheme="maroon-gold" font="playfair-inter">
+  <Hero4 client:load />
+</SectionTheme>
+```
+
+For section-specific tokens the scheme/font axes don't cover, use the
+`SECTION_OVERRIDES` map defined inside `SectionTheme.astro`, keyed by section
+name. Apply it with `section="…"`:
+
+```astro
+<SectionTheme section="ti-differences">
+  <TIDifferencesOption3 client:load />
+</SectionTheme>
+```
+
+Add a new entry to `SECTION_OVERRIDES` when a section needs its own tokens. For
+true one-offs, the `vars` prop still takes a free-form CSS-variable object that
+is applied inline and wins over everything else.
+
+**Precedence (highest first):** `vars` → `SECTION_OVERRIDES[section]` → `scheme`/`font` → global default (`:root`).
+
+- All props optional. Omit `scheme`/`font` to inherit the global default for that axis.
+- `SectionTheme` renders a `display:contents` box — zero layout impact, safe to
+  wrap around GSAP-pinned sections.
+- It works by setting `data-scheme` / `data-font` attributes, matched by scoped
+  CSS rules in `option3.astro` that re-declare the theme variables on that subtree.
+- Global default (theme switcher start state) is `charcoal-cyan` + `spectral-work`.
+- **Valid ids are ONLY the schemes/fonts in the tables below.** Do not invent new
+  ones. The scoped CSS in `option3.astro` mirrors the switcher's `SCHEMES`/`FONTS`
+  data — if you change a scheme value, update both places.
+
 ### Available CSS variables (set by theme switcher)
 
 | Variable | Purpose |

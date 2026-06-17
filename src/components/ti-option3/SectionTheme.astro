@@ -1,0 +1,56 @@
+---
+/*
+ * SectionTheme.astro — per-section theme override for Option 3.
+ *
+ * Wraps a section in a `display:contents` box (zero layout impact — safe for
+ * GSAP-pinned sections) that carries data-scheme / data-font attributes.
+ * Those attributes are matched by the scoped CSS rules in option3.astro, which
+ * re-declare the theme CSS variables on this subtree only.
+ *
+ * ── Section-specific overrides ──
+ * Canonical per-section token overrides live in SECTION_OVERRIDES below, keyed
+ * by section name. Pass `section="hero"` to apply that section's overrides.
+ * These are the tokens the scheme/font axes don't cover (e.g. a distinct hero
+ * background or display font). Add a new entry here when a section needs its own.
+ *
+ * Props (all optional):
+ *   scheme  — SCHEME id (navy-blue, slate-amber, charcoal-cyan, forest-stone,
+ *             violet-gold, navy-gold, maroon-gold)
+ *   font    — FONT id (playfair-inter, fraunces-jakarta, cormorant-montserrat,
+ *             baskerville-source, spectral-work)
+ *   section — key into SECTION_OVERRIDES (e.g. "hero")
+ *   vars    — free-form CSS-variable overrides for THIS instance only (one-offs).
+ *
+ * Precedence (highest first):  vars  >  SECTION_OVERRIDES[section]  >  scheme/font  >  global default (:root)
+ *
+ * Omit scheme/font to inherit the global default set by the theme switcher.
+ *
+ *   <SectionTheme section="ti-differences">
+ *     <TIDifferencesOption3 client:load />
+ *   </SectionTheme>
+ */
+
+// Per-section token overrides. Add sections here as they need their own tokens.
+const SECTION_OVERRIDES = {
+  'ti-differences': {
+    '--font-display': "'Cormorant Garamond', Georgia, serif",
+    '--font-body': "'Montserrat', system-ui, sans-serif",
+  },
+};
+
+const { scheme, font, section, vars = {} } = Astro.props;
+
+// Merge: section overrides first, then per-instance vars win.
+const merged = { ...(section ? SECTION_OVERRIDES[section] ?? {} : {}), ...vars };
+
+// display:contents keeps the wrapper layout-transparent; custom props still
+// cascade to children. Inline declarations win over the scheme/font CSS rules.
+const style =
+  'display:contents;' +
+  Object.entries(merged)
+    .map(([k, v]) => `${k}:${v};`)
+    .join('');
+---
+<div class="section-theme" data-scheme={scheme} data-font={font} style={style}>
+  <slot />
+</div>
