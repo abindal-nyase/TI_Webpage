@@ -1,4 +1,4 @@
-import s from './04_O3_NYACulture2.module.css'
+import s from './04_O3_ClientCare.module.css'
 
 const DESCRIPTION =
   'At NYA, tenant improvement work is treated as a responsibility: to understand the building, protect the priorities behind the project, communicate clearly, and do the work with care. That mindset began with our founder and continues in the way our teams serve clients today.'
@@ -72,7 +72,7 @@ const ITEMS = [
   },
 ]
 
-export default function O3NYACulture2() {
+export default function O3ClientCare() {
   return (
     <section id="nya-culture-2" className={s.section}>
       <div className={s.grid}>
