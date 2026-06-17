@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import s from './TIDifferencesOption3.module.css'
+import s from './01_O3_TIDifferences.module.css'
 import { BARS, ITEMS, COPY, DISC_REDS, DISC_GREENS, RED_COLORS, GREEN_COLORS } from './config.js'
 import { N, TEXT_REDS, TEXT_GREENS, CURVE_ACCENT } from './geometry.js'
 import { lerp, buildCurvePath } from './utils.js'

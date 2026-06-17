@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import styles from './FirmCultureOption3.module.css';
+import styles from './02_O3_FirmCulture.module.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -42,7 +42,7 @@ const WORD_GRID = Array.from({ length: NUM_ROWS }, (_, ri) =>
   Array.from({ length: WORDS_PER_ROW }, (_, ci) => BASE_WORDS[(ri * 3 + ci) % BASE_WORDS.length])
 );
 
-export default function FirmCultureOption3() {
+export default function O3FirmCulture() {
   const sectionRef      = useRef(null);
   const stickyRef       = useRef(null);
   const compositionRef  = useRef(null);

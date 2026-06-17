@@ -1,4 +1,4 @@
-import s from './TIDifferencesOption3.module.css'
+import s from './01_O3_TIDifferences.module.css'
 import { N, DISC_PHASES } from './geometry.js'
 
 export function DiscTextCol({ items, dropped, droppedGreen, activeI, phase }) {

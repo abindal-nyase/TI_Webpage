@@ -8,7 +8,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import styles from './TrustWallOption3.module.css';
+import styles from './03_O3_TrustWall.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -89,7 +89,7 @@ function MarqueeRow({ logos, direction }) {
   );
 }
 
-export default function TrustWallOption3() {
+export default function O3TrustWall() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const bodyRef = useRef(null);

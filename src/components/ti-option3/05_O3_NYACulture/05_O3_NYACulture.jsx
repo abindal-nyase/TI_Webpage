@@ -1,8 +1,8 @@
 import { useRef, useEffect } from 'react'
-import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
+import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../../hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import s from './NYACulture.module.css'
+import s from './05_O3_NYACulture.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -14,7 +14,7 @@ const QUOTES = [
 
 const INTERVAL_MS = 4000
 
-export default function NYACulture() {
+export default function O3NYACulture() {
   const sectionRef = useRef(null)
   const photoRef   = useRef(null)
   const quoteRefs  = useRef([])

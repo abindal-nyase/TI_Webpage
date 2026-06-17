@@ -1,4 +1,4 @@
-import s from './TIDifferencesOption3.module.css'
+import s from './01_O3_TIDifferences.module.css'
 import { TOWER_W, TOWER_H, FACE_H } from './geometry.js'
 
 export function DiscTower({ discData, pxW, pxH, scale, initPositions, dropped, fall, collapseStyles, activeI, colors, discVars, isGreen, renderOverlay }) {

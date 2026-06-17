@@ -1,4 +1,4 @@
-import s from './TIDifferencesOption3.module.css'
+import s from './01_O3_TIDifferences.module.css'
 import { DISCS, ITEMS, COPY, DISC_REDS, DISC_GREENS, RED_COLORS, GREEN_COLORS } from './config.js'
 import {
   N, DISC_PHASES, TOWER_W, TOWER_H, TOWER_PX_W, TOWER_PX_H,

@@ -1,4 +1,4 @@
-import s from './TIDifferencesOption3.module.css'
+import s from './01_O3_TIDifferences.module.css'
 import { TEXT_REDS, TEXT_GREENS } from './geometry.js'
 import { BarsAndBubbles1 } from './BarsAndBubbles1.jsx'
 import { BarsAndBubbles2 } from './BarsAndBubbles2.jsx'

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import styles from './SideNavOption3.module.css';
+import styles from './O3_SideNav.module.css';
 
 const SECTIONS = [
   { id: 'hero4',                   num: '00', label: 'Overview',       dark: true  },
@@ -75,7 +75,7 @@ function computeDarkRatio(pillEl) {
   return Math.min(1, covered / Math.max(1, pr.height));
 }
 
-export default function SideNavOption3() {
+export default function O3SideNav() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [progress, setProgress] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState(null);

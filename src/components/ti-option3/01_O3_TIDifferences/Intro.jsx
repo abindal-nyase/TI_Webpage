@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Snap from 'lenis/snap'
-import s from './TIDifferencesOption3.module.css'
+import s from './01_O3_TIDifferences.module.css'
 import { COPY } from './config.js'
 
 gsap.registerPlugin(ScrollTrigger)

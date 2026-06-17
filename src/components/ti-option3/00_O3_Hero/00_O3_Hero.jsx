@@ -1,26 +1,26 @@
 import { useRef } from 'react'
-import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
+import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../../hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import s from './Hero4.module.css'
+import s from './00_O3_Hero.module.css'
 
-import i1 from '../../assets/i1.webp?url'
-import i1I from '../../assets/i1I.webp?url'
-import i2 from '../../assets/i2.webp?url'
-import i2I from '../../assets/i2I.webp?url'
-import i3 from '../../assets/i3.webp?url'
-import i3I from '../../assets/i3I.webp?url'
-import i4 from '../../assets/i4.webp?url'
-import i4I from '../../assets/i4I.webp?url'
-import i5 from '../../assets/i5.webp?url'
-import i5I from '../../assets/i5I.webp?url'
-import i6 from '../../assets/i6.webp?url'
-import i6I from '../../assets/i6I.webp?url'
-import i7 from '../../assets/i7.webp?url'
-import i7I from '../../assets/i7I.webp?url'
-import i8 from '../../assets/i8.webp?url'
-import i8I from '../../assets/i8I.webp?url'
-import nyaWhite from '../../assets/nya-white.webp?url'
+import i1 from '../../../assets/i1.webp?url'
+import i1I from '../../../assets/i1I.webp?url'
+import i2 from '../../../assets/i2.webp?url'
+import i2I from '../../../assets/i2I.webp?url'
+import i3 from '../../../assets/i3.webp?url'
+import i3I from '../../../assets/i3I.webp?url'
+import i4 from '../../../assets/i4.webp?url'
+import i4I from '../../../assets/i4I.webp?url'
+import i5 from '../../../assets/i5.webp?url'
+import i5I from '../../../assets/i5I.webp?url'
+import i6 from '../../../assets/i6.webp?url'
+import i6I from '../../../assets/i6I.webp?url'
+import i7 from '../../../assets/i7.webp?url'
+import i7I from '../../../assets/i7I.webp?url'
+import i8 from '../../../assets/i8.webp?url'
+import i8I from '../../../assets/i8I.webp?url'
+import nyaWhite from '../../../assets/nya-white.webp?url'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -99,7 +99,7 @@ const LAYOUT = {
   8: { top: 7.9125, left: 4.8, width: 76.6175 },
 };
 
-export default function Hero4() {
+export default function O3Hero() {
   const sectionRef     = useRef(null);
   const triggerRef     = useRef(null);
   const movehomeRef    = useRef(null);

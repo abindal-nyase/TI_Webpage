@@ -1,4 +1,4 @@
-import s from './FooterOption3.module.css';
+import s from './06_O3_Footer.module.css';
 
 const NAV_COLS = [
   {
@@ -71,7 +71,7 @@ const NAV_COLS = [
   },
 ];
 
-export default function FooterOption3() {
+export default function O3Footer() {
   return (
     <footer id="section-footer" className={s.footer}>
 
