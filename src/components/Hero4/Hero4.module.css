@@ -85,7 +85,7 @@
   align-items: center;
   padding: 0 4vw;
   z-index: 60;
-  background: var(--color-primary-hero, #000);
+  background: var(--color-primary-hero, #0F172A);
 }
 
 .headerLogo {
@@ -94,6 +94,7 @@
   display: block;
   object-fit: contain;
   user-select: none;
+  margin-left: auto;
 }
 
 /* ── Hero title — small-caps "Tenant / Improvements" ─────────────── */
@@ -124,7 +125,7 @@
    so "Tenant" → big T + small-cap ENANT, all one word with no gap. */
 .titleWord {
   display: inline-block;
-  font-family: var(--font-display-hero, 'Playfair Display', serif);
+  font-family: var(--font-display-hero, "'Spectral', Georgia, serif", serif);
   font-variant-caps: small-caps;
   font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
   font-weight: 400;
@@ -169,7 +170,7 @@
   width: 100%;
   height: 120vh;
   top: 0;
-  background: var(--color-primary, #000);
+  background: var(--color-primary-hero, #0F172A);
   clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%);
 }
 
@@ -205,7 +206,7 @@
 .bg2Backing {
   position: absolute;
   inset: 0;
-  background: var(--color-primary, #000);
+  background: var(--color-primary-hero, #0F172A);
   clip-path: polygon(0 15.6%, 100% 6%, 100% 50%, 0 50%);
 }
 

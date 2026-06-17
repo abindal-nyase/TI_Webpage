@@ -95,7 +95,7 @@ export function Intro() {
     function attach() {
       const lenis = window.__lenis
       if (!lenis || !sectionRef.current) { raf = requestAnimationFrame(attach); return }
-      snap = new Snap(lenis, { type: 'proximity', duration: 0.8 })
+      snap = new Snap(lenis, { type: 'proximity', duration: 0.5 })
       removeEl = snap.addElement(sectionRef.current, { align: ['start'], ignoreSticky: true })
     }
     attach()
