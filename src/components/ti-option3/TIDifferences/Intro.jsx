@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Snap from 'lenis/snap'
 import s from './TIDifferencesOption3.module.css'
 import { COPY } from './config.js'
 
@@ -84,16 +85,39 @@ export function Intro() {
     }
   }, [])
 
+  // Scroll-snap the intro into its pinned/centered position. Uses Lenis's own
+  // Snap addon (not ScrollTrigger snap) so it scrolls through Lenis and doesn't
+  // fight the smooth-scroll loop. align:'start' = driver top → viewport top,
+  // which is exactly when .introPin engages (intro centered). 'proximity' only
+  // snaps when near the intro, leaving the long disc scroll untouched.
+  useEffect(() => {
+    let snap, removeEl, raf
+    function attach() {
+      const lenis = window.__lenis
+      if (!lenis || !sectionRef.current) { raf = requestAnimationFrame(attach); return }
+      snap = new Snap(lenis, { type: 'proximity', duration: 0.8 })
+      removeEl = snap.addElement(sectionRef.current, { align: ['start'], ignoreSticky: true })
+    }
+    attach()
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      removeEl?.()
+      snap?.destroy()
+    }
+  }, [])
+
   return (
-    <section ref={sectionRef} className={s.intro}>
-      <div className={s.introBox}>
-        <h2 ref={headingRef} className={s.introH} data-intro-anim>
-          {COPY.introHeadMain.map((line, i) => (
-            <span key={i} className={s.introHeadMain}>{line}</span>
-          ))}
-          <em>{COPY.introHeadEm}</em>
-        </h2>
-        <p ref={subRef} className={s.introSub} data-intro-anim>{COPY.introSub}</p>
+    <section ref={sectionRef} className={s.introDriver}>
+      <div className={s.introPin}>
+        <div className={s.introBox}>
+          <h2 ref={headingRef} className={s.introH} data-intro-anim>
+            {COPY.introHeadMain.map((line, i) => (
+              <span key={i} className={s.introHeadMain}>{line}</span>
+            ))}
+            <em>{COPY.introHeadEm}</em>
+          </h2>
+          <p ref={subRef} className={s.introSub} data-intro-anim>{COPY.introSub}</p>
+        </div>
       </div>
     </section>
   )

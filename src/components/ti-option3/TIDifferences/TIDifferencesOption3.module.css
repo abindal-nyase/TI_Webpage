@@ -32,14 +32,23 @@
   will-change: transform;
 }
 
-.intro {
+/* Driver gives the scroll length over which the pinned intro is held.
+   Pin travel = driver height − 100vh (sticky height). 180vh → 80vh hold. */
+.introDriver {
   position: relative;
+  min-height: 180vh;
+}
+/* Sticky pin: intro content centered in the viewport, held while the
+   driver scrolls past. Mirrors the .discDriver/.discScene pattern.
+   background comes from .root — shared fade across the whole section. */
+.introPin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  min-height: 60vh;
   padding: 6rem 8vw;
-  /* background comes from .root — shared fade across the whole section */
 }
 .introBox {
   display: flex;

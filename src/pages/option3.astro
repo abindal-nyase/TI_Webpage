@@ -259,6 +259,19 @@ import BackToHub from '../components/BackToHub.astro';
 
     const SCHEMES = [
       {
+        id: 'selected', name: 'JP',
+        swatches: ['#0F172A', '#06B6D4'],
+        vars: {
+          '--color-primary':       '#0F172A',
+          '--color-primary-hero':  '#0F172A',
+          '--color-primary-light': '#1E293B',
+          '--color-accent':        '#06B6D4',
+          '--color-accent-hover':  '#0891B2',
+          '--border-accent':       'rgba(6,182,212,0.25)',
+          '--shadow-accent':       '0 8px 28px rgba(6,182,212,0.28)',
+        },
+      },
+      {
         id: 'navy-blue', name: 'NB',
         swatches: ['#0B1F3B', '#2F80ED'],
         vars: {
@@ -346,6 +359,12 @@ import BackToHub from '../components/BackToHub.astro';
 
     const FONTS = [
       {
+        id: 'selected', label: 'JP',
+        displayFamily: "'Spectral', Georgia, serif",
+        displayFamilyHero: "'Spectral', Georgia, serif",
+        bodyFamily:    "'Work Sans', system-ui, sans-serif",
+      },
+      {
         id: 'playfair-inter', label: 'Playfair + Inter',
         displayFamily: "'Playfair Display', Georgia, serif",
         bodyFamily:    "'Inter', system-ui, sans-serif",
@@ -372,8 +391,8 @@ import BackToHub from '../components/BackToHub.astro';
       },
     ];
 
-    let activeScheme = 'navy-blue';
-    let activeFont   = 'playfair-inter';
+    let activeScheme = 'selected';
+    let activeFont   = 'selected';
 
     function applyScheme(id: string) {
       const scheme = SCHEMES.find(s => s.id === id);
@@ -392,6 +411,7 @@ import BackToHub from '../components/BackToHub.astro';
       if (!font) return;
       const root = document.documentElement;
       root.style.setProperty('--font-display', font.displayFamily);
+      root.style.setProperty('--font-display-hero', font.displayFamilyHero);
       root.style.setProperty('--font-body',    font.bodyFamily);
       activeFont = id;
       document.querySelectorAll<HTMLButtonElement>('.tb-font-btn').forEach(btn =>

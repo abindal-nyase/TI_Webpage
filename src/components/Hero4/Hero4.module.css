@@ -85,7 +85,7 @@
   align-items: center;
   padding: 0 4vw;
   z-index: 60;
-  background: var(--color-primary, #000);
+  background: var(--color-primary-hero, #000);
 }
 
 .headerLogo {
@@ -110,6 +110,8 @@
   display: flex;
   align-items: baseline;
   line-height: 0.85;
+  gap: clamp(0.5rem, 5vw, 5rem);
+  flex-wrap: wrap;
 }
 
 /* Second line ("Improvements") staggers right + drops down from the first */
@@ -122,7 +124,7 @@
    so "Tenant" → big T + small-cap ENANT, all one word with no gap. */
 .titleWord {
   display: inline-block;
-  font-family: var(--font-display, 'Playfair Display', serif);
+  font-family: var(--font-display-hero, 'Playfair Display', serif);
   font-variant-caps: small-caps;
   font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
   font-weight: 400;

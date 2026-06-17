@@ -31,7 +31,7 @@ gsap.registerPlugin(ScrollTrigger)
 //   • +ve   → drops the building lower (past the bottom edge)
 //   • -ve   → lifts it up toward centre (≈ -0.5 ≈ centred)
 // X: +ve = right of centre, -ve = left.
-const BUILDING_OFFSET_Y = 0.56; // landscape/desktop: dropped below bottom-centre
+const BUILDING_OFFSET_Y = 0.4; // landscape/desktop: dropped below bottom-centre
 // Portrait phones are tall + the building is width-bound, so the big landscape
 // drop pushes the whole building off the bottom edge. Use a small portrait
 // offset so it rests in view. 0 = union bottom at the edge; +ve nudges lower.
@@ -593,14 +593,18 @@ export default function Hero4() {
         <div ref={titleRef} className={s.heroTitle}>
           <div className={s.titleRow}>
             <span className={`${s.titleWord} ${s.titleWordTenant}`}>
-              <span className={s.firstLetter}>T</span>enant
-            </span>
-          </div>
-          <div className={`${s.titleRow} ${s.titleRowIndent}`}>
+              <span className={s.firstLetter}>T</span>enant 
+            </span> 
+            
             <span className={`${s.titleWord} ${s.titleWordImprovements}`}>
               <span className={s.firstLetter}>I</span>mprovements
             </span>
           </div>
+          {/*<div className={`${s.titleRow} ${s.titleRowIndent}`}>
+            <span className={`${s.titleWord} ${s.titleWordImprovements}`}>
+              <span className={s.firstLetter}>I</span>mprovements
+            </span>
+          </div>*/}
         </div>
 
         <div className={s.bg1}>
