@@ -147,6 +147,21 @@
   letter-spacing: 0.04em;
 }
 
+/* Landscape / desktop: keep "Tenant Improvements" on a single line. The
+   default 7vw slope outgrows the viewport between ~1024–1240px wide, dropping
+   "Improvements" to a second line. Force nowrap and a gentler slope so both
+   words fit one row from 1024px up. Mobile/portrait (<1024px) still wraps. */
+@media (min-width: 1024px) {
+  .titleRow {
+    flex-wrap: nowrap;
+    gap: clamp(0.5rem, 4vw, 4rem);
+  }
+  .titleWord {
+    font-size: clamp(2rem, 1rem + 7.6vw, 9.2vw);
+    white-space: nowrap;
+  }
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════
    ANIMATED BACKGROUNDS — large triangular shapes covering viewport
