@@ -74,12 +74,18 @@ export function CollapsingDiscs3() {
   // Fit-to-viewport scale for the disc block. The tower (value bar + gap +
   // stack + risk bar) is a fixed-px block; in a narrow `1fr` column it
   // overflows and the scene clips it. Scale the whole block down so the rest
-  // state (7th disc stacked) always fits its column. offsetWidth/offsetHeight
-  // ignore the applied CSS transform → no measurement feedback loop, and the
-  // tower box is a fixed height regardless of dropped state → measure once.
+  // state (7th disc stacked) always fits its column.
+  //
+  // The text labels (eyebrows, titles, bar labels/categories) counter-scale by
+  // 1/--fit-scale in CSS, so their on-screen size stays at a readable,
+  // viewport-responsive clamp() no matter how small the tower gets. That makes
+  // their *unscaled* layout grow as the fit shrinks, so the fit is a fixed
+  // point: set --fit-scale, re-measure, repeat. It converges monotonically
+  // downward (smaller scale → bigger unscaled labels → smaller next scale).
+  // offsetWidth/offsetHeight ignore the CSS transform itself, so only the
+  // counter-scaled labels move the measurement — exactly what we iterate on.
   const colRef = useRef(null)
   const fitRef = useRef(null)
-  const [fitScale, setFitScale] = useState(1)
   useEffect(() => {
     function measure() {
       const col = colRef.current, wrap = fitRef.current
@@ -95,16 +101,30 @@ export function CollapsingDiscs3() {
       // real ceiling: 100vh in the 2-col layout, auto (tall) when stacked
       // ≤960px, where height is unconstrained and only width should drive fit.
       const scene = col.closest('[class*="discScene"]') || col
-      const availW = col.clientWidth      - padX
-      const availH = scene.clientHeight    - padY
+      const availW = col.clientWidth - padX
+      // Bound height by the tower's OWN column, capped at the scene. Portrait
+      // splits the scene 50/50 vertically (col = 50vh row, min-height:0 holds
+      // it there) → use that half; 2-col landscape stretches col to the full
+      // 100vh scene → both agree. The min() also guards the legacy stacked
+      // case where the column's auto height would otherwise overshoot.
+      const availH = Math.min(col.clientHeight, scene.clientHeight) - padY
+      if (availW <= 0 || availH <= 0) return
       // Budget 2×|shift| of horizontal headroom: --tower-col-shift offsets the
       // section left of center, so the block needs that much extra room on the
       // left to stay inside a center-origin scale.
-      const natW = wrap.offsetWidth + 2 * Math.abs(DISCS.towerColShift)
-      const natH = wrap.offsetHeight
-      if (!natW || !natH) return
-      const next = Math.min(1, availW / natW, availH / natH)
-      if (next > 0) setFitScale(next)
+      const budget = 2 * Math.abs(DISCS.towerColShift)
+      let scale = 1
+      for (let i = 0; i < 8; i++) {
+        wrap.style.setProperty('--fit-scale', scale)
+        const natW = wrap.offsetWidth + budget   // forces sync reflow
+        const natH = wrap.offsetHeight
+        if (!natW || !natH) return
+        const next = Math.min(1, availW / natW, availH / natH)
+        if (Math.abs(next - scale) < 0.004) { scale = next; break }
+        scale = next
+      }
+      wrap.style.setProperty('--fit-scale', scale)
+      wrap.style.transform = `scale(${scale})`
     }
     measure()
     window.addEventListener('resize', measure)
@@ -140,7 +160,7 @@ export function CollapsingDiscs3() {
             <div
               className={s.towerOverlap}
               ref={fitRef}
-              style={{ transform: `scale(${fitScale})`, transformOrigin: "center center" }}
+              style={{ transformOrigin: "center center" }}
             >
               {/* Red tower — fades out on green reveal */}
               <div

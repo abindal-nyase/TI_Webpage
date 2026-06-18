@@ -251,9 +251,13 @@
   white-space: nowrap;
 }
 
+/* Labels inside the fit-scaled .towerOverlap counter-scale by 1/--fit-scale so
+   their on-screen size stays at the responsive clamp() below regardless of how
+   far the tower is shrunk to fit narrow/short viewports. --fit-scale defaults
+   to 1 (e.g. before JS runs, or for elements outside the scaled wrapper). */
 .eyebrowRed {
   font-family: var(--font-body);
-  font-size: calc(0.56rem * var(--font-scale, 1));
+  font-size: calc(clamp(0.66rem, 6.9vw, 1.2rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -263,7 +267,7 @@
 }
 .eyebrowGreen {
   font-family: var(--font-body);
-  font-size: calc(0.56rem * var(--font-scale, 1));
+  font-size: calc(clamp(0.66rem, 6.9vw, 1.2rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -273,9 +277,11 @@
 }
 .sectionTitle {
   font-family: var(--font-display);
-  font-size: calc(clamp(1.6rem, 2.8vw, 2.4rem) * var(--font-scale, 1));
+  font-size: calc(clamp(1.7rem, 5.2vw, 3rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 600;
-  color: var(--color-black, #0F172A);
+  /* Disc scene sits on the dark inner .root (var(--color-primary)) — light fill
+     for contrast, not --color-black which would be invisible on it. */
+  color: var(--color-white, #ffffff);
   margin: 0;
   line-height: 1.1;
   letter-spacing: -0.01em;
@@ -374,11 +380,12 @@
 }
 .valueBarLabel {
   font-family: var(--font-body);
-  font-size: 0.44rem;
+  font-size: calc(clamp(0.62rem, 0.85vw, 0.8rem) / var(--fit-scale, 1));
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-gray-700, #475569);
+  /* light on the dark disc-scene backdrop (see .sectionTitle note) */
+  color: rgba(255, 255, 255, 0.78);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
@@ -404,25 +411,25 @@
 }
 .riskBarTitle {
   font-family: var(--font-body);
-  font-size: calc(0.44rem * var(--font-scale, 1));
+  font-size: calc(clamp(0.68rem, 0.95vw, 0.88rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-gray-700, #475569);
+  color: rgba(255, 255, 255, 0.78);
 }
 .riskBarPct {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: calc(0.81rem * var(--font-scale, 1));
-  color: var(--color-black, #0F172A);
+  font-size: calc(clamp(0.95rem, 1.25vw, 1.2rem) * var(--font-scale, 1) / var(--fit-scale, 1));
+  color: var(--color-white, #ffffff);
   line-height: 1;
 }
 .riskBarCat {
   font-family: var(--font-body);
-  font-size: calc(0.375rem * var(--font-scale, 1));
+  font-size: calc(clamp(0.6rem, 0.82vw, 0.78rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-gray-700, #475569);
+  color: rgba(255, 255, 255, 0.62);
 }
 .riskBar {
   border-radius: 2px;
@@ -434,16 +441,27 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 3vh 4vw 3vh 2.5vw;
   overflow: hidden;
+}
+/* Holds the point cards. In portrait it is translated (not native-scrolled) to
+   keep the current point centered in the pane — see DiscTextCol. */
+.textColInner {
+  position: relative;   /* offsetParent for the cards' offsetTop in DiscTextCol */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ── TEXT CARD ────────────────────────────────────────────────────────────── */
 .discCard {
   --white: #f0ece3;
   --text:  #b0a89a;
-  --muted: rgba(255, 255, 255, 0.35);
+  /* inactive (dropped but not the live) card category — readable on dark,
+     still quieter than the active red/green category */
+  --muted: rgba(255, 255, 255, 0.62);
 
   display: flex;
   align-items: flex-start;
@@ -470,7 +488,7 @@
   font-family: var(--font-body);
   font-size: calc(1.3rem * var(--font-scale, 1));
   letter-spacing: 0.08em;
-  color: var(--border-accent, rgba(255,255,255,0.16));
+  color: rgba(255, 255, 255, 0.42);
   flex-shrink: 0;
   min-width: 2ch;
   transition: color 0.35s ease;
@@ -494,7 +512,7 @@
 }
 .discCat {
   font-family: var(--font-body);
-  font-size: calc(0.59rem * var(--font-scale, 1));
+  font-size: calc(clamp(0.68rem, 0.9vw, 0.85rem) * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -507,11 +525,11 @@
 
 .discNegTxt {
   font-family: var(--font-display);
-  font-size: calc(clamp(0.82rem, 1.05vw, 0.94rem) * var(--font-scale, 1));
+  font-size: calc(clamp(0.95rem, 1.3vw, 1.15rem) * var(--font-scale, 1));
   font-weight: 400;
-  font-style: italic;
+  font-style: normal;
   line-height: 1.6;
-  color: rgba(176, 168, 154, 0.28);
+  color: rgba(176, 168, 154, 0.62);
   margin: 0;
   transition: color 0.4s ease;
 }
@@ -685,7 +703,8 @@
 }
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
-@media (max-width: 960px) {
+/* Narrow landscape: legacy stack — tower over the points, scrolls as one. */
+@media (max-width: 960px) and (orientation: landscape) {
   .discScene {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
@@ -701,4 +720,30 @@
     border-top: 1px solid var(--border-default, #E2E8F0);
     padding: 2vh 5vw;
   }
+}
+
+/* Portrait: locked 50/50 vertical split. Top half holds the disc tower (pinned
+   within the sticky scene); bottom half scrolls the points so the current one
+   is always centered (driven by DiscTextCol as disks drop). */
+@media (orientation: portrait) {
+  .discScene {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 100vh;
+    min-height: 100vh;
+  }
+  .towerColCd3 {
+    min-height: 0;            /* hold the row at 50vh — don't inflate to content */
+    border-right: none;
+    border-bottom: 1px solid var(--border-accent);
+    padding: 2vh 4vw;
+  }
+  .textCol {
+    min-height: 0;
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding: 2.5vh 6vw;
+    scrollbar-width: none;    /* Firefox: hide the points-pane scrollbar */
+  }
+  .textCol::-webkit-scrollbar { display: none; }
 }
