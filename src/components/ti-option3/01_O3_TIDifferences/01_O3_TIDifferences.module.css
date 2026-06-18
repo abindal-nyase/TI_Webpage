@@ -408,6 +408,13 @@
   flex-direction: row;
   align-items: baseline;
   gap: 8px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.riskBarTitle,
+.riskBarPct,
+.riskBarCat {
+  flex-shrink: 0;
 }
 .riskBarTitle {
   font-family: var(--font-body);
