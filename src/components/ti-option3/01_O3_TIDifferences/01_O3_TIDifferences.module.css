@@ -13,6 +13,10 @@
   --red:   #c85050;
   --green: #4ab87a;
 
+  /* Intro quote font scale. Drives .introH/.introSub size AND the pin-hold
+     length (.introDriver) so they stay in sync. 1 = baseline, 1.2 = +20%. */
+  --intro-font-scale: 1.2;
+
   position: relative;
   z-index: 36;          /* above Hero4 (z-index:35). Hero4 is one stacking context,
                            so this section paints over ALL of it — bg2 and the
@@ -33,10 +37,12 @@
 }
 
 /* Driver gives the scroll length over which the pinned intro is held.
-   Pin travel = driver height − 100vh (sticky height). 180vh → 80vh hold. */
+   Pin travel = driver height − 100vh (sticky height). Hold scales with the
+   intro font: 100vh sticky + 80vh×scale. scale 1 → 180vh (80vh hold),
+   scale 1.2 → 196vh (96vh hold). */
 .introDriver {
   position: relative;
-  min-height: 180vh;
+  min-height: calc(100vh + 80vh * var(--intro-font-scale, 1));
 }
 /* Sticky pin: intro content centered in the viewport, held while the
    driver scrolls past. Mirrors the .discDriver/.discScene pattern.
@@ -83,7 +89,7 @@
 
 .introH {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 4vw, 5.6rem);
+  font-size: calc(clamp(1.2rem, 4vw, 5.6rem) * var(--intro-font-scale, 1));
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -98,7 +104,7 @@
 
 .introSub {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-size: calc(clamp(1rem, 1.5vw, 1.2rem) * var(--intro-font-scale, 1));
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.55);
   margin: 0;
