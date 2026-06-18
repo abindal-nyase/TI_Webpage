@@ -95,13 +95,13 @@ export const COPY = {
 }
 
 export const DISC_REDS = [
-  { face: '#823232', rim: '#602626' },
-  { face: '#923838', rim: '#6e2c2c' },
-  { face: '#a43e3e', rim: '#7c3030' },
-  { face: '#b44444', rim: '#8c3838' },
-  { face: '#c44a4a', rim: '#9a3e3e' },
-  { face: '#d25050', rim: '#a84444' },
-  { face: '#de5656', rim: '#b44a4a' },
+  { face: '#7a3a40', rim: '#552828' },
+  { face: '#8c3b41', rim: '#62292e' },
+  { face: '#9f3b43', rim: '#6f292f' },
+  { face: '#b13c44', rim: '#7c2a30' },
+  { face: '#c43d45', rim: '#892a30' },
+  { face: '#d63d47', rim: '#962b32' },
+  { face: '#e93e48', rim: '#a32b32' },
 ]
 
 export const DISC_GREENS = [
@@ -115,13 +115,13 @@ export const DISC_GREENS = [
 ]
 
 export const RED_COLORS = [
-  { bright: '#6e2828', dark: '#4a1e1e' },
-  { bright: '#7e3030', dark: '#582424' },
-  { bright: '#8e3838', dark: '#662a2a' },
-  { bright: '#9e4040', dark: '#723030' },
-  { bright: '#ae4848', dark: '#7e3838' },
-  { bright: '#bc4c4c', dark: '#8a3c3c' },
-  { bright: '#c85050', dark: '#924040' },
+  { bright: '#7a3a40', dark: '#552828' },
+  { bright: '#8c3b41', dark: '#62292e' },
+  { bright: '#9f3b43', dark: '#6f292f' },
+  { bright: '#b13c44', dark: '#7c2a30' },
+  { bright: '#c43d45', dark: '#892a30' },
+  { bright: '#d63d47', dark: '#962b32' },
+  { bright: '#e93e48', dark: '#a32b32' },
 ]
 
 export const GREEN_COLORS = [

@@ -137,7 +137,7 @@
   top: 0;
   height: 100vh;
   display: grid;
-  grid-template-columns: var(--tower-col-pct, 44%) 1fr;
+  grid-template-columns: 1fr 1fr;
   overflow: hidden;
   /* background comes from .root — already white by the time this is in view */
   background: transparent;
@@ -176,6 +176,11 @@
   padding: 2vh 2vw;
   overflow: visible;
   border-right: 1px solid var(--border-accent);
+  /* The disc block has a large fixed-px min-content width. Without this, the
+     grid item's default min-width:auto inflates the 1fr track to that width,
+     overflowing the scene on narrow viewports. min-width:0 lets the track
+     collapse to its real share so the JS fit-scale governs the visual. */
+  min-width: 0;
 }
 
 /* Grid-stacking wrapper so red and green towers occupy the same space */
@@ -254,6 +259,7 @@
   text-transform: uppercase;
   color: var(--red);
   margin: 0 0 3px;
+  text-align: center;
 }
 .eyebrowGreen {
   font-family: var(--font-body);
@@ -263,6 +269,7 @@
   text-transform: uppercase;
   color: var(--green);
   margin: 0 0 3px;
+  text-align: center;
 }
 .sectionTitle {
   font-family: var(--font-display);

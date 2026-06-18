@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import s from './01_O3_TIDifferences.module.css'
 import { DISCS, ITEMS, COPY, DISC_REDS, DISC_GREENS, RED_COLORS, GREEN_COLORS } from './config.js'
 import {
@@ -71,6 +71,51 @@ export function CollapsingDiscs3() {
     }
   }, [])
 
+  // Fit-to-viewport scale for the disc block. The tower (value bar + gap +
+  // stack + risk bar) is a fixed-px block; in a narrow `1fr` column it
+  // overflows and the scene clips it. Scale the whole block down so the rest
+  // state (7th disc stacked) always fits its column. offsetWidth/offsetHeight
+  // ignore the applied CSS transform → no measurement feedback loop, and the
+  // tower box is a fixed height regardless of dropped state → measure once.
+  const colRef = useRef(null)
+  const fitRef = useRef(null)
+  const [fitScale, setFitScale] = useState(1)
+  useEffect(() => {
+    function measure() {
+      const col = colRef.current, wrap = fitRef.current
+      if (!col || !wrap) return
+      const cs = getComputedStyle(col)
+      const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+      const padY = parseFloat(cs.paddingTop)  + parseFloat(cs.paddingBottom)
+      // Height must be bounded by the sticky scene box, NOT the column.
+      // `.discScene` is height:100vh + overflow:hidden but defines no
+      // grid-template-rows, so its implicit row (and the column) grows to the
+      // tower's content height — using the column's clientHeight would report
+      // the full tower and defeat the fit. The scene's own clientHeight is the
+      // real ceiling: 100vh in the 2-col layout, auto (tall) when stacked
+      // ≤960px, where height is unconstrained and only width should drive fit.
+      const scene = col.closest('[class*="discScene"]') || col
+      const availW = col.clientWidth      - padX
+      const availH = scene.clientHeight    - padY
+      // Budget 2×|shift| of horizontal headroom: --tower-col-shift offsets the
+      // section left of center, so the block needs that much extra room on the
+      // left to stay inside a center-origin scale.
+      const natW = wrap.offsetWidth + 2 * Math.abs(DISCS.towerColShift)
+      const natH = wrap.offsetHeight
+      if (!natW || !natH) return
+      const next = Math.min(1, availW / natW, availH / natH)
+      if (next > 0) setFitScale(next)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    window.addEventListener('themechange', measure)
+    document.fonts?.ready.then(measure)
+    return () => {
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('themechange', measure)
+    }
+  }, [])
+
   return (
     <div className={s.root} style={{ marginTop: `calc(-50vh + ${liftShift}px)` }}>
       <div
@@ -91,8 +136,12 @@ export function CollapsingDiscs3() {
             "--tower-col-shift": `${DISCS.towerColShift}px`,
           }}
         >
-          <div className={s.towerColCd3}>
-            <div className={s.towerOverlap}>
+          <div className={s.towerColCd3} ref={colRef}>
+            <div
+              className={s.towerOverlap}
+              ref={fitRef}
+              style={{ transform: `scale(${fitScale})`, transformOrigin: "center center" }}
+            >
               {/* Red tower — fades out on green reveal */}
               <div
                 className={s.towerSection}
