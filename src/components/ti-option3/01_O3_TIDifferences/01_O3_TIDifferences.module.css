@@ -89,7 +89,7 @@
 
 .introH {
   font-family: var(--font-display);
-  font-size: calc(clamp(1.2rem, 4vw, 5.6rem) * var(--intro-font-scale, 1));
+  font-size: calc(clamp(2rem, 4vw, 5.6rem) * var(--intro-font-scale, 1));
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -104,10 +104,19 @@
 
 .introSub {
   font-family: var(--font-body);
-  font-size: calc(clamp(1rem, 1.5vw, 1.2rem) * var(--intro-font-scale, 1));
+  font-size: calc(clamp(1rem, 1.5vw, 1.4rem) * var(--intro-font-scale, 1));
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.55);
   margin: 0;
+}
+
+/* Small portrait phones: headline would overflow at min size — let it wrap */
+@media (max-width: 600px) and (orientation: portrait) {
+  .introH {
+    width: 100%;
+    max-width: 100%;
+  }
+  .introHeadMain { white-space: normal; }
 }
 
 .cue {
