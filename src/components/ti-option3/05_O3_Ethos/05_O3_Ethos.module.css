@@ -1,14 +1,14 @@
 /* ─────────────────────────────────────────────────────────────────────
-   NYA Culture — 50vh pinned quote section
-   Photo left, scroll-driven quotes right.
-   Fonts: Cormorant Garamond (quotes) · Great Vibes (signature)
+   NYA Culture — single quote + portrait
+   Quote left, portrait right (bottom-anchored, full head & shoulders).
+   Fonts: Cormorant Garamond (quote) · Great Vibes (signature)
    ───────────────────────────────────────────────────────────────────── */
 
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&display=swap');
 
-/* ── Section — natural height, no sticky/scroll wrapper ─────────── */
+/* ── Section ─────────────────────────────────────────────────────── */
 .section {
-  background: #faf9f7;
+  background: #ffffff;
   width: 100%;
   overflow: hidden;
 }
@@ -17,43 +17,37 @@
 .inner {
   position: relative;
   width: 100%;
-  height: 40vh;
+  height: 62vh;
   display: flex;
   align-items: stretch;
   overflow: hidden;
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   LEFT COLUMN — photo
+   RIGHT COLUMN — portrait
    ══════════════════════════════════════════════════════════════════ */
 
 .left {
-  flex: 0 0 38%;
+  flex: 0 0 46%;
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
-  /* purple accent bar on the right edge */
-  border-right: 3px solid #6B2D8B;
+  /* no overflow clip — photo bleeds past this column to the section edge */
 }
 
 .photo {
   display: block;
-  height: 100%;
+  height: 165%;          /* zoom in — head fills frame */
   width: auto;
+  max-width: none;
   object-fit: contain;
   object-position: top center;
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;                /* anchor head at top, crop bottom at chest */
+  right: 0;              /* flush to section's right edge, bleeds leftward */
   user-select: none;
 }
 
-
 /* ══════════════════════════════════════════════════════════════════
-   RIGHT COLUMN — quotes stack
+   LEFT COLUMN — quote
    ══════════════════════════════════════════════════════════════════ */
 
 .right {
@@ -61,14 +55,14 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0 6vw 0 5vw;
+  padding: 0 4vw 0 6vw;
 }
 
-/* Large decorative opening quotation mark — aligned with person's head */
+/* Large decorative opening quotation mark */
 .openMark {
   position: absolute;
   top: 18%;
-  left: 4vw;
+  left: 5vw;
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: clamp(80px, 10vw, 140px);
   font-style: italic;
@@ -79,15 +73,13 @@
   user-select: none;
 }
 
-/* Each quote slide is absolutely stacked in the same space */
 .slide {
-  position: absolute;
-  inset: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: 13% 6vw 0 5vw; /* aligned with quote mark */
+  justify-content: center;
   gap: 16px;
+  width: 100%;
 }
 
 /* ── Quote text ──────────────────────────────────────────────────── */
@@ -95,7 +87,7 @@
   margin: 0;
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   font-style: italic;
-  font-size: clamp(16px, 2vw, 28px);
+  font-size: clamp(18px, 2.2vw, 30px);
   font-weight: 500;
   line-height: 1.6;
   color: #1a1818;
@@ -118,26 +110,23 @@
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 768px) {
+  /* photo left | quote right, smaller zoom */
   .inner {
-    height: auto;
-    flex-direction: column;
+    height: 56vh;
+    flex-direction: row-reverse;
   }
   .left {
-    flex: 0 0 40vw;
-    border-right: none;
-    border-bottom: 3px solid #6B2D8B;
-    height: 40vw;
+    flex: 0 0 44%;
   }
   .photo {
-    height: 130%;
-    bottom: 0;
+    height: 125%;   /* less zoom in portrait */
+    right: auto;
+    left: -150px;    /* 20px off the left edge */
   }
   .right {
-    padding: 32px 6vw;
+    padding: 0 4vw;
   }
-  .slide {
-    position: relative;
-    inset: auto;
-    padding: 0;
+  .openMark {
+    font-size: clamp(60px, 14vw, 100px);
   }
 }
