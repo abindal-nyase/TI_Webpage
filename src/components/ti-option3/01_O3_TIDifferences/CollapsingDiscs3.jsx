@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import s from './01_O3_TIDifferences.module.css'
 import { DISCS, ITEMS, COPY, DISC_REDS, DISC_GREENS, RED_COLORS, GREEN_COLORS } from './config.js'
 import {
@@ -44,8 +45,34 @@ export function CollapsingDiscs3() {
   const redInitPositions   = cd3RedDiscData.map(disc => ({ left: toScreenLeft(disc.initCX, disc.radius), top: toScreenTop(disc.initCZ) }))
   const greenInitPositions = GREEN_DISC_DATA.map(gd => ({ left: gd.initLeft, top: gd.initTop }))
 
+  // Lift overlap between Intro and the disc section.
+  // `.root` has margin-top: -50vh, so at Intro's pin-release the section top
+  // sits at exactly 50% viewport. We want the lift line to land on the gap
+  // between Intro's headline (introHeadEm) and subtext (introSub) instead.
+  // The Intro box is vertically centered, so that gap sits below mid-viewport
+  // by Δ = (headlineHeight − subHeight) / 2. Push the section down by Δ.
+  // Both heights scale with viewport width / zoom / font pair → measured live.
+  // Intro's <h2> and <p> both carry data-intro-anim (h2 first, sub second).
+  const [liftShift, setLiftShift] = useState(0)
+  useEffect(() => {
+    function measure() {
+      const anims = document.querySelectorAll('[data-intro-anim]')
+      const h2 = anims[0], sub = anims[1]
+      if (!h2 || !sub) return
+      setLiftShift(Math.round((h2.offsetHeight - sub.offsetHeight) / 2))
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    window.addEventListener('themechange', measure) // font pair changes element heights
+    document.fonts?.ready.then(measure)
+    return () => {
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('themechange', measure)
+    }
+  }, [])
+
   return (
-    <div className={s.root}>
+    <div className={s.root} style={{ marginTop: `calc(-50vh + ${liftShift}px)` }}>
       <div
         ref={driverRef}
         className={s.discDriver}
