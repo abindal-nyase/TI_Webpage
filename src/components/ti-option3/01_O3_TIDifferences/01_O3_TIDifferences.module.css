@@ -47,15 +47,16 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 6rem 8vw;
 }
 .introBox {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 1.6rem;
   max-width: 720px;
+  text-align: center;
 }
 
 /* Eyebrow — matches TIDifferencesOption3 style: accent color + decorative line */

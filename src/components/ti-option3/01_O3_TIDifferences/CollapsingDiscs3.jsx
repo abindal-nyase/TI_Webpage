@@ -45,7 +45,7 @@ export function CollapsingDiscs3() {
   const greenInitPositions = GREEN_DISC_DATA.map(gd => ({ left: gd.initLeft, top: gd.initTop }))
 
   return (
-    <>
+    <div className={s.root}>
       <div className={s.optionLabel}>
         <div className={s.optionDivider} />
         <span>Collapsing Discs 3</span>
@@ -146,6 +146,6 @@ export function CollapsingDiscs3() {
           <DiscTextCol items={ITEMS} dropped={dropped} droppedGreen={droppedGreen} activeI={activeI} phase={phase} />
         </div>
       </div>
-    </>
+    </div>
   )
 }
