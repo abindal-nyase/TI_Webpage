@@ -1,1 +1,119 @@
-/* filled in Task 4 */
+/* 04_O3_ClientCare.module.css — all color/font tokens via CSS variables */
+
+.section {
+  position: relative;
+  overflow-x: clip;            /* clip horizontal parallax WITHOUT breaking sticky */
+  background: var(--surface-page);
+  color: var(--color-gray-900);
+  padding-block: var(--section-padding);
+}
+
+/* ── Sticky header ── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: clamp(var(--sp-6), 6vw, var(--sp-12)) var(--margin-desktop) clamp(var(--sp-4), 4vw, var(--sp-8));
+  background: var(--surface-page);
+  max-width: var(--container);
+  margin-inline: auto;
+}
+.eyebrow {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  margin: 0 0 var(--sp-2);
+}
+.title {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  font-size: clamp(var(--text-3xl), 6vw, var(--text-6xl));
+  line-height: 1.05;
+  margin: 0 0 var(--sp-4);
+}
+.intro {
+  font-family: var(--font-body);
+  color: var(--color-gray-700);
+  font-size: clamp(var(--text-base), 2.2vw, var(--text-xl));
+  line-height: 1.6;
+  max-width: var(--container-narrow);
+  margin: 0;
+}
+
+/* ── Bands ── */
+.bands { position: relative; z-index: 1; }
+
+.band {
+  position: relative;
+  overflow: hidden;            /* contain this band's bg drift (no sticky inside) */
+  min-height: clamp(70vh, 90vh, 980px);
+  display: flex;
+  align-items: center;
+}
+.bandBg {
+  position: absolute;
+  inset: -8% -14% -8% -14%;    /* extra bleed so xPercent drift never reveals an edge */
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+.bandOverlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary);
+  opacity: 0.82;               /* tint so text stays legible on every theme */
+}
+.bandInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--margin-desktop);
+  color: var(--color-white);
+}
+.bandLabel {
+  display: inline-block;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  margin-bottom: var(--sp-6);
+}
+.row { margin-bottom: clamp(var(--sp-8), 6vw, var(--sp-16)); }
+.row:last-child { margin-bottom: 0; }
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-2xl), 5vw, var(--text-5xl));
+  line-height: 1.1;
+  margin: 0 0 var(--sp-4);
+  will-change: transform;
+}
+.rowContent {
+  font-family: var(--font-body);
+  font-size: clamp(var(--text-base), 2vw, var(--text-lg));
+  line-height: 1.65;
+  max-width: 60ch;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  will-change: transform;
+}
+
+/* Portrait phones: shorter bands, tighter rhythm */
+@media (max-width: 768px) {
+  .band { min-height: auto; padding-block: clamp(var(--sp-12), 18vh, var(--sp-20)); }
+  .rowContent { max-width: 100%; }
+}
+
+/* Landscape phones / short viewports: don't let a band exceed the screen */
+@media (max-height: 520px) and (orientation: landscape) {
+  .band { min-height: auto; padding-block: var(--sp-12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bandBg, .rowTitle, .rowContent { will-change: auto; }
+}
