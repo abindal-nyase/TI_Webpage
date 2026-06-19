@@ -66,6 +66,24 @@ test.describe('Client Care parallax section', () => {
     expect(titleDelta).toBeGreaterThan(contentDelta); // titles faster than content
   });
 
+  test('section pins — stage stays at viewport top while scrolling (no vertical scroll-up)', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+    await gotoOption3(page);
+    await page.waitForSelector(SECTION);
+    const top = await sectionDocTop(page);
+    await scrollToInstant(page, top + 1500);
+    await page.waitForTimeout(700);
+    const stage = await page.evaluate(() => {
+      // GSAP wraps the pinned stage in a .pin-spacer; the stage itself goes fixed.
+      const spacer = document.querySelector('#nya-culture-2 .pin-spacer');
+      const el = spacer ? spacer.querySelector(':scope > div') : null;
+      if (!el) return { pos: 'no-pin', top: 9999 };
+      return { pos: getComputedStyle(el).position, top: Math.round(el.getBoundingClientRect().top) };
+    });
+    expect(stage.pos, 'pinned stage should be position:fixed').toBe('fixed');
+    expect(stage.top, 'pinned stage should sit at viewport top').toBeLessThanOrEqual(5);
+  });
+
   test('no horizontal page overflow across viewports', async ({ page }) => {
     for (const vp of [VIEWPORTS.desktop, VIEWPORTS.tabletPort, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
       await page.setViewportSize(vp);

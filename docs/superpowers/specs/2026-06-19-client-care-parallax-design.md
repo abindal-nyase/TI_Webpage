@@ -11,15 +11,20 @@ Full replacement of the existing Client Care section. Replace the hover-accordio
 layout with a horizontal-parallax scroll experience: as the user scrolls vertically,
 bullet content slides left→right at layered speeds over slow-drifting background photos.
 
-## Approach (decided)
+## Approach (decided — revised)
 
-**Vertical-scroll parallax, no full-section pin (Approach A).** The section scrolls
-normally top-to-bottom. Scroll progress drives horizontal `translateX` on text and
-background layers via GSAP ScrollTrigger `scrub`. The section is never GSAP-pinned,
-so there is no risk of the page locking.
+**Pinned horizontal scrollytelling.** The section pins (GSAP `pin`); vertical scroll
+is consumed to drive horizontal-only motion — nothing scrolls up. Each point crosses
+the screen left → right one at a time (title faster than content) over background
+images that crossfade and drift left → right behind them. `scrub` makes it reversible.
+Matches the Aramco reference.
 
-Rejected: pinned horizontal conveyor (Approach B) — heavier, fights mobile, higher
-risk against the project's pin rules.
+Reduced motion / no-JS: no pin; the same markup falls back to a static stacked list
+(CSS default), fully legible. GSAP adds an `isAnimated` class to switch to the pinned
+overlay layout only when motion is allowed.
+
+(Earlier iterations — no-pin vertical parallax, then a non-pinned conveyor — were
+rejected by the user in favour of this pinned version.)
 
 ## Layout
 
