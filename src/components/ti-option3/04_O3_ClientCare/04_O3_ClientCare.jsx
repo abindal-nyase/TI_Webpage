@@ -192,12 +192,16 @@ export default function O3ClientCare() {
       </div>
 
       <div className={s.bands}>
-        {BUCKETS.map((bucket) => (
+        {BUCKETS.map((bucket) => {
+          // Astro returns an ImageMetadata object for src/assets imports inside
+          // islands; fall back to the raw value if it is already a string URL.
+          const bgUrl = bucket.bg?.src ?? bucket.bg
+          return (
           <div key={bucket.label} className={s.band}>
             <div
               className={s.bandBg}
               data-cc-bg
-              style={{ backgroundImage: `url(${bucket.bg})` }}
+              style={{ backgroundImage: `url(${bgUrl})` }}
               aria-hidden="true"
             />
             <div className={s.bandOverlay} aria-hidden="true" />
@@ -211,7 +215,8 @@ export default function O3ClientCare() {
               ))}
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )

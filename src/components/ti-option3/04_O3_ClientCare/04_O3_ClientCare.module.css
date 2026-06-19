@@ -1,11 +1,13 @@
-/* 04_O3_ClientCare.module.css — all color/font tokens via CSS variables */
+/* 04_O3_ClientCare.module.css
+   Colors/fonts via option3 CSS variables (index.css + theme switcher).
+   Never hardcode colors or font families. */
 
 .section {
   position: relative;
   overflow-x: clip;            /* clip horizontal parallax WITHOUT breaking sticky */
-  background: var(--surface-page);
-  color: var(--color-gray-900);
-  padding-block: var(--section-padding);
+  background: var(--bg);
+  color: var(--text);
+  padding-block: var(--section-py);
 }
 
 /* ── Sticky header ── */
@@ -13,32 +15,33 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: clamp(var(--sp-6), 6vw, var(--sp-12)) var(--margin-desktop) clamp(var(--sp-4), 4vw, var(--sp-8));
-  background: var(--surface-page);
-  max-width: var(--container);
+  padding: clamp(1.5rem, 6vw, 3.5rem) var(--section-px) clamp(1rem, 4vw, 2rem);
+  background: var(--bg);
+  max-width: var(--max-w);
   margin-inline: auto;
 }
 .eyebrow {
   font-family: var(--font-body);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: var(--text-sm);
+  font-size: var(--fs-label);
+  font-weight: 600;
   color: var(--color-accent);
-  margin: 0 0 var(--sp-2);
+  margin: 0 0 0.5rem;
 }
 .title {
   font-family: var(--font-display);
   color: var(--color-primary);
-  font-size: clamp(var(--text-3xl), 6vw, var(--text-6xl));
+  font-size: var(--fs-display);
   line-height: 1.05;
-  margin: 0 0 var(--sp-4);
+  margin: 0 0 1rem;
 }
 .intro {
   font-family: var(--font-body);
-  color: var(--color-gray-700);
-  font-size: clamp(var(--text-base), 2.2vw, var(--text-xl));
+  color: var(--text-muted);
+  font-size: var(--fs-subhead);
   line-height: 1.6;
-  max-width: var(--container-narrow);
+  max-width: var(--max-w-text);
   margin: 0;
 }
 
@@ -54,7 +57,7 @@
 }
 .bandBg {
   position: absolute;
-  inset: -8% -14% -8% -14%;    /* extra bleed so xPercent drift never reveals an edge */
+  inset: -8% -14% -8% -14%;    /* bleed so xPercent drift never reveals an edge */
   background-size: cover;
   background-position: center;
   will-change: transform;
@@ -63,39 +66,41 @@
   position: absolute;
   inset: 0;
   background: var(--color-primary);
-  opacity: 0.82;               /* tint so text stays legible on every theme */
+  opacity: 0.68;               /* tint: photo reads through, text stays legible */
 }
 .bandInner {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: var(--container);
+  max-width: var(--max-w);
   margin-inline: auto;
-  padding-inline: var(--margin-desktop);
-  color: var(--color-white);
+  padding-inline: var(--section-px);
+  color: var(--white);
 }
 .bandLabel {
   display: inline-block;
   font-family: var(--font-body);
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  font-size: var(--text-sm);
+  font-size: var(--fs-label);
+  font-weight: 600;
   color: var(--color-accent);
-  margin-bottom: var(--sp-6);
+  margin-bottom: 1.5rem;
 }
-.row { margin-bottom: clamp(var(--sp-8), 6vw, var(--sp-16)); }
+.row { margin-bottom: clamp(2rem, 6vw, 4.5rem); }
 .row:last-child { margin-bottom: 0; }
 
 .rowTitle {
   font-family: var(--font-display);
-  font-size: clamp(var(--text-2xl), 5vw, var(--text-5xl));
-  line-height: 1.1;
-  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-headline);
+  line-height: 1.12;
+  margin: 0 0 1rem;
+  color: var(--white);
   will-change: transform;
 }
 .rowContent {
   font-family: var(--font-body);
-  font-size: clamp(var(--text-base), 2vw, var(--text-lg));
+  font-size: var(--fs-body);
   line-height: 1.65;
   max-width: 60ch;
   margin: 0;
@@ -105,13 +110,13 @@
 
 /* Portrait phones: shorter bands, tighter rhythm */
 @media (max-width: 768px) {
-  .band { min-height: auto; padding-block: clamp(var(--sp-12), 18vh, var(--sp-20)); }
+  .band { min-height: auto; padding-block: clamp(3rem, 18vh, 5rem); }
   .rowContent { max-width: 100%; }
 }
 
 /* Landscape phones / short viewports: don't let a band exceed the screen */
 @media (max-height: 520px) and (orientation: landscape) {
-  .band { min-height: auto; padding-block: var(--sp-12); }
+  .band { min-height: auto; padding-block: 3rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
