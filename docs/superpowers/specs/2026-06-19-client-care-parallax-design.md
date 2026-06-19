@@ -93,10 +93,13 @@ Curated to **8 items**, reusing existing `title` + `content` copy verbatim. The
 
 Dropped (overlap with kept items): `early-guidance`, `details`, `plan-check`.
 
-Data lives in a `BUCKETS` array at the top of the component:
+Background images are Vite-imported at the top of the component and referenced by
+the imported URL in the `BUCKETS` array:
 ```js
+import bg1 from '../../../assets/client-care/clientcare-bg-1.jpg'
+// …bg2, bg3, bg4
 const BUCKETS = [
-  { label: 'Care', bg: '/pav-img/clientcare-bg-1.jpg', items: [ {id,title,content}, … ] },
+  { label: 'Care', bg: bg1, items: [ {id,title,content}, … ] },
   …
 ]
 ```
@@ -104,8 +107,10 @@ const BUCKETS = [
 ## Backgrounds
 
 - 4 free-license stock photos (architecture / blueprints / construction / trust),
-  downloaded into `public/pav-img/` as `clientcare-bg-1.jpg` … `clientcare-bg-4.jpg`.
-- Predictable filenames so the user can swap files later without code changes.
+  downloaded into `src/assets/client-care/` as `clientcare-bg-1.jpg` … `-4.jpg`.
+- Imported via Vite (build-optimized, content-hashed) — NOT served from `public/`.
+  Predictable filenames so the user can replace files in place; replacing requires a
+  rebuild (`npm run build`) since Vite bundles/hashes them.
 - Rendered low-opacity behind text with a `--color-primary` tint overlay so titles
   and body stay readable across all six themes.
 
@@ -127,7 +132,7 @@ Every color and font is a CSS variable. No hardcoded hex or font family.
   (the current accordion version).
 - **Create:** new `04_O3_ClientCare/04_O3_ClientCare.jsx` + `.module.css` (same path
   and default export name → `option3.astro` import is unchanged).
-- **Add:** `public/pav-img/clientcare-bg-1.jpg` … `-4.jpg`.
+- **Add:** `src/assets/client-care/clientcare-bg-1.jpg` … `-4.jpg`.
 - **Untouched:** `option3.astro` (already imports the component and wraps it in
   `<SectionTheme>`).
 
