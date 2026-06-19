@@ -48,17 +48,27 @@ risk against the project's pin rules.
 - **4 buckets**, each = a themed band holding **2 bullet rows** + **1 background image**.
 - Each **row** = a `title` line and a `content` paragraph that translate independently.
 
-## Motion
+## Motion — conveyor (travel across and exit)
 
-All scroll-driven via GSAP ScrollTrigger with `scrub`. Per row / per layer:
+Each line is a horizontal conveyor: it enters off-screen left, crosses the screen,
+and exits off-screen right as its band scrolls up through the viewport. Scroll-linked
+via GSAP ScrollTrigger `scrub`, so scrolling up reverses it. Because each line
+triggers on itself, the points cross one after another (sequentially).
 
-| Layer | Horizontal range | Relative speed |
+Travel is in **vw** (not element-relative %) so text actually crosses the full
+screen at any resolution. Symmetric `fromTo(-Nvw → +Nvw)` puts the readable moment
+at scroll progress 0.5 (centered). Title travels the most (fastest), content less,
+background least.
+
+| Layer | Travel (wide / narrow) | Relative speed |
 |---|---|---|
-| Background image | small (e.g. −6% → +6%) | slowest (depth) |
-| `content` paragraph | medium | slower than title |
-| `title` line | large | fastest |
+| `title` line | ±120vw / ±135vw | fastest |
+| `content` paragraph | ±78vw / ±92vw | slower |
+| Background image | ±8vw / ±6vw (xPercent) | slowest (depth) |
 
-- Direction: left → right as the band scrolls up through the viewport.
+- Each `.band` uses `overflow: hidden` and the section uses `overflow-x: clip` so the
+  off-screen travel never creates a horizontal scrollbar.
+- Direction: enter left → exit right as the band scrolls up through the viewport.
 - Each band gets its own ScrollTrigger (`trigger: bandEl`, `start: 'top bottom'`,
   `end: 'bottom top'`, `scrub: <1–1.5>`, `invalidateOnRefresh: true`).
 - The exact translate percentages are tuning constants defined once at top of the

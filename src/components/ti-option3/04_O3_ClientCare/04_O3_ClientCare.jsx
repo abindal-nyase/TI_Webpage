@@ -112,12 +112,34 @@ export default function O3ClientCare() {
             const { isWide, reduce } = mmCtx.conditions
             if (reduce) return // static layout, no transforms
 
-            // xPercent ranges (of each element's own width). Title > content > bg.
-            const TITLE = isWide ? 12 : 7
-            const CONTENT = isWide ? 7 : 4
-            const IMG = isWide ? 5 : 3
+            // Conveyor: each line enters off-screen left, crosses, exits right as
+            // it travels up through the viewport. Travel is in vw so the text
+            // actually crosses the full screen at any resolution. Title travels
+            // the most (fastest), content less, background least (slowest depth).
+            // Symmetric fromTo means progress 0.5 = centered = the readable moment.
+            const TITLE = isWide ? 120 : 135 // vw
+            const CONTENT = isWide ? 78 : 92 // vw
+            const IMG = isWide ? 8 : 6 // vw
 
-            rootRef.current.querySelectorAll('[data-cc-bg]').forEach((bg) => {
+            // start = enter from left, end = exit right; scrub makes it reversible.
+            const cross = (el, vw, scrub) =>
+              gsap.fromTo(
+                el,
+                { x: `-${vw}vw` },
+                {
+                  x: `${vw}vw`,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: el,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub,
+                    invalidateOnRefresh: true,
+                  },
+                },
+              )
+
+            rootRef.current.querySelectorAll('[data-cc-bg]').forEach((bg) =>
               gsap.fromTo(
                 bg,
                 { xPercent: -IMG },
@@ -132,44 +154,10 @@ export default function O3ClientCare() {
                     invalidateOnRefresh: true,
                   },
                 },
-              )
-            })
-
-            rootRef.current.querySelectorAll('[data-cc-title]').forEach((el) => {
-              gsap.fromTo(
-                el,
-                { xPercent: -TITLE },
-                {
-                  xPercent: TITLE,
-                  ease: 'none',
-                  scrollTrigger: {
-                    trigger: el,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1,
-                    invalidateOnRefresh: true,
-                  },
-                },
-              )
-            })
-
-            rootRef.current.querySelectorAll('[data-cc-content]').forEach((el) => {
-              gsap.fromTo(
-                el,
-                { xPercent: -CONTENT },
-                {
-                  xPercent: CONTENT,
-                  ease: 'none',
-                  scrollTrigger: {
-                    trigger: el,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1.4,
-                    invalidateOnRefresh: true,
-                  },
-                },
-              )
-            })
+              ),
+            )
+            rootRef.current.querySelectorAll('[data-cc-title]').forEach((el) => cross(el, TITLE, 1))
+            rootRef.current.querySelectorAll('[data-cc-content]').forEach((el) => cross(el, CONTENT, 1.4))
           },
         )
       }, rootRef)
