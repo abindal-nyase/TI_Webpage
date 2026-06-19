@@ -1,0 +1,198 @@
+/* ─────────────────────────────────────────────────────────────────────
+   NYA Culture 2 — 2×2 grid: headers top row, image/accordion bottom row
+   ───────────────────────────────────────────────────────────────────── */
+
+.section {
+  width: 100%;
+  background: #fff;
+  padding: 100px 0;
+}
+
+/* ── 2-column × 2-row grid ───────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  padding: 0 8vw;
+  gap: 40px 72px;
+}
+
+/* ── Row 1 Left — active title + subtitle ────────────────────────── */
+.leftHeader {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: end;            /* pushes to bottom of row so image aligns */
+}
+
+.activeTitle {
+  margin: 0;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(12px, 0.95vw, 14px);
+  font-weight: 600;
+  color: var(--color-primary, #0B1F3B);
+  line-height: 1.4;
+  min-height: 2.8em;
+}
+
+.subtitle {
+  margin: 0;
+  font-family: var(--font-display, 'Playfair Display', serif);
+  font-size: clamp(24px, 2.8vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-primary, #0B1F3B);
+}
+
+
+/* ── Row 2 Left — image (sticky, fixed height — unaffected by accordion) */
+.leftMain {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  position: sticky;
+  top: 80px;
+}
+
+.img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Row 2 Right — description + accordion ───────────────────────── */
+.rightMain {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.descHeading {
+  margin: 0;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(15px, 1.15vw, 18px);
+  font-weight: 700;
+  color: var(--color-primary, #0B1F3B);
+  line-height: 1.4;
+}
+
+.description {
+  margin: 0;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.75;
+  color: #374151;
+}
+
+.accordion {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  border-top: 1px solid #E5E7EB;
+}
+
+.item:last-child {
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  cursor: pointer;
+}
+
+.itemTitle {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(13px, 1vw, 14px);
+  font-weight: 600;
+  color: #111827;
+  transition: color 0.2s;
+}
+
+.item:hover .itemTitle {
+  color: var(--color-primary, #0B1F3B);
+}
+
+.itemIcon {
+  flex-shrink: 0;
+  user-select: none;
+  color: #9CA3AF;
+  transition: color 0.2s;
+}
+
+/* Default: collapsed → show + */
+.itemIcon::before {
+  content: '+';
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* Hover: expanded → show − */
+.item:hover .itemIcon {
+  color: var(--color-primary, #0B1F3B);
+}
+.item:hover .itemIcon::before {
+  content: '−';
+}
+
+.itemBody {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity    0.3s ease;
+}
+
+.item:hover .itemBody {
+  max-height: 180px;
+  opacity: 1;
+}
+
+.itemBenefit {
+  margin: 0;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(12px, 0.9vw, 14px);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--color-primary, #0B1F3B);
+}
+
+.itemContent {
+  margin: 0;
+  padding-bottom: 18px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: clamp(12px, 0.9vw, 14px);
+  line-height: 1.7;
+  color: #6B7280;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .leftHeader, .rightHeader, .leftMain, .rightMain {
+    grid-column: 1;
+    grid-row: auto;
+    align-self: auto;
+  }
+  .leftMain {
+    position: relative;
+    top: 0;
+  }
+  .imgBox { max-width: 380px; }
+}
