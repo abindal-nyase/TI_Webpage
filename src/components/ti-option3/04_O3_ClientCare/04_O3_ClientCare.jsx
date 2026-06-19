@@ -94,6 +94,95 @@ const BUCKETS = [
 export default function O3ClientCare() {
   const rootRef = useRef(null)
 
+  useEffect(() => {
+    let ctx
+
+    function buildAnims() {
+      if (ctx) ctx.revert()
+      ctx = gsap.context(() => {
+        const mm = gsap.matchMedia()
+
+        mm.add(
+          {
+            isWide: '(min-width: 769px)',
+            isNarrow: '(max-width: 768px)',
+            reduce: '(prefers-reduced-motion: reduce)',
+          },
+          (mmCtx) => {
+            const { isWide, reduce } = mmCtx.conditions
+            if (reduce) return // static layout, no transforms
+
+            // xPercent ranges (of each element's own width). Title > content > bg.
+            const TITLE = isWide ? 12 : 7
+            const CONTENT = isWide ? 7 : 4
+            const IMG = isWide ? 5 : 3
+
+            rootRef.current.querySelectorAll('[data-cc-bg]').forEach((bg) => {
+              gsap.fromTo(
+                bg,
+                { xPercent: -IMG },
+                {
+                  xPercent: IMG,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: bg.closest('div'),
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1.2,
+                    invalidateOnRefresh: true,
+                  },
+                },
+              )
+            })
+
+            rootRef.current.querySelectorAll('[data-cc-title]').forEach((el) => {
+              gsap.fromTo(
+                el,
+                { xPercent: -TITLE },
+                {
+                  xPercent: TITLE,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: el,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1,
+                    invalidateOnRefresh: true,
+                  },
+                },
+              )
+            })
+
+            rootRef.current.querySelectorAll('[data-cc-content]').forEach((el) => {
+              gsap.fromTo(
+                el,
+                { xPercent: -CONTENT },
+                {
+                  xPercent: CONTENT,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: el,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1.4,
+                    invalidateOnRefresh: true,
+                  },
+                },
+              )
+            })
+          },
+        )
+      }, rootRef)
+    }
+
+    document.fonts.ready.then(buildAnims)
+    window.addEventListener('themechange', buildAnims)
+    return () => {
+      window.removeEventListener('themechange', buildAnims)
+      ctx?.revert()
+    }
+  }, [])
+
   return (
     <section id="nya-culture-2" ref={rootRef} className={s.section}>
       <div className={s.header}>
