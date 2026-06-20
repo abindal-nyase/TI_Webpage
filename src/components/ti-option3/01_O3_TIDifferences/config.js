@@ -5,7 +5,7 @@ import simMu055 from './simulation_data_mu_0.55.json'
 export const DISCS = {
   blenderScale:       120,
   towerScale:         0.64,
-  scrollVhPerPhase:   48,
+  scrollVhPerPhase:   30,
   baselinePct:        0,
   fontScale:          1.0,
   posNegFontRatio:    0.9,

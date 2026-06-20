@@ -143,3 +143,38 @@
 @media (prefers-reduced-motion: reduce) {
   .bandBg, .pointTitle, .pointContent, .pointLabel { will-change: auto; }
 }
+
+/* Landscape phones (e.g. 844×390): the short viewport vertically centres each
+   sliding point right under the fixed header, so the big point title collided
+   with "A Culture of Trust". Scale the type down AND push the centred points
+   below the header so nothing overlaps. */
+@media (orientation: landscape) and (max-height: 600px) {
+  .header {
+    padding-top: clamp(0.75rem, 3vw, 1.5rem);
+    padding-bottom: 0.4rem;
+  }
+  .title {
+    font-size: clamp(1.2rem, 3.2vw, 1.7rem);
+  }
+  .intro {
+    font-size: clamp(0.8rem, 1.6vw, 0.95rem);
+    line-height: 1.45;
+  }
+  .isAnimated .point {
+    /* justify-content stays center, but the top padding shifts the centring
+       box down so the centred title clears the header band above. */
+    padding-top: 6rem;
+  }
+  .isAnimated .pointLabel {
+    margin-bottom: 0.4rem;
+  }
+  .isAnimated .pointTitle {
+    font-size: clamp(1.3rem, 3.6vw, 2rem);
+    max-width: 24ch;
+  }
+  .isAnimated .pointContent {
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    max-width: 34ch;
+    margin-top: 0.35rem;
+  }
+}

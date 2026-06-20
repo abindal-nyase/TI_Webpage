@@ -109,3 +109,13 @@
     font-size: 0.55rem;
   }
 }
+
+/* Landscape phones (e.g. 844×390): 28 rows in a short viewport made the 0.85rem
+   background words crowd together and read as too big/distracting. Scale the
+   word-cloud font down here only — desktop sizing is unchanged. */
+@media (orientation: landscape) and (max-height: 600px) {
+  .word {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+}

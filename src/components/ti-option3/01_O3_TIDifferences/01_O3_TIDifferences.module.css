@@ -747,6 +747,30 @@
     border-top: 1px solid var(--border-default, #E2E8F0);
     padding: 2vh 5vw;
   }
+
+  /* CD3 (the disc tower used on this page): landscape is wide but short, so the
+     single-column stack pushed the text cards below the fold — only the tower
+     half was visible. Keep the desktop 50/50 LEFT|RIGHT split so tower and
+     points are both on screen. Scoped via :has so the legacy stack above still
+     applies to the other (unused) variants. */
+  .discScene:has(.towerColCd3) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    height: 100vh;
+    min-height: 100vh;
+  }
+  .discScene:has(.towerColCd3) .towerColCd3 {
+    min-height: 0;
+    border-right: 1px solid var(--border-accent);
+    border-top: none;
+    padding: 2vh 3vw;
+  }
+  .discScene:has(.towerColCd3) .textCol {
+    min-height: 0;
+    border-top: none;
+    overflow-y: auto;
+    padding: 2vh 4vw;
+  }
 }
 
 /* Portrait: locked 50/50 vertical split. Top half holds the disc tower (pinned

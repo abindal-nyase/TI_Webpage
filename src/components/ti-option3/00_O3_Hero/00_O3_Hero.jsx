@@ -35,7 +35,9 @@ const BUILDING_OFFSET_Y = 0.4; // landscape/desktop: dropped below bottom-centre
 // Portrait phones are tall + the building is width-bound, so the big landscape
 // drop pushes the whole building off the bottom edge. Use a small portrait
 // offset so it rests in view. 0 = union bottom at the edge; +ve nudges lower.
-const BUILDING_OFFSET_Y_PORTRAIT = 0.25;
+// Lifted from 0.25 → 0.18 so the resting building sits ≈60px higher on portrait
+// phones (390×844) — previously only the roof peeked above the fold.
+const BUILDING_OFFSET_Y_PORTRAIT = 0.18;
 const BUILDING_OFFSET_X = 0;
 
 // ── Intro config ───────────────────────────────────────────────────────────
@@ -60,6 +62,17 @@ const BG2_REST  = '-135vh'
 // including the building's fly-up through open space — over less scroll, which
 // cuts the near-empty mid-flight frames (dead-scroll). Was 4.35.
 const PIN_LENGTH = 2.2
+// Portrait phones are tall, so the same cascade scrubbed over PIN_LENGTH felt
+// like the stack shot up too fast. A longer pin scrubs the SAME timeline over
+// more scroll → gentler rise. Seam stays synced: the next section's layout
+// position (pin-spacer height) AND the pin release both scale with this, so
+// their offset is unchanged.
+const PIN_LENGTH_PORTRAIT = 3.3
+const pinLength = () =>
+  (typeof window !== 'undefined' &&
+   window.matchMedia('(orientation: portrait)').matches)
+    ? PIN_LENGTH_PORTRAIT
+    : PIN_LENGTH
 
 // Provisional first-paint scale before the building is measured (see below).
 const NATURAL_W = 1024
@@ -114,6 +127,7 @@ export default function O3Hero() {
   const bg2ImgRef      = useRef(null);
   const bg2BackingRef  = useRef(null);
   const exitOverlayRef = useRef(null);
+  const loadCoverRef   = useRef(null);
   const mmRef          = useRef(null);
 
   useLayoutEffect(() => {
@@ -288,13 +302,17 @@ export default function O3Hero() {
             transformOrigin: "top left",
             visibility: "visible",
           });
+          // Building is now painted — drop the navy load cover that hid the
+          // white .home wedge (which read as "the next section showing through")
+          // while the base images were still downloading.
+          if (loadCoverRef.current) loadCoverRef.current.style.display = "none";
 
           tl = gsap.timeline({
             scrollTrigger: {
               id: "hero4-pin",
               trigger: triggerRef.current,
               start: "top top",
-              end: () => "+=" + getVH() * PIN_LENGTH,
+              end: () => "+=" + getVH() * pinLength(),
               pin: true,
               scrub: true,
               invalidateOnRefresh: true,
@@ -624,6 +642,11 @@ export default function O3Hero() {
 
         <div ref={exitOverlayRef} className={s.exitOverlay} />
 
+        {/* Navy cover shown until the building paints (removed in buildTimeline).
+            Matches the hero's bg so the load-in reads as a clean navy hero with
+            the title, never the white wedge / next section peeking through. */}
+        <div ref={loadCoverRef} className={s.loadCover} />
+
         <div ref={movehomeRef} className={s.movehome}>
           {LAYERS.map((layer, i) => (
             <div
@@ -631,8 +654,13 @@ export default function O3Hero() {
               className={`${s[`l${layer.id}`]} ${s.layer}`}
               ref={(el) => { layerRefs.current[i] = el; }}
             >
-              <img src={layer.base} alt="" draggable={false} className={s.imgBase} />
-              <img src={layer.hover} alt="" draggable={false} className={s.imgHover} />
+              {/* Base layers gate the build + first paint → load them first.
+                  Hover variants (~half the total bytes, never shown at load) are
+                  deferred so they don't starve the base images' bandwidth — this
+                  removes the cold-load gap where the building hadn't appeared and
+                  the empty hero showed through. */}
+              <img src={layer.base} alt="" draggable={false} className={s.imgBase} fetchpriority="high" decoding="async" />
+              <img src={layer.hover} alt="" draggable={false} className={s.imgHover} loading="lazy" fetchpriority="low" decoding="async" />
             </div>
           ))}
         </div>

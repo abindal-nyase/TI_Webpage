@@ -140,7 +140,9 @@ export default function O3ClientCare() {
             const HOLD = 1.5    // centred dwell — the bulk of each point's time
             const SEG = ENTER + HOLD
             // SPEED: scroll viewport-heights mapped to one timeline second.
-            const SPEED = 0.7
+            // Lowered 0.7 → 0.5 to cut dead scroll — the conveyor reaches the
+            // footer in ~8 viewports instead of ~11, still a readable dwell.
+            const SPEED = 0.5
 
             const titles = gsap.utils.toArray(stage.querySelectorAll('[data-cc-title]'))
             const contents = gsap.utils.toArray(stage.querySelectorAll('[data-cc-content]'))

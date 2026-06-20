@@ -165,3 +165,30 @@
     padding: 16px 22px;
   }
 }
+
+/* Landscape phones (e.g. 844×390): the full-size heading + two rows of 240×120
+   logos overran the short viewport and bled into the next section. Scale the
+   whole section down so it fits one screen. */
+@media (orientation: landscape) and (max-height: 600px) {
+  .section {
+    padding-top: 16px;
+  }
+  .inner {
+    margin-bottom: 22px;
+  }
+  .heading {
+    font-size: clamp(32px, 5vw, 50px);
+    margin-bottom: 14px;
+  }
+  .body {
+    font-size: clamp(12px, 1.4vw, 14px);
+  }
+  .marqueeSection {
+    padding: 18px 0;
+  }
+  .logoSlot {
+    width: 148px;
+    height: 70px;
+    padding: 10px 16px;
+  }
+}

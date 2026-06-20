@@ -10,11 +10,15 @@ const SECTIONS = [
   { id: 'section-footer',          num: '04', label: 'Get in Touch',  dark: true  },
 ];
 
-// Color endpoint definitions (resolved to RGB at runtime)
+// Color endpoint definitions (resolved to RGB at runtime).
+// `light` = endpoint over a LIGHT/white background → black-ish text.
+// `dark`  = endpoint over a DARK background → white text.
+// The blend factor t (0=light, 1=dark) is the real pixel-sampled background
+// darkness behind each pill, so the nav flips white↔black as the page scrolls.
 const COLOR_PAIRS = {
-  num:     { light: 'var(--color-gray-700)',  dark: 'rgba(255,255,255,0.45)' },
-  numHi:   { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
-  label:   { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
+  num:     { light: 'var(--color-gray-700)',  dark: 'rgba(255,255,255,0.6)'  },
+  numHi:   { light: 'var(--color-black)',     dark: '#ffffff'                },
+  label:   { light: 'var(--color-black)',     dark: '#ffffff'                },
   border:  { light: 'rgba(0,0,0,0.08)',       dark: 'rgba(255,255,255,0.1)'  },
   hoverBg: { light: 'rgba(0,0,0,0.05)',       dark: 'rgba(255,255,255,0.07)' },
   fill:    { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
@@ -58,21 +62,43 @@ function getSectionProgress(section) {
   return Math.min(1, Math.max(0, -firstRect.top / (totalHeight - vh)));
 }
 
-// Fraction of pill height covered by dark-background sections
-function computeDarkRatio(pillEl) {
-  if (!pillEl) return 0;
-  const pr = pillEl.getBoundingClientRect();
-  let covered = 0;
-  for (const s of SECTIONS) {
-    if (!s.dark) continue;
-    const el = document.getElementById(s.id);
-    if (!el) continue;
-    const sr = el.getBoundingClientRect();
-    const top = Math.max(pr.top, sr.top);
-    const bot = Math.min(pr.bottom, sr.bottom);
-    if (bot > top) covered += bot - top;
+// Relative luminance of an [r,g,b] triplet (0=black … 1=white).
+function luminance(r, g, b) { return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255; }
+
+// Topmost OPAQUE background color actually painted behind a point, ignoring the
+// nav itself and any transparent layers (building PNGs, masked shapes, etc.).
+// Returns 1 if that pixel reads dark, 0 if light, or null if nothing opaque
+// was found (caller treats as "no change").
+function pixelIsDark(x, y, navEl) {
+  const els = document.elementsFromPoint(x, y);
+  for (const el of els) {
+    if (navEl.contains(el)) continue; // skip the nav's own pills/labels
+    const c = getComputedStyle(el).backgroundColor;
+    const m = c.match(/[\d.]+/g);
+    if (!m) continue;
+    const a = m[3] !== undefined ? +m[3] : 1;
+    if (a < 0.5) continue; // see-through layer — keep looking underneath
+    return luminance(+m[0], +m[1], +m[2]) < 0.5 ? 1 : 0;
   }
-  return Math.min(1, covered / Math.max(1, pr.height));
+  return null;
+}
+
+// Real pixel-sampled darkness behind a pill: sample several points down its
+// height and average. Partial overlap (pill straddling a light/dark seam) gives
+// a fractional value, so the colors blend smoothly across the boundary.
+function computeDarkRatio(pillEl, navEl) {
+  if (!pillEl || !navEl) return 0;
+  const pr = pillEl.getBoundingClientRect();
+  const x = Math.round(pr.left + pr.width / 2);
+  const SAMPLES = 5;
+  let sum = 0, n = 0;
+  for (let i = 0; i < SAMPLES; i++) {
+    const y = Math.round(pr.top + (pr.height * (i + 0.5)) / SAMPLES);
+    const d = pixelIsDark(x, y, navEl);
+    if (d === null) continue;
+    sum += d; n++;
+  }
+  return n ? sum / n : 0;
 }
 
 export default function O3SideNav() {
@@ -108,9 +134,10 @@ export default function O3SideNav() {
       // Direct DOM update — avoids React re-render on every scroll frame
       const rc = colorsRef.current;
       if (!rc) return;
+      const navEl = itemRefs.current.find(Boolean)?.closest('nav');
       itemRefs.current.forEach((el) => {
         if (!el) return;
-        const t = computeDarkRatio(el);
+        const t = computeDarkRatio(el, navEl);
         el.style.setProperty('--pill-num',      blendRGBA(rc.num.light,     rc.num.dark,     t));
         el.style.setProperty('--pill-num-hi',   blendRGBA(rc.numHi.light,   rc.numHi.dark,   t));
         el.style.setProperty('--pill-label',    blendRGBA(rc.label.light,   rc.label.dark,   t));

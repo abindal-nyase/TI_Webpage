@@ -9,11 +9,13 @@
   overflow: hidden;
   background: var(--white);
   position: relative;
-  /* Below TIDifferences (z-index:36). Everything in Hero4 — bg1, bg2 AND the
-     building (movehome/l8) — lives inside this stacking context, so the whole
-     hero paints under the section. The rising navy section therefore covers
-     bg2 and the building base. */
-  z-index: 35;
+  /* NO z-index here on purpose: position:relative without z-index does NOT
+     create a stacking context, so .home's descendants compete directly in the
+     root stacking order against the next section (TIDifferences, z-index:36).
+     That lets bg1/bg2 (z-index:1) stay BELOW the rising navy section while the
+     building (.movehome, z-index:50) rides OVER it — see issue: "l8 over dark
+     section". .home's own white background paints at z auto (below the
+     section), so the pinned section is never covered. */
 }
 
 /* ── Pinned wrapper ───────────────────────────────────────────────── */
@@ -27,7 +29,11 @@
 .movehome {
   left: 11vh;
   position: relative;
-  z-index: 5;
+  /* High z so the building (incl. l8 ground floor) paints OVER the rising
+     TIDifferences navy section (z-index:36). .home no longer creates a
+     stacking context, so this competes at the root level. bg1/bg2 stay at
+     z-index:1 (below the section). */
+  z-index: 50;
   /* Pre-hydration paint: park the building below the fold so the first frame
      matches the GSAP rise-from-below intro (JS centres + bottom-anchors it in
      useLayoutEffect before paint). Avoids a wrong-corner flash. */
@@ -162,6 +168,20 @@
   }
 }
 
+/* Landscape phones (e.g. 844×390): the short viewport + wrapping pushed
+   "Improvements" to a second line that overflowed the right edge. Force one
+   line with a viewport-width-bound size so "Tenant Improvements" always fits. */
+@media (orientation: landscape) and (max-height: 600px) {
+  .titleRow {
+    flex-wrap: nowrap;
+    gap: clamp(0.4rem, 2vw, 1.5rem);
+  }
+  .titleWord {
+    font-size: clamp(1.4rem, 4.8vw, 2.6rem);
+    white-space: nowrap;
+  }
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════
    ANIMATED BACKGROUNDS — large triangular shapes covering viewport
@@ -263,6 +283,17 @@
     rgba(0, 0, 0, 0.25) 45%,
     transparent 50%
   );
+}
+
+/* ── load cover — navy fill shown until the building paints ──────── */
+.loadCover {
+  position: absolute;
+  inset: 0;
+  background: var(--color-primary, #0F172A);
+  /* Above bg1/bg2 (z 1) to hide the white .home wedge, below the building
+     (movehome z 50), header/title (z 60) and nav. Removed via display:none in
+     buildTimeline once the building is visible. */
+  z-index: 2;
 }
 
 /* ── exit overlay — scrubbed white fade before pin releases ──────── */

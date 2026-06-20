@@ -78,7 +78,10 @@ export const TEXT_REDS    = RED_COLORS[N - 1].bright
 export const TEXT_GREENS  = GREEN_COLORS[N - 1].bright
 export const CURVE_ACCENT = 'var(--color-accent)'
 
-export const DISC_PHASES = 2 * N + 4
+// 2*N red+green drop phases, +1 fall, +1 green-reveal start, +1 dwell at the
+// completed green state. Was 2*N+4 — the extra trailing phase was dead scroll
+// that faded the final "Scope & Fees" category out before the section released.
+export const DISC_PHASES = 2 * N + 3
 
 export const DISC_VARS = {
   '--face-h':   `${FACE_H}px`,

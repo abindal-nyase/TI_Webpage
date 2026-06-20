@@ -383,7 +383,9 @@ export function CollapsingDiscs3() {
                             <span
                               className={s.riskBarCat}
                               style={{
-                                opacity: phase < DISC_PHASES - 1 ? 1 : 0,
+                                // Keep the final "Scope & Fees" category visible
+                                // through the closing dwell phase (no fade-out).
+                                opacity: phase < DISC_PHASES ? 1 : 0,
                                 transition: "opacity 0.6s ease",
                               }}
                             >
