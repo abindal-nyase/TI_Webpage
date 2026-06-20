@@ -32,5 +32,4 @@ Reference/
 
 # responsive audit (temp)
 responsive-audit/
-_shoot.mjs
-_contactsheet.mjs
+_*.mjs

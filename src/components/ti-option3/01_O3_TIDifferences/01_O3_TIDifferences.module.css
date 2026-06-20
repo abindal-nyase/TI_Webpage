@@ -709,6 +709,26 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+/* Disable the decorative entrance / looping animations and snap their targets
+   to the final visible state. (The scroll-driven disc choreography itself is
+   the section's content and is left intact.) The infinite pencilWrite loop is
+   the main vestibular offender here. */
+@media (prefers-reduced-motion: reduce) {
+  .pencilVisible,
+  .discPosTxtWrite,
+  .trajectoryLabel,
+  .redBubble,
+  .greenBubble {
+    animation: none !important;
+  }
+  .discPosTxt,
+  .discPosTxtWrite { clip-path: inset(0 0 0 0); }
+  .trajectoryLabel { opacity: 1; }
+  .redBubble,
+  .greenBubble { opacity: 1; transform: translateY(0); }
+}
+
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 /* Narrow landscape: legacy stack — tower over the points, scrolls as one. */
 @media (max-width: 960px) and (orientation: landscape) {

@@ -7,7 +7,7 @@
 /* ── Outer section — clip boundary ───────────────────────────────── */
 .home {
   overflow: hidden;
-  background: #fff;
+  background: var(--white);
   position: relative;
   /* Below TIDifferences (z-index:36). Everything in Hero4 — bg1, bg2 AND the
      building (movehome/l8) — lives inside this stacking context, so the whole
@@ -103,7 +103,7 @@
   top: calc(96px + 3vh);
   left: 4vw;
   z-index: 60;
-  color: #fff;
+  color: var(--white);
   pointer-events: none;
 }
 
@@ -269,7 +269,7 @@
 .exitOverlay {
   position: absolute;
   inset: 0;
-  background: #fff;
+  background: var(--white);
   opacity: 0;
   z-index: 50;
   pointer-events: none;

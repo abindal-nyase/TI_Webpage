@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './01_O3_TIDifferences.module.css'
 import { DISCS, ITEMS, COPY, DISC_REDS, DISC_GREENS, RED_COLORS, GREEN_COLORS } from './config.js'
 import {
@@ -55,19 +56,29 @@ export function CollapsingDiscs3() {
   // Intro's <h2> and <p> both carry data-intro-anim (h2 first, sub second).
   const [liftShift, setLiftShift] = useState(0)
   useEffect(() => {
+    let raf = 0
     function measure() {
       const anims = document.querySelectorAll('[data-intro-anim]')
       const h2 = anims[0], sub = anims[1]
       if (!h2 || !sub) return
       setLiftShift(Math.round((h2.offsetHeight - sub.offsetHeight) / 2))
+      // marginTop (calc(-50vh + liftShift)) shifts layout the pinned Intro
+      // trigger measured against — recompute its start/end after the shift.
+      ScrollTrigger.refresh()
+    }
+    // rAF-throttle so rapid resize/orientation events don't thrash layout.
+    function schedule() {
+      if (raf) return
+      raf = requestAnimationFrame(() => { raf = 0; measure() })
     }
     measure()
-    window.addEventListener('resize', measure)
-    window.addEventListener('themechange', measure) // font pair changes element heights
+    window.addEventListener('resize', schedule)
+    window.addEventListener('themechange', schedule) // font pair changes element heights
     document.fonts?.ready.then(measure)
     return () => {
-      window.removeEventListener('resize', measure)
-      window.removeEventListener('themechange', measure)
+      if (raf) cancelAnimationFrame(raf)
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('themechange', schedule)
     }
   }, [])
 
@@ -126,13 +137,21 @@ export function CollapsingDiscs3() {
       wrap.style.setProperty('--fit-scale', scale)
       wrap.style.transform = `scale(${scale})`
     }
+    // rAF-throttle: the iterative fit loop forces synchronous reflow, so running
+    // it on every raw resize event janks orientation changes on mobile.
+    let raf = 0
+    function schedule() {
+      if (raf) return
+      raf = requestAnimationFrame(() => { raf = 0; measure() })
+    }
     measure()
-    window.addEventListener('resize', measure)
-    window.addEventListener('themechange', measure)
+    window.addEventListener('resize', schedule)
+    window.addEventListener('themechange', schedule)
     document.fonts?.ready.then(measure)
     return () => {
-      window.removeEventListener('resize', measure)
-      window.removeEventListener('themechange', measure)
+      if (raf) cancelAnimationFrame(raf)
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('themechange', schedule)
     }
   }, [])
 

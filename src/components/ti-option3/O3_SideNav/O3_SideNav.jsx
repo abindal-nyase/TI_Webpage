@@ -85,9 +85,13 @@ export default function O3SideNav() {
   useEffect(() => {
     colorsRef.current = resolveAllColors();
 
-    // Re-resolve when theme switcher mutates root style (CSS vars change)
+    // Re-resolve when theme switcher mutates root style (CSS vars change).
+    // Debounced via rAF: the switcher sets many properties in one burst, each
+    // of which would otherwise trigger a full probe-node re-resolve.
+    let moRaf = 0;
     const mo = new MutationObserver(() => {
-      colorsRef.current = resolveAllColors();
+      if (moRaf) return;
+      moRaf = requestAnimationFrame(() => { moRaf = 0; colorsRef.current = resolveAllColors(); });
     });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 
@@ -116,10 +120,22 @@ export default function O3SideNav() {
       });
     };
 
-    window.addEventListener('scroll', update, { passive: true });
+    // rAF-batch the scroll handler: update() does getBoundingClientRect() per
+    // item + 6 setProperty() calls, so running it raw on every scroll event
+    // forces repeated layout. Coalesce to one run per frame.
+    let scrollRaf = 0;
+    const onScroll = () => {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => { scrollRaf = 0; update(); });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
     update();
     return () => {
-      window.removeEventListener('scroll', update);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      if (moRaf) cancelAnimationFrame(moRaf);
       mo.disconnect();
     };
   }, []);

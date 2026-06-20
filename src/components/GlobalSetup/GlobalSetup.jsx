@@ -9,7 +9,13 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 export default function GlobalSetup() {
   useEffect(() => {
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
+    // Respect reduced-motion: keep Lenis (so window.__lenis.scrollTo still
+    // works) but disable the continuous smooth-scroll easing — lerp:1 follows
+    // the native scroll position instantly, smoothWheel:false uses native wheel.
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const lenis = prefersReduced
+      ? new Lenis({ lerp: 1, smoothWheel: false, smoothTouch: false })
+      : new Lenis({ lerp: 0.1, smoothWheel: true })
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => { lenis.raf(time * 1000) })
     gsap.ticker.lagSmoothing(0)

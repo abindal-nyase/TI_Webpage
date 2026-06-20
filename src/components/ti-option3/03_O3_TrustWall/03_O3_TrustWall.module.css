@@ -15,7 +15,9 @@
   width: 100%;
   max-width: var(--container, 1200px);
   margin: 0 0 80px 0;
-  padding: 0 clamp(12px, 2vw, 48px);
+  /* Generous gutter: the heading is up to 120px, so a tight 12–48px gutter reads
+     as edge-cramped. Min stays clear of the left section-index rail. */
+  padding: 0 clamp(24px, 4vw, 64px);
 }
 
 /* ── Header (vertical stack) ── */

@@ -30,10 +30,20 @@ export function DiscTextCol({ items, dropped, droppedGreen, activeI, phase }) {
     inner.style.transform = `translateY(${-y}px)`
   }
   useEffect(center, [dropped, droppedGreen])
+  // Keep a ref to the latest `center` so the resize/orientation listeners are
+  // bound once but always run the current closure (fresh props), instead of
+  // re-adding listeners on every render.
+  const centerRef = useRef(center)
+  centerRef.current = center
   useEffect(() => {
-    window.addEventListener('resize', center)
-    return () => window.removeEventListener('resize', center)
-  })
+    const run = () => centerRef.current()
+    window.addEventListener('resize', run)
+    window.addEventListener('orientationchange', run)
+    return () => {
+      window.removeEventListener('resize', run)
+      window.removeEventListener('orientationchange', run)
+    }
+  }, [])
 
   return (
     <div className={s.textCol} ref={colRef}>

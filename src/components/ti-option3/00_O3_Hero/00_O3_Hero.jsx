@@ -55,7 +55,11 @@ const BG2_REST  = '-135vh'
 // Scroll distance (in viewport heights) the hero pin scrubs the whole cascade
 // over. Total scroll from hero top to the intro section reaching the viewport
 // top = PIN_LENGTH + 1 (the pinned trigger's own viewport scrolls out after).
-const PIN_LENGTH = 4.35
+// Pin scroll length in viewport-heights. The timeline (duration cascadeEnd) is
+// scrubbed across this distance, so a smaller value transits the whole hero —
+// including the building's fly-up through open space — over less scroll, which
+// cuts the near-empty mid-flight frames (dead-scroll). Was 4.35.
+const PIN_LENGTH = 2.2
 
 // Provisional first-paint scale before the building is measured (see below).
 const NATURAL_W = 1024

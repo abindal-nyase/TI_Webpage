@@ -31,7 +31,8 @@
   justify-content: center;
   overflow: hidden;
   background: transparent;
-  padding: 10px 8px;
+  padding: 12px 10px;
+  min-height: 44px;            /* a11y touch target on tablet/landscape */
   width: 100%;
   box-sizing: border-box;
   transition: background 0.2s var(--ease-out);

@@ -104,55 +104,105 @@ export default function O3ClientCare() {
       ctx = gsap.context(() => {
         const mm = gsap.matchMedia()
 
-        // Only the pinned conveyor when motion is allowed. Reduced motion keeps
-        // the static stacked CSS fallback (no pin, fully legible).
-        mm.add('(prefers-reduced-motion: no-preference)', () => {
-          const stage = stageRef.current
-          const isNarrow = window.matchMedia('(max-width: 768px)').matches
-          const TITLE = isNarrow ? 135 : 120 // vw — fastest
-          const CONTENT = isNarrow ? 92 : 78 // vw — slower
-          const IMG = 7 // xPercent — slowest (depth)
+        // Object syntax: GSAP re-runs (revert + rebuild) whenever ANY of these
+        // queries flips — so crossing 768px (e.g. tablet rotate) or toggling
+        // reduced-motion rebuilds the conveyor with the right params instead of
+        // keeping stale, once-read values. Reduced motion keeps the static
+        // stacked CSS fallback (no pin, fully legible).
+        mm.add(
+          {
+            isWide: '(min-width: 769px)',
+            isNarrow: '(max-width: 768px)',
+          },
+          (context) => {
+            const { isNarrow } = context.conditions
+            const stage = stageRef.current
 
-          const titles = gsap.utils.toArray(stage.querySelectorAll('[data-cc-title]'))
-          const contents = gsap.utils.toArray(stage.querySelectorAll('[data-cc-content]'))
-          const labels = gsap.utils.toArray(stage.querySelectorAll('[data-cc-label]'))
-          const bgs = gsap.utils.toArray(stage.querySelectorAll('[data-cc-bg]'))
-          const N = titles.length
+            // Travel (vw). Must be large enough that, when one point is centred,
+            // its neighbours are fully off-screen — otherwise adjacent content
+            // blocks (up to ~28ch wide) overlap in the centre band. Title travels
+            // farthest (fastest), content less, label with the title.
+            const TITLE = isNarrow ? 135 : 120 // vw travel — title (fastest)
+            const CONTENT = isNarrow ? 92 : 78 // vw travel — content (slower)
+            const IMG = 7 // xPercent — slowest (depth)
 
-          stage.classList.add(s.isAnimated)
+            // Per-point timeline budget (seconds): a point slides in (ENTER),
+            // HOLDS centred and readable, then slides out (EXIT). A point's exit
+            // overlaps the NEXT point's enter (exit starts at base+SEG, the next
+            // enter also starts at base+SEG) so the stage is never empty between
+            // points — one is always entering, centred, or leaving. HOLD ≫ ENTER
+            // gives a long readable dwell.
+            const ENTER = 0.5   // slide-in duration
+            const EXIT = 0.32   // slide-out duration — quicker than ENTER so the
+                                // outgoing point clears the centre before the
+                                // incoming one arrives (minimal double-visible
+                                // overlap), yet the stage is never empty.
+            const HOLD = 1.5    // centred dwell — the bulk of each point's time
+            const SEG = ENTER + HOLD
+            // SPEED: scroll viewport-heights mapped to one timeline second.
+            const SPEED = 0.7
 
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top top',
-              end: () => '+=' + window.innerHeight * (N * 0.85),
-              pin: stage,
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          })
+            const titles = gsap.utils.toArray(stage.querySelectorAll('[data-cc-title]'))
+            const contents = gsap.utils.toArray(stage.querySelectorAll('[data-cc-content]'))
+            const labels = gsap.utils.toArray(stage.querySelectorAll('[data-cc-label]'))
+            const bgs = gsap.utils.toArray(stage.querySelectorAll('[data-cc-bg]'))
+            const N = titles.length
+            const L = N * SEG // total timeline length (last point holds to the end)
 
-          // Backgrounds: continuous slow left -> right drift across the whole run.
-          tl.fromTo(bgs, { xPercent: -IMG }, { xPercent: IMG, ease: 'none', duration: N }, 0)
+            stage.classList.add(s.isAnimated)
 
-          // Backgrounds: crossfade — bucket b is visible during its two points.
-          bgs.forEach((bg, b) => {
-            gsap.set(bg, { autoAlpha: b === 0 ? 1 : 0 })
-            const inAt = b * 2
-            if (b > 0) tl.to(bg, { autoAlpha: 1, duration: 0.5, ease: 'none' }, inAt - 0.25)
-            if (b < bgs.length - 1) tl.to(bg, { autoAlpha: 0, duration: 0.5, ease: 'none' }, inAt + 2 - 0.25)
-          })
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top top',
+                end: () => '+=' + window.innerHeight * (L * SPEED),
+                pin: stage,
+                scrub: 1,
+                invalidateOnRefresh: true,
+              },
+            })
 
-          // Points cross the screen one at a time, left -> right.
-          // Title travels farthest (fastest); content less; both readable at the
-          // window centre (x = 0). scrub makes the whole thing reversible.
-          titles.forEach((t, i) => {
-            tl.fromTo(t, { x: `-${TITLE}vw` }, { x: `${TITLE}vw`, ease: 'none', duration: 1 }, i)
-            tl.fromTo(contents[i], { x: `-${CONTENT}vw` }, { x: `${CONTENT}vw`, ease: 'none', duration: 1 }, i)
-            if (labels[i]) tl.fromTo(labels[i], { x: `-${TITLE}vw` }, { x: `${TITLE}vw`, ease: 'none', duration: 1 }, i)
-          })
+            // Force the timeline to span the full L even though the last point
+            // has no exit tween — keeps it pinned/centred through its final hold.
+            tl.to({}, { duration: L }, 0)
 
-          return () => stage.classList.remove(s.isAnimated)
+            // Backgrounds: continuous slow left -> right drift across the whole run.
+            tl.fromTo(bgs, { xPercent: -IMG }, { xPercent: IMG, ease: 'none', duration: L }, 0)
+
+            // Backgrounds crossfade — bucket b (2 points) is visible across its span.
+            bgs.forEach((bg, b) => {
+              gsap.set(bg, { autoAlpha: b === 0 ? 1 : 0 })
+              const inT = 2 * b * SEG
+              const outT = 2 * (b + 1) * SEG
+              if (b > 0) tl.to(bg, { autoAlpha: 1, duration: ENTER, ease: 'none' }, inT - ENTER)
+              if (b < bgs.length - 1) tl.to(bg, { autoAlpha: 0, duration: ENTER, ease: 'none' }, outT - ENTER)
+            })
+
+            // Each point: enter from left → HOLD centred → exit right. The slide
+            // is paired with a fade (autoAlpha) so the swap is a cross-dissolve:
+            // the outgoing point fades out as it leaves while the next fades in —
+            // never an empty stage (no gap) AND never hard text-on-text overlap.
+            // Title/label travel farther (faster) than content for depth. Parked
+            // hidden at -T before entering. Last point omits the exit and holds.
+            const slide = (el, T, base, isLast) => {
+              if (!el) return
+              tl.fromTo(
+                el,
+                { x: `-${T}vw`, autoAlpha: 0 },
+                { x: '0vw', autoAlpha: 1, ease: 'power2.out', duration: ENTER },
+                base,
+              )
+              if (!isLast) tl.to(el, { x: `${T}vw`, autoAlpha: 0, ease: 'power2.in', duration: EXIT }, base + SEG)
+            }
+            titles.forEach((t, i) => {
+              const base = i * SEG
+              const isLast = i === N - 1
+              slide(t, TITLE, base, isLast)
+              slide(contents[i], CONTENT, base, isLast)
+              slide(labels[i], TITLE, base, isLast)
+            })
+
+            return () => stage.classList.remove(s.isAnimated)
         })
       }, sectionRef)
     }

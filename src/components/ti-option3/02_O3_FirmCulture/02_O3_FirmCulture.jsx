@@ -70,7 +70,12 @@ export default function O3FirmCulture() {
             invalidateOnRefresh: true,
           },
         });
-        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'none', duration: 8 }, 0);
+        // power3.out rushes the scale down through the giant, unreadable
+        // letterform-wedge phase quickly, then lingers in the small/readable
+        // range where the word-wall shows behind the text — so the reveal spends
+        // its scroll on meaningful frames instead of a flat white wedge. (Was
+        // ease:'none', which left ~70% of the scroll on the giant wedge.)
+        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'power4.out', duration: 8 }, 0);
         tl.to({}, { duration: 1 }, 8);
       });
     });

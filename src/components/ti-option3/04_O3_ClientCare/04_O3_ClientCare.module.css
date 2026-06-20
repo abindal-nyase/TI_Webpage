@@ -102,7 +102,7 @@
 /* ── ANIMATED mode (GSAP-pinned conveyor) ── */
 .isAnimated {
   position: relative;
-  height: 100vh;
+  height: 100vh;               /* == innerHeight, matches GSAP pin length */
   overflow: hidden;            /* contain off-screen horizontal travel */
 }
 .isAnimated .points {
