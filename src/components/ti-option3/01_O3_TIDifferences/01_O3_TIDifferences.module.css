@@ -185,6 +185,7 @@
 
 /* Grid-stacking wrapper so red and green towers occupy the same space */
 .towerOverlap {
+  --fit-max: 1;   /* JS fit loop won't upscale past this; raised on wide screens */
   display: grid;
   grid-template-rows: 1fr;
   align-items: center;
@@ -797,4 +798,43 @@
     scrollbar-width: none;    /* Firefox: hide the points-pane scrollbar */
   }
   .textCol::-webkit-scrollbar { display: none; }
+}
+
+/* ── LARGE DESKTOP ────────────────────────────────────────────────────────── */
+/* On wide landscape monitors the fixed-px tower fit-caps at 1 and every label/
+   card font hits its clamp() max, so both columns sit small in a sea of empty
+   space. Let the tower upscale (--fit-max) and raise the type clamp maxes so
+   the scene fills the viewport. Landscape-only so portrait/stacked are untouched. */
+@media (min-width: 1800px) and (orientation: landscape) {
+  .towerOverlap { --fit-max: 1.5; }
+
+  .eyebrowRed,
+  .eyebrowGreen { font-size: calc(clamp(0.66rem, 6.9vw, 1.7rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .sectionTitle { font-size: calc(clamp(1.7rem, 5.2vw, 4.4rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .valueBarLabel { font-size: calc(clamp(0.62rem, 0.85vw, 1.05rem) / var(--fit-scale, 1)); }
+  .riskBarTitle { font-size: calc(clamp(0.68rem, 0.95vw, 1.2rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .riskBarPct { font-size: calc(clamp(0.95rem, 1.25vw, 1.65rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .riskBarCat { font-size: calc(clamp(0.6rem, 0.82vw, 1.05rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+
+  .discCat     { font-size: calc(clamp(0.68rem, 0.9vw, 1.1rem) * var(--font-scale, 1)); }
+  .discNegTxt  { font-size: calc(clamp(0.95rem, 1.3vw, 1.5rem) * var(--font-scale, 1)); }
+  .discPosTxt  { font-size: calc(clamp(1rem, 1.35vw, 1.55rem) * var(--font-scale, 1) * var(--pos-neg-ratio, 1)); }
+  .discCardNum { font-size: calc(1.7rem * var(--font-scale, 1)); }
+}
+
+@media (min-width: 2400px) and (orientation: landscape) {
+  .towerOverlap { --fit-max: 1.8; }
+
+  .eyebrowRed,
+  .eyebrowGreen { font-size: calc(clamp(0.66rem, 6.9vw, 2rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .sectionTitle { font-size: calc(clamp(1.7rem, 5.2vw, 5.4rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .valueBarLabel { font-size: calc(clamp(0.62rem, 0.85vw, 1.25rem) / var(--fit-scale, 1)); }
+  .riskBarTitle { font-size: calc(clamp(0.68rem, 0.95vw, 1.4rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .riskBarPct { font-size: calc(clamp(0.95rem, 1.25vw, 2rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+  .riskBarCat { font-size: calc(clamp(0.6rem, 0.82vw, 1.25rem) * var(--font-scale, 1) / var(--fit-scale, 1)); }
+
+  .discCat     { font-size: calc(clamp(0.68rem, 0.9vw, 1.3rem) * var(--font-scale, 1)); }
+  .discNegTxt  { font-size: calc(clamp(0.95rem, 1.3vw, 1.8rem) * var(--font-scale, 1)); }
+  .discPosTxt  { font-size: calc(clamp(1rem, 1.35vw, 1.85rem) * var(--font-scale, 1) * var(--pos-neg-ratio, 1)); }
+  .discCardNum { font-size: calc(2rem * var(--font-scale, 1)); }
 }

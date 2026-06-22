@@ -124,13 +124,17 @@ export function CollapsingDiscs3() {
       // section left of center, so the block needs that much extra room on the
       // left to stay inside a center-origin scale.
       const budget = 2 * Math.abs(DISCS.towerColShift)
+      // Upper bound on the fit scale. Defaults to 1 (never upscale), but large
+      // viewports raise it via the --fit-max CSS var so the fixed-px tower grows
+      // to fill its column instead of sitting tiny in a sea of whitespace.
+      const fitMax = parseFloat(getComputedStyle(wrap).getPropertyValue('--fit-max')) || 1
       let scale = 1
       for (let i = 0; i < 8; i++) {
         wrap.style.setProperty('--fit-scale', scale)
         const natW = wrap.offsetWidth + budget   // forces sync reflow
         const natH = wrap.offsetHeight
         if (!natW || !natH) return
-        const next = Math.min(1, availW / natW, availH / natH)
+        const next = Math.min(fitMax, availW / natW, availH / natH)
         if (Math.abs(next - scale) < 0.004) { scale = next; break }
         scale = next
       }
