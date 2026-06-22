@@ -209,6 +209,57 @@ Open [http://localhost:4321](http://localhost:4321) in your browser. The server 
 
 ---
 
+## Responsive Capture Scripts (optional)
+
+The root-level `_*.mjs` scripts drive a headless browser (Playwright) over the
+live site to capture how it renders across screen sizes. There are two:
+
+| Script | Output | What it does |
+|---|---|---|
+| `_screens.mjs` | `responsive-audit/screens/<viewport>/` | Walks down the page taking screenshots; logs horizontal-overflow and console errors per viewport. |
+| `_video.mjs` | `responsive-audit/video/<viewport>/` | Records a human-paced scroll-through as a `.webm` video. |
+
+Both share `_lib.mjs` (viewport presets + browser helpers — not run directly).
+
+### Prerequisites
+
+The dev server must be running in a separate terminal, and Playwright's browser
+must be installed once:
+
+```bash
+npm run dev                 # terminal 1 — serves localhost:4321
+npx playwright install chromium   # one-time, first run only
+```
+
+### Running
+
+```bash
+# All 13 viewport presets
+node _screens.mjs
+node _video.mjs
+
+# Specific viewport(s) — pass preset names as arguments
+node _screens.mjs mobile-port-390
+node _video.mjs desktop-1920 tablet-port-768
+
+# Substring filter via VP env var (matches preset names)
+VP=mobile node _screens.mjs    # every mobile-* preset
+VP=tablet node _video.mjs      # every tablet-* preset
+```
+
+Available presets (defined in `_lib.mjs`), small → large:
+
+```
+mobile-small-360  mobile-port-390  mobile-pro-430  mobile-land-844
+phablet-600  tablet-port-768  tablet-pro-834  tablet-land-1024
+laptop-1280  laptop-1366  desktop-1440  desktop-1920  desktop-2560
+```
+
+> Override the target URL with `URL=...` (default `http://localhost:4321/option3`),
+> e.g. `URL=http://localhost:4321/option1 node _screens.mjs desktop-1440`.
+
+---
+
 ## Backend / Data Pipeline (optional)
 
 The `backend/` scripts are run locally to refresh the map data — they are not part of the website build.
