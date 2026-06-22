@@ -155,3 +155,17 @@
 @media (max-width: 480px) {
   .grid { grid-template-columns: 1fr; }
 }
+
+/* ── Small mobile (≤390px: Mobile Port 390, Mobile Small 360) ───────── */
+
+@media (max-width: 390px) {
+  .footer    { padding: 48px 6vw 0; }
+  .logo      { height: 44px; margin-bottom: 40px; }
+  .top       { gap: 22px; padding-bottom: 52px; }
+  .cta       { padding: 12px 28px; font-size: 11px; }
+  .grid      { gap: 32px; padding: 44px 0 52px; }
+  .col       { gap: 14px; }
+  .colHeading { font-size: 10px; }
+  .link      { font-size: 14px; padding: 5px 0; }
+  .copy      { font-size: 10px; }
+}
