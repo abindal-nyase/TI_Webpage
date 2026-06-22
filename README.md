@@ -217,7 +217,7 @@ live site to capture how it renders across screen sizes. There are two:
 | Script | Output | What it does |
 |---|---|---|
 | `_screens.mjs` | `responsive-audit/screens/<viewport>/` | Walks down the page taking screenshots; logs horizontal-overflow and console errors per viewport. |
-| `_video.mjs` | `responsive-audit/video/<viewport>/` | Records a human-paced scroll-through as a `.webm` video. |
+| `_video.mjs` | `responsive-audit/video/<viewport>.mp4` | Records a human-paced scroll-through; transcodes to `.mp4` (H.264) if ffmpeg is installed, otherwise keeps `.webm`. |
 
 Both share `_lib.mjs` (viewport presets + browser helpers — not run directly).
 
@@ -230,6 +230,9 @@ must be installed once:
 npm run dev                 # terminal 1 — serves localhost:4321
 npx playwright install chromium   # one-time, first run only
 ```
+
+`_video.mjs` additionally needs [ffmpeg](https://ffmpeg.org) to produce `.mp4`
+(without it the video is left as `.webm`). On macOS: `brew install ffmpeg`.
 
 ### Running
 

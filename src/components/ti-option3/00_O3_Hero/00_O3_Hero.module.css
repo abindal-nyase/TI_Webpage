@@ -103,19 +103,38 @@
   margin-left: auto;
 }
 
+/* Phones — shrink the logo top-right; width binds, height follows aspect ratio.
+   Portrait (390/430): 1/4 screen width. Landscape short (844×390): 1/6. */
+@media (max-width: 480px) {
+  .headerLogo {
+    width: 25vw;
+    height: auto;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  .headerLogo {
+    width: 16.6vw;
+    height: auto;
+  }
+}
+
 /* ── Hero title — small-caps "Tenant / Improvements" ─────────────── */
 .heroTitle {
   position: absolute;
   top: calc(96px + 3vh);
-  left: 4vw;
+  left: 0;
+  width: 100%;
   z-index: 60;
   color: var(--white);
   pointer-events: none;
+  display: flex;
+  justify-content: center;
 }
 
 .titleRow {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   line-height: 0.85;
   gap: clamp(0.5rem, 5vw, 5rem);
   flex-wrap: wrap;
@@ -163,7 +182,7 @@
     gap: clamp(0.5rem, 4vw, 4rem);
   }
   .titleWord {
-    font-size: clamp(2rem, 1rem + 7.6vw, 9.2vw);
+    font-size: clamp(2rem, 1rem + 7vw, 9.2vw);
     white-space: nowrap;
   }
 }
