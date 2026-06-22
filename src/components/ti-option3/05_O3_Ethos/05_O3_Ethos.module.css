@@ -109,36 +109,30 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  /* photo left | quote right, smaller zoom */
+
+/* ≤834px (Mobile 360/390/430, Tablet Pro 834) — drop photo, quote only.
+   Quote font scales with viewport width. */
+@media (max-width: 834px) {
   .inner {
-    height: 56vh;
-    flex-direction: row-reverse;
+    height: auto;
+    flex-direction: column;
   }
-  .left {
-    flex: 0 0 44%;
-  }
+  .left,
   .photo {
-    height: 125%;   /* less zoom in portrait */
-    right: auto;
-    left: -150px;    /* 20px off the left edge */
+    display: none;
   }
   .right {
-    padding: 0 4vw;
+    flex: 1 1 100%;
+    padding: 14vh 7vw;
   }
   .openMark {
-    font-size: clamp(60px, 14vw, 100px);
+    left: 6vw;
+    font-size: clamp(70px, 18vw, 130px);
   }
-}
-
-/* phone-port-360 .. 430 — quote must fully clear the photo (no overlap).
-   The photo's width scales with viewport HEIGHT (height:125% of a 56vh inner),
-   and these phones are much taller than the 320 ref (800/844 vs 568), so the
-   photo renders ~40% wider. A plain left-shift isn't enough; push hard enough
-   that the photo's right edge lands left of the quote at every width in range.
-   Measured gaps: ~18px @360, ~35px @390, ~39px @430. */
-@media (min-width: 360px) and (max-width: 430px) {
-  .photo {
-    left: calc(40px - 100vw);
+  .quote {
+    font-size: clamp(22px, 5.2vw, 40px);
+  }
+  .signature {
+    font-size: clamp(30px, 7vw, 52px);
   }
 }
