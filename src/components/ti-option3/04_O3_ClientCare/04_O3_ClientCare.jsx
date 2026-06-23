@@ -234,7 +234,7 @@ export default function O3ClientCare() {
           {BUCKETS.map((bucket) => {
             // Astro returns an ImageMetadata object for src/assets imports in
             // islands; fall back to the raw value if it is already a string URL.
-            const bgUrl = bucket.bg?.src ?? bucket.bg
+            const bgUrl = bucket.bg?.src ?? bucket.bg;
             return (
               <div
                 key={bucket.label}
@@ -242,7 +242,7 @@ export default function O3ClientCare() {
                 data-cc-bg
                 style={{ backgroundImage: `url(${bgUrl})` }}
               />
-            )
+            );
           })}
           <div className={s.overlay} />
         </div>
@@ -256,13 +256,16 @@ export default function O3ClientCare() {
         <div className={s.points}>
           {POINTS.map((p) => (
             <div key={p.id} className={s.point}>
-              <span className={s.pointLabel} data-cc-label>{p.label}</span>
-              <h3 className={s.pointTitle} data-cc-title>{p.title}</h3>
-              <p className={s.pointContent} data-cc-content>{p.content}</p>
+              <h3 className={s.pointTitle} data-cc-title>
+                {p.title}
+              </h3>
+              <p className={s.pointContent} data-cc-content>
+                {p.content}
+              </p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

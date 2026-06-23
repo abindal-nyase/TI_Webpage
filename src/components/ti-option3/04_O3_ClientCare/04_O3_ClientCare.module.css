@@ -128,15 +128,23 @@
   padding-inline: var(--section-px);
 }
 .isAnimated .pointLabel { margin-bottom: 1rem; will-change: transform; }
+/* ONE uniform type size for every point, sized so the LONGEST paragraph
+   (~110 words) fits the fixed 100vh pinned stage (which clips overflow). The
+   stage height == viewport height, so size scales with viewport HEIGHT (vh) —
+   not just width — to stay on-screen on short viewports. Width grows to ~62ch
+   so long paragraphs wrap to fewer lines. Same clamp on all items keeps every
+   point identical (no per-item or per-breakpoint font shuffling). */
 .isAnimated .pointTitle {
-  font-size: clamp(var(--fs-headline), 6vw, var(--fs-hero));
-  max-width: 18ch;
+  font-size: clamp(1.1rem, calc(1.2vw + 1.6vh), 2.2rem);
+  line-height: 1.14;
+  max-width: 22ch;
   will-change: transform;
 }
 .isAnimated .pointContent {
-  font-size: clamp(var(--fs-subhead), 3vw, var(--fs-display));
-  max-width: 28ch;
-  margin-top: 0.5rem;
+  font-size: clamp(0.72rem, calc(0.3vw + 1.6vh), 1.25rem);
+  line-height: 1.45;
+  max-width: 62ch;
+  margin-top: 0.6rem;
   will-change: transform;
 }
 
@@ -161,20 +169,12 @@
     line-height: 1.45;
   }
   .isAnimated .point {
-    /* justify-content stays center, but the top padding shifts the centring
-       box down so the centred title clears the header band above. */
-    padding-top: 6rem;
+    /* justify-content stays center; the top padding shifts the centring box
+       down so the centred title clears the header band above. The uniform
+       vh-based type above already shrinks to fit this short viewport. */
+    padding-top: 2.5rem;
   }
   .isAnimated .pointLabel {
-    margin-bottom: 0.4rem;
-  }
-  .isAnimated .pointTitle {
-    font-size: clamp(1.3rem, 3.6vw, 2rem);
-    max-width: 24ch;
-  }
-  .isAnimated .pointContent {
-    font-size: clamp(0.85rem, 2vw, 1.05rem);
-    max-width: 34ch;
-    margin-top: 0.35rem;
+    margin-bottom: 0.2rem;
   }
 }
