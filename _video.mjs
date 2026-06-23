@@ -21,7 +21,7 @@ if (!hasFfmpeg) console.warn('ffmpeg not found — keeping .webm (install ffmpeg
 await withBrowser(async (browser) => {
   for (const vp of VPS) {
     const { ctx, page } = await openPage(browser, vp, { video: OUT });
-    await humanScroll(page);
+    await humanScroll(page, { dwell: 1000, glide: 1.0 });  // 1s per scroll step + 1s glide (slower, longer video)
     const video = page.video();
     await ctx.close();                         // finalizes the recording
     const webm = `${OUT}/${vp.name}.webm`;

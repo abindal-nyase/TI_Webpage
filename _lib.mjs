@@ -88,16 +88,16 @@ export const scrollTo = (page, y) => page.evaluate((yy) => window.scrollTo(0, yy
 // GSAP pins expand the page as you scroll, so a single up-front measurement
 // undershoots and stops before the footer. Loops until the bottom is actually
 // reached (confirmed twice — the page may still settle), with a safety cap.
-export async function humanScroll(page, { stepFrac = 0.55, dwell = 950, settle = 1200 } = {}) {
+export async function humanScroll(page, { stepFrac = 0.55, dwell = 950, settle = 1200, glide = 0.7 } = {}) {
   const vh = await page.evaluate(() => window.innerHeight);
   const step = Math.round(vh * stepFrac);
   let y = 0;
   let atBottom = 0;
   for (let guard = 0; guard < 400; guard++) {
-    await page.evaluate((yy) => {
-      if (window.__lenis) window.__lenis.scrollTo(yy, { duration: 0.7 });
+    await page.evaluate(({ yy, g }) => {
+      if (window.__lenis) window.__lenis.scrollTo(yy, { duration: g });
       else window.scrollTo({ top: yy, behavior: 'smooth' });
-    }, y);
+    }, { yy: y, g: glide });
     await sleep(dwell);
     const m = await page.evaluate(() => ({
       total: document.body.scrollHeight,
@@ -113,11 +113,11 @@ export async function humanScroll(page, { stepFrac = 0.55, dwell = 950, settle =
   }
   // Park at the true (re-measured) bottom and dwell, so the recording clearly
   // lands on the footer instead of cutting off mid-glide.
-  await page.evaluate(() => {
+  await page.evaluate((g) => {
     const t = document.body.scrollHeight;
-    if (window.__lenis) window.__lenis.scrollTo(t, { duration: 0.7 });
+    if (window.__lenis) window.__lenis.scrollTo(t, { duration: g });
     else window.scrollTo({ top: t, behavior: 'smooth' });
-  });
+  }, glide);
   await sleep(settle);
 }
 
