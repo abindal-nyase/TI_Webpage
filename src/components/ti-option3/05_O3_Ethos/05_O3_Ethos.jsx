@@ -7,7 +7,7 @@ import s from './05_O3_Ethos.module.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const QUOTE =
-  'Every job was a chance to earn a relationship, and do right by a client, not just in a way that met the code, but in a way they could feel.'
+  "I treat every tenant improvement like a home-cooked meal. I take my time, I use good ingredients, and I remember who I am cooking for. Success is not measured by how many projects we finish, but by how many clients call us back. That quiet dignity of doing the work well, where no one notices the structure but everyone feels its safety is my art.";
 
 export default function O3Ethos() {
   const sectionRef = useRef(null)

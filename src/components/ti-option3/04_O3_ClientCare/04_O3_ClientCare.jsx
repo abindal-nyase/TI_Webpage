@@ -27,45 +27,50 @@ const BUCKETS = [
     items: [
       {
         id: 'advocate',
-        title: 'A true client advocate',
-        content: 'We protect what matters most to the owner, architect, and team — not just the structural scope.',
+        title: 'NYA acts as a true client advocate',
+        content: 'We take client care seriously. We listen closely, understand what matters most to the owner, architect, or project team, and work to protect those priorities. Our goal is not just to complete the structural scope, but to support clients, ensure they are informed, and make sure their needs are looked after.',
       },
       {
         id: 'client-care',
-        title: 'Care for the building itself',
-        content: 'We learn how your specific building actually works before we advise on it.',
+        title: 'We genuinely care for the client and the building itself',
+        content: 'Generic structural advice can miss what makes an existing building unique. We take the time to understand the inner workings of your building: its structural system, existing conditions, load paths, constraints, and hidden complexities. That allows our guidance to be grounded in how the building actually works, not in one-size-fits-all assumptions.',
       },
     ],
   },
   {
-    label: 'Judgment',
+    label: 'Precision',
     bg: bg2,
     items: [
       {
-        id: 'technical-judgment',
-        title: 'Judgment that earns confidence',
-        content: 'Other engineers trust us to peer-review their complex TI designs.',
+        id: 'details',
+        title: 'Details shaped with care, not copied from habit',
+        content: 'Existing buildings rarely behave like clean templates. Years of prior modifications, hidden as-built discrepancies, and onsite adaptations mean the real condition is always more particular than the record drawings suggest. We tailor our structural details to each project’s actual conditions, reducing the risk of field conflicts, unclear connections, and construction-phase surprises.',
       },
       {
-        id: 'make-it-work',
-        title: 'A "make it work" mindset',
-        content: 'We turn ambitious architecture into buildable structure instead of defaulting to "no".',
+        id: 'pricing',
+        title: 'Pricing that is reliable',
+        content: 'The ultimate goal is a predictable total project cost, which a complete proposal achieves by eliminating unexpected expenses and costly surprises rather than simply cutting upfront engineering fees. At NYA, experience is not overhead; it is efficiency. Because our engineers have navigated most TI challenges before, we do not learn at the client’s expense. Instead, we hit the ground running, leveraging past insights, automated tools, and advanced processes to accelerate the project timeline while drastically reducing risk.',
       },
     ],
   },
   {
-    label: 'Process',
+    label: 'Experience',
     bg: bg3,
     items: [
       {
         id: 'senior-engineers',
-        title: 'Senior engineers, direct access',
-        content: 'You work straight with seasoned engineers — no bureaucracy, no waiting.',
+        title: 'You work with senior engineers with decades of experience',
+        content: 'In tenant improvement work, slow communication and too many handoffs can quietly cost a project time. A bureaucratic process can delay decisions, create unnecessary back-and-forth, and make it harder to resolve issues when they come up. We replace that drag with seasoned structural judgment and direct, unfiltered access to the engineers closest to the work. The result is a team that keeps the project moving, not through rushed work, but through a process engineered to remove the waiting.',
       },
       {
-        id: 'communication',
-        title: 'Communication that reduces pressure',
-        content: 'Same-day responses close the small gaps before they become schedule loss.',
+        id: 'make-it-work',
+        title: 'A “make it work” mindset',
+        content: 'Architects bring creative ambition to TI work, from unusual stairs and open lobbies to complex adaptive reuse concepts, and our role is to safeguard that ambition by translating it into structural solutions that are coordinated, code-conscious, and constructible. Because every design firm maintains its own unique priorities and workflows, we never ask a creative team to adapt to us; instead, we seamlessly calibrate our guidance, communication style, and level of detail to integrate directly into the architect\'s established process. This deeply adaptive collaboration ensures the original design vision moves forward with earned confidence rather than hope, delivering an engineering partnership that amplifies the architect\'s work without creating additional friction.',
+      },
+      {
+        id: 'plan-check',
+        title: 'Plan check is easy with NYA’s experience',
+        content: 'When you begin a TI project with us, you start with a team that has already mapped the terrain: the building, the permitting path, the plan check culture, the ownership expectations, and the local players involved. That is the advantage we bring to TI work. Our familiarity helps teams begin with more clarity, reduce early friction, and move forward with confidence from the first conversation.',
       },
     ],
   },
@@ -74,14 +79,14 @@ const BUCKETS = [
     bg: bg4,
     items: [
       {
-        id: 'pricing',
-        title: 'Pricing that is reliable',
-        content: 'Complete, predictable proposals — experience that lowers total project cost.',
+        id: 'guidance',
+        title: 'Guidance clients can feel confident in',
+        content: 'Before a TI project is fully formalized, owners often need enough structural input to understand what is possible and what may create risk. We help teams have those early conversations with more confidence, offering quick guidance, feasibility input, and practical advice so the project can move forward with a clearer path.',
       },
       {
-        id: 'trusted',
-        title: 'Work that is trusted',
-        content: 'Most of our work comes from referrals built on decades of relationships.',
+        id: 'communication',
+        title: 'Communication that reduces pressure, not adds to it',
+        content: 'Delays in TI projects rarely stem from sudden crises; they are more often caused by unanswered questions, delayed RFIs, and decisions that linger too long. To keep projects moving, we provide same-day responses, immediate phone consultations for field issues, and proactive communication throughout the design and construction process. Drawing on decades of experience, we adapt to each client’s preferred workflows and presentation standards, ensuring information is delivered clearly and decisions are made efficiently. The result is tighter cost control, reduced risk, and more predictable project schedules.',
       },
     ],
   },
@@ -171,11 +176,16 @@ export default function O3ClientCare() {
             // Backgrounds: continuous slow left -> right drift across the whole run.
             tl.fromTo(bgs, { xPercent: -IMG }, { xPercent: IMG, ease: 'none', duration: L }, 0)
 
-            // Backgrounds crossfade — bucket b (2 points) is visible across its span.
+            // Backgrounds crossfade — each bucket is visible across the span of
+            // its own points. Buckets have variable item counts, so derive each
+            // bucket's start point-index from cumulative counts (no hardcoded 2).
+            const counts = BUCKETS.map((bk) => bk.items.length)
+            const offsets = []
+            counts.reduce((acc, c, i) => { offsets[i] = acc; return acc + c }, 0)
             bgs.forEach((bg, b) => {
               gsap.set(bg, { autoAlpha: b === 0 ? 1 : 0 })
-              const inT = 2 * b * SEG
-              const outT = 2 * (b + 1) * SEG
+              const inT = offsets[b] * SEG
+              const outT = (offsets[b] + counts[b]) * SEG
               if (b > 0) tl.to(bg, { autoAlpha: 1, duration: ENTER, ease: 'none' }, inT - ENTER)
               if (b < bgs.length - 1) tl.to(bg, { autoAlpha: 0, duration: ENTER, ease: 'none' }, outT - ENTER)
             })
