@@ -608,7 +608,7 @@ export default function O3Hero() {
           bg2BackingRef.current,
           { backgroundColor: primaryColor },
           {
-            backgroundColor: '#ffffff',
+            backgroundColor: 'oklch(1 0 0)',
             scrollTrigger: {
               trigger: introSection,
               start: 'top 50%',

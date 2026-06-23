@@ -248,7 +248,6 @@ export default function O3ClientCare() {
         </div>
 
         <div className={s.header}>
-          <p className={s.eyebrow}>Client Care</p>
           <h2 className={s.title}>A Culture of Trust</h2>
           <p className={s.intro}>{DESCRIPTION}</p>
         </div>

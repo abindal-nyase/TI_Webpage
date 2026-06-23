@@ -48,11 +48,11 @@ function renderRedOverlay(disc, i, on) {
       <text style={{ fontFamily: 'var(--font-body)', fontSize: CD4_CAT_FS_L, fontWeight: 700, letterSpacing: '0.1em', fill: TEXT_REDS }}>
         <textPath href={`#cd4r-cat-${i}`} startOffset="50%" textAnchor="middle">{ITEMS[i].category.toUpperCase()}</textPath>
       </text>
-      <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fill: 'rgba(240,236,227,0.92)' }}>
+      <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fill: 'oklch(0.9437 0.0127 86.8308 / 0.92)' }}>
         <textPath href={`#cd4r-d1-${i}`} startOffset="50%" textAnchor="middle">{desc1}</textPath>
       </text>
       {desc2 && (
-        <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fill: 'rgba(240,236,227,0.92)' }}>
+        <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_RED_DESC_FS_L, fill: 'oklch(0.9437 0.0127 86.8308 / 0.92)' }}>
           <textPath href={`#cd4r-d2-${i}`} startOffset="50%" textAnchor="middle">{desc2}</textPath>
         </text>
       )}
@@ -91,11 +91,11 @@ function renderGreenOverlay(disc, i, on) {
       <text style={{ fontFamily: 'var(--font-body)', fontSize: CD4_CAT_FS_L, fontWeight: 700, letterSpacing: '0.1em', fill: TEXT_GREENS }}>
         <textPath href={`#cd4g-cat-${i}`} startOffset="50%" textAnchor="middle">{ITEMS[i].category.toUpperCase()}</textPath>
       </text>
-      <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_GRN_DESC_FS_L, fill: 'rgba(240,236,227,0.92)' }}>
+      <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_GRN_DESC_FS_L, fill: 'oklch(0.9437 0.0127 86.8308 / 0.92)' }}>
         <textPath href={`#cd4g-d1-${i}`} startOffset="50%" textAnchor="middle">{desc1}</textPath>
       </text>
       {desc2 && (
-        <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_GRN_DESC_FS_L, fill: 'rgba(240,236,227,0.92)' }}>
+        <text style={{ fontFamily: 'var(--font-display)', fontSize: CD4_GRN_DESC_FS_L, fill: 'oklch(0.9437 0.0127 86.8308 / 0.92)' }}>
           <textPath href={`#cd4g-d2-${i}`} startOffset="50%" textAnchor="middle">{desc2}</textPath>
         </text>
       )}
@@ -230,7 +230,7 @@ export function CollapsingDiscs4() {
                   <div className={s.valueBarWrap} style={{ marginRight: scaledGap, opacity: dropped > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                     <div className={s.valueBarRow}>
                       <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
-                      <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)' }} />
+                      <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'oklch(0.7343 0.0218 81.7627 / 0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)' }} />
                     </div>
                     <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                   </div>
@@ -272,7 +272,7 @@ export function CollapsingDiscs4() {
                   <div className={s.valueBarWrap} style={{ marginRight: scaledGap, opacity: droppedGreen > 0 ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                     <div className={s.valueBarRow}>
                       <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
-                      <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: greenValueH, background: droppedGreen === N ? GREEN_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: 'height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s' }} />
+                      <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: greenValueH, background: droppedGreen === N ? GREEN_COLORS[N - 1].bright : 'oklch(0.7343 0.0218 81.7627 / 0.55)', transition: 'height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s' }} />
                     </div>
                     <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                   </div>

@@ -75,7 +75,7 @@ export function CollapsingDiscsSideBySide({ redDiscData, collapseDuration, label
                 <div className={s.valueBarWrap} style={{ marginRight: discValueBarGap }}>
                   <div className={s.valueBarRow}>
                     <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
-                    <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)', opacity: dropped > 0 ? 1 : 0 }} />
+                    <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: finalRedValueH, background: fall ? RED_COLORS[N - 1].bright : 'oklch(0.7343 0.0218 81.7627 / 0.55)', transition: fall ? 'none' : 'height 0.45s cubic-bezier(0.18,1.18,0.38,1)', opacity: dropped > 0 ? 1 : 0 }} />
                   </div>
                   <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                 </div>
@@ -111,7 +111,7 @@ export function CollapsingDiscsSideBySide({ redDiscData, collapseDuration, label
                 <div className={s.valueBarWrap} style={{ marginRight: discValueBarGap, opacity: greenReveal ? 1 : 0, transition: 'opacity 0.3s ease' }}>
                   <div className={s.valueBarRow}>
                     <span className={s.valueBarLabel}>{COPY.barValueLabel}</span>
-                    <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: greenValueH, background: droppedGreen === N ? GREEN_COLORS[N - 1].bright : 'rgba(176,168,154,0.55)', transition: 'height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s' }} />
+                    <div className={s.valueBar} style={{ width: DISCS.valueBarW, height: greenValueH, background: droppedGreen === N ? GREEN_COLORS[N - 1].bright : 'oklch(0.7343 0.0218 81.7627 / 0.55)', transition: 'height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s' }} />
                   </div>
                   <div style={{ height: 29 + DISCS.riskBarH, flexShrink: 0 }} />
                 </div>

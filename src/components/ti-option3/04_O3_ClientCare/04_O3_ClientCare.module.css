@@ -56,7 +56,7 @@
 }
 .intro {
   font-family: var(--font-body);
-  color: rgba(255, 255, 255, 0.78);
+  color: oklch(1 0 0 / 0.78);
   font-size: var(--fs-subhead);
   line-height: 1.6;
   max-width: var(--max-w-text);
@@ -96,7 +96,7 @@
   line-height: 1.6;
   max-width: 46ch;
   margin: 0;
-  color: rgba(255, 255, 255, 0.86);
+  color: oklch(1 0 0 / 0.86);
 }
 
 /* ── ANIMATED mode (GSAP-pinned conveyor) ── */

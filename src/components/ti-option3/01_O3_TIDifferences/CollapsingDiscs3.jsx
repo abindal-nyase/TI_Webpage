@@ -211,7 +211,7 @@ export function CollapsingDiscs3() {
                           height: finalRedValueH,
                           background: fall
                             ? RED_COLORS[N - 1].bright
-                            : "rgba(176,168,154,0.55)",
+                            : "oklch(0.7343 0.0218 81.7627 / 0.55)",
                           transition: fall
                             ? "none"
                             : "height 0.45s cubic-bezier(0.18,1.18,0.38,1)",
@@ -328,7 +328,7 @@ export function CollapsingDiscs3() {
                           background:
                             droppedGreen === N
                               ? GREEN_COLORS[N - 1].bright
-                              : "rgba(176,168,154,0.55)",
+                              : "oklch(0.7343 0.0218 81.7627 / 0.55)",
                           transition:
                             "height 0.45s cubic-bezier(0.18,1.18,0.38,1), background-color 0s",
                         }}

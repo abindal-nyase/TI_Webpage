@@ -10,8 +10,8 @@
 
 /* ── TOKENS ──────────────────────────────────────────────────────────────── */
 .root {
-  --red:   #c85050;
-  --green: #4ab87a;
+  --red:   oklch(0.5892 0.1538 23.0345);
+  --green: oklch(0.703 0.1364 155.5746);
 
   /* Intro quote font scale. Drives .introH/.introSub size AND the pin-hold
      length (.introDriver) so they stay in sync. 1 = baseline, 1.2 = +20%. */
@@ -26,7 +26,7 @@
   /* Starts matching Hero4's bg2 (primary) — no seam — then GSAP fades this
      to white over the first half-viewport of scroll (see Intro.jsx). */
   background: var(--color-primary);
-  color: var(--color-black, #0F172A);
+  color: var(--color-black, oklch(0.2077 0.0398 265.7549));
   font-family: var(--font-display);
 }
 
@@ -106,7 +106,7 @@
   font-family: var(--font-body);
   font-size: calc(clamp(1rem, 1.5vw, 1.4rem) * var(--intro-font-scale, 1));
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.55);
+  color: oklch(1 0 0 / 0.55);
   margin: 0;
 }
 
@@ -125,7 +125,7 @@
   font-weight: 400;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--color-gray-700, #475569);
+  color: var(--color-gray-700, oklch(0.4455 0.0374 257.2808));
 }
 
 /* ── LAYOUT ──────────────────────────────────────────────────────────────── */
@@ -245,7 +245,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.5vw, 3.2rem);
   font-weight: 600;
-  color: var(--color-black, #0F172A);
+  color: var(--color-black, oklch(0.2077 0.0398 265.7549));
   margin: 0;
   line-height: 1.1;
   letter-spacing: -0.01em;
@@ -282,7 +282,7 @@
   font-weight: 600;
   /* Disc scene sits on the dark inner .root (var(--color-primary)) — light fill
      for contrast, not --color-black which would be invisible on it. */
-  color: var(--color-white, #ffffff);
+  color: var(--color-white, oklch(1 0 0));
   margin: 0;
   line-height: 1.1;
   letter-spacing: -0.01em;
@@ -326,19 +326,19 @@
   justify-content: center;
   background: radial-gradient(
     ellipse 75% 64% at 36% 28%,
-    rgba(255, 255, 255, 0.24) 0%,
+    oklch(1 0 0 / 0.24) 0%,
     var(--f)                  46%,
-    rgba(0,   0,   0,   0.22) 100%
+    oklch(0 0 0 / 0.22) 100%
   );
   transition: box-shadow 0.3s ease;
 }
-.discFaceLive      { box-shadow: 0 0 40px rgba(196, 37, 53, 0.7); }
-.discFaceLiveGreen { box-shadow: 0 0 40px rgba(13, 168, 94, 0.7); }
+.discFaceLive      { box-shadow: 0 0 40px oklch(0.5344 0.1927 22.2386 / 0.7); }
+.discFaceLiveGreen { box-shadow: 0 0 40px oklch(0.6431 0.1594 154.0582 / 0.7); }
 .discNum {
   font-family: var(--font-body);
   font-size: 1.4rem;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.68);
+  color: oklch(1 0 0 / 0.68);
   user-select: none;
   pointer-events: none;
 }
@@ -386,7 +386,7 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   /* light on the dark disc-scene backdrop (see .sectionTitle note) */
-  color: rgba(255, 255, 255, 0.78);
+  color: oklch(1 0 0 / 0.78);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
@@ -423,12 +423,12 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.78);
+  color: oklch(1 0 0 / 0.78);
 }
 .riskBarPct {
   font-family: 'Bebas Neue', sans-serif;
   font-size: calc(clamp(0.95rem, 1.25vw, 1.2rem) * var(--font-scale, 1) / var(--fit-scale, 1));
-  color: var(--color-white, #ffffff);
+  color: var(--color-white, oklch(1 0 0));
   line-height: 1;
 }
 .riskBarCat {
@@ -437,7 +437,7 @@
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: oklch(1 0 0 / 0.62);
 }
 .riskBar {
   border-radius: 2px;
@@ -465,11 +465,11 @@
 
 /* ── TEXT CARD ────────────────────────────────────────────────────────────── */
 .discCard {
-  --white: #f0ece3;
-  --text:  #b0a89a;
+  --white: oklch(0.9437 0.0127 86.8308);
+  --text:  oklch(0.7343 0.0218 81.7627);
   /* inactive (dropped but not the live) card category — readable on dark,
      still quieter than the active red/green category */
-  --muted: rgba(255, 255, 255, 0.62);
+  --muted: oklch(1 0 0 / 0.62);
 
   display: flex;
   align-items: flex-start;
@@ -496,7 +496,7 @@
   font-family: var(--font-body);
   font-size: calc(1.3rem * var(--font-scale, 1));
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.42);
+  color: oklch(1 0 0 / 0.42);
   flex-shrink: 0;
   min-width: 2ch;
   transition: color 0.35s ease;
@@ -537,7 +537,7 @@
   font-weight: 400;
   font-style: normal;
   line-height: 1.6;
-  color: rgba(176, 168, 154, 0.62);
+  color: oklch(0.7343 0.0218 81.7627 / 0.62);
   margin: 0;
   transition: color 0.4s ease;
 }
@@ -547,7 +547,7 @@
 .discPosSlotReserved {
   min-height: 2.4rem;
   margin-top: 0.45rem;
-  border-top: 1px solid var(--border-accent, rgba(255,255,255,0.04));
+  border-top: 1px solid var(--border-accent, oklch(1 0 0 / 0.04));
   padding-top: 0.45rem;
 }
 .discPosSlotOn { min-height: 0; }
@@ -594,13 +594,13 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-gray-700, #475569);
-  background: var(--surface-card, #fff);
+  color: var(--color-gray-700, oklch(0.4455 0.0374 257.2808));
+  background: var(--surface-card, oklch(1 0 0));
 }
 .optionDivider {
   width: 120px;
   height: 1px;
-  background: var(--border-default, #E2E8F0);
+  background: var(--border-default, oklch(0.9288 0.0126 255.5078));
   margin: 0 auto 1.5rem;
 }
 
@@ -611,7 +611,7 @@
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: var(--surface-card, #fff);
+  background: var(--surface-card, oklch(1 0 0));
 }
 .barChartArea {
   position: relative;
@@ -677,7 +677,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.80);
+  color: oklch(1 0 0 / 0.8);
   margin-bottom: 10px;
   line-height: 1.2;
   flex-shrink: 0;
@@ -688,7 +688,7 @@
   font-family: var(--font-display);
   font-size: calc(clamp(0.82rem, 1.05vw, 0.94rem) * var(--font-scale, 1));
   font-style: italic;
-  color: rgba(255, 255, 255, 0.65);
+  color: oklch(1 0 0 / 0.65);
   line-height: 1.4;
   overflow: hidden;
 }
@@ -745,7 +745,7 @@
     gap: 8px;
   }
   .textCol {
-    border-top: 1px solid var(--border-default, #E2E8F0);
+    border-top: 1px solid var(--border-default, oklch(0.9288 0.0126 255.5078));
     padding: 2vh 5vw;
   }
 

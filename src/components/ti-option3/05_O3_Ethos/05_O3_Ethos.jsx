@@ -48,29 +48,22 @@ export default function O3Ethos() {
     <section ref={sectionRef} id="nya-culture" className={s.section}>
       <div className={s.inner}>
 
-        {/* ── Left: quote ── */}
-        <div className={s.right}>
-          <span className={s.openMark}>&ldquo;</span>
-          <div className={s.slide}>
-            <blockquote ref={quoteRef} className={s.quote}>
-              {QUOTE}
-            </blockquote>
-            <p ref={sigRef} className={s.signature}>
-              — Nabih Youssef
-            </p>
-          </div>
-        </div>
+        {/* Photo floats right — quote text wraps around it */}
+        <img
+          ref={photoRef}
+          src="/pav-img/Nabih-5-2.png"
+          alt="Nabih Youssef"
+          draggable={false}
+          className={s.photo}
+        />
 
-        {/* ── Right: person photo ── */}
-        <div className={s.left}>
-          <img
-            ref={photoRef}
-            src="/pav-img/Nabih-5-2.png"
-            alt="Nabih Youssef"
-            draggable={false}
-            className={s.photo}
-          />
-        </div>
+        <span className={s.openMark}>&ldquo;</span>
+        <blockquote ref={quoteRef} className={s.quote}>
+          {QUOTE}
+        </blockquote>
+        <p ref={sigRef} className={s.signature}>
+          — Nabih Youssef
+        </p>
 
       </div>
     </section>
