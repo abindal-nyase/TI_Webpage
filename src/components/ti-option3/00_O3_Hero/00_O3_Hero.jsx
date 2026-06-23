@@ -290,6 +290,7 @@ export default function O3Hero() {
         const cascadeEnd = CASCADE_START + 7 * LAYER_STEP + L8_DUR;
 
         let tl = null;
+        let holdST = null;
         let cancelled = false;
 
         const buildTimeline = () => {
@@ -307,7 +308,18 @@ export default function O3Hero() {
           // while the base images were still downloading.
           if (loadCoverRef.current) loadCoverRef.current.style.display = "none";
 
+          // Hand pinning over to the real cascade timeline. The hold pin (created
+          // before images loaded) used the SAME trigger/start/end + pinSpacing, so
+          // the pin-spacer height — and thus the next section's layout position —
+          // is identical; swapping them is seamless with no scroll jump.
+          if (holdST) { holdST.kill(); holdST = null; }
+
           tl = gsap.timeline({
+            // force3D:true keeps every layer on a translate3d (GPU) transform for
+            // the whole scrub. Default "auto" reverts a layer to a 2D transform
+            // the moment its tween stops ticking, which demotes the GPU layer and
+            // forces the large webp to re-rasterize → the flicker seen mid-scroll.
+            defaults: { force3D: true },
             scrollTrigger: {
               id: "hero4-pin",
               trigger: triggerRef.current,
@@ -486,6 +498,23 @@ export default function O3Hero() {
         };
         ScrollTrigger.addEventListener("refresh", onRefresh);
 
+        // Pin the hero IMMEDIATELY — before the building images finish
+        // downloading. The real cascade timeline can't be built until the base
+        // images load (their measured height drives the contain-fit), so without
+        // this any scroll during that window would slide the un-pinned hero away
+        // and reveal the next section. This placeholder pin holds the hero in
+        // place (loadCover keeps it a clean navy hero) until buildTimeline swaps
+        // in the real pin. Same trigger/start/end/pinSpacing → seamless handoff.
+        holdST = ScrollTrigger.create({
+          id: "hero4-holdpin",
+          trigger: triggerRef.current,
+          start: "top top",
+          end: () => "+=" + getVH() * pinLength(),
+          pin: true,
+          pinSpacing: true,
+          invalidateOnRefresh: true,
+        });
+
         // getBoundingClientRect height is only real once images have loaded
         // (height:auto = 0 before load) — gate the build on it.
         const imgReady = (im) => im.complete && im.naturalHeight;
@@ -533,6 +562,7 @@ export default function O3Hero() {
           cancelled = true;
           ScrollTrigger.removeEventListener("refreshInit", onRefreshInit);
           ScrollTrigger.removeEventListener("refresh", onRefresh);
+          holdST?.kill();
           tl?.scrollTrigger?.kill();
           tl?.kill();
           clearTimeout(orientationTimer);

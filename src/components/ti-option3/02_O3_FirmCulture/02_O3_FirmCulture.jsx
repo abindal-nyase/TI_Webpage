@@ -60,23 +60,40 @@ export default function O3FirmCulture() {
       if (cancelled) return;
       ScrollTrigger.refresh();
       context.add(() => {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end:   'bottom bottom',
-            scrub: 0.3,
-            pin:   sticky,
-            invalidateOnRefresh: true,
+        const mm = gsap.matchMedia();
+        mm.add(
+          {
+            isSmall360: '(max-width: 375px)',
+            isPort390:  '(min-width: 376px) and (max-width: 430px)',
+            isWide:     '(min-width: 431px)',
           },
-        });
-        // power3.out rushes the scale down through the giant, unreadable
-        // letterform-wedge phase quickly, then lingers in the small/readable
-        // range where the word-wall shows behind the text — so the reveal spends
-        // its scroll on meaningful frames instead of a flat white wedge. (Was
-        // ease:'none', which left ~70% of the scroll on the giant wedge.)
-        tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: 0.03, yPercent: 0, ease: 'power4.out', duration: 8 }, 0);
-        tl.to({}, { duration: 1 }, 8);
+          (mmCtx) => {
+            const { isSmall360, isPort390 } = mmCtx.conditions;
+
+            // End scale = the readable resting size. Narrow phones scaled the
+            // tagline + NYA down too far, so raise the floor on Mobile Small 360.
+            const endScale = isSmall360 ? 0.042 : 0.03;
+            // power4.out rushes the scale down through the giant, unreadable
+            // letterform-wedge phase quickly, then lingers in the small/readable
+            // range where the word-wall shows behind the text. On Mobile Port 390
+            // the entrance read too small, so a gentler ease keeps the initial
+            // readable frames larger while landing on the same 0.03 final size.
+            const ease = isPort390 ? 'power2.out' : 'power4.out';
+
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: section,
+                start: 'top top',
+                end:   'bottom bottom',
+                scrub: 0.3,
+                pin:   sticky,
+                invalidateOnRefresh: true,
+              },
+            });
+            tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: endScale, yPercent: 0, ease, duration: 8 }, 0);
+            tl.to({}, { duration: 1 }, 8);
+          }
+        );
       });
     });
 

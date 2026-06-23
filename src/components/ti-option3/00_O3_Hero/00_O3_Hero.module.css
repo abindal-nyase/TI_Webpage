@@ -55,12 +55,20 @@
   position: absolute;
   height: auto;
   user-select: none;
+  /* Stabilise rasterization of the large webp layers during the scrub. Without
+     a backface rule the browser re-rasterizes them as the GPU layer is created/
+     destroyed each frame, which flickers. Pairs with force3D:true on the tweens. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   /* pointer-events left ON so mouse reaches the image → parent .layer gets :hover */
 }
 
 /* ── Layer container — make the whole visible area hoverable ─────── */
 .layer {
   cursor: pointer;
+  /* Promote each layer to its own compositor layer up-front so it stays put
+     across the scrub instead of being promoted/demoted per tween tick. */
+  will-change: transform;
 }
 
 /* ═══════════════════════════════════════════════════════════════════

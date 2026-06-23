@@ -21,6 +21,21 @@ import O3SideNav from '../components/ti-option3/O3_SideNav/O3_SideNav';
 import SectionTheme from '../components/ti-option3/SectionTheme.astro';
 import BackToHub from '../components/BackToHub.astro';
 
+// Hero building base layers — preloaded in <head> so the browser starts
+// fetching the ~4.7MB stack at HTML-parse time (in parallel with the JS
+// bundle + fonts) instead of waiting for the Hero component to hydrate.
+// Same hashed URLs the component imports, so the <img src> hits cache.
+// Hover variants are intentionally NOT preloaded (deferred, never shown at load).
+import heroI1 from '../assets/hero-images/i1.webp?url';
+import heroI2 from '../assets/hero-images/i2.webp?url';
+import heroI3 from '../assets/hero-images/i3.webp?url';
+import heroI4 from '../assets/hero-images/i4.webp?url';
+import heroI5 from '../assets/hero-images/i5.webp?url';
+import heroI6 from '../assets/hero-images/i6.webp?url';
+import heroI7 from '../assets/hero-images/i7.webp?url';
+import heroI8 from '../assets/hero-images/i8.webp?url';
+const heroBaseImages = [heroI1, heroI2, heroI3, heroI4, heroI5, heroI6, heroI7, heroI8];
+
 /*
  * Single source of truth for the theme switcher.
  * These drive BOTH the scoped CSS rules (generated below) and the client-side
@@ -71,6 +86,13 @@ const themeOverrideCss = [
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
   <title>NYA TI — Option 3 (WIP)</title>
+
+  <!-- Preload hero building base layers (see frontmatter). Starts the large
+       webp fetch immediately at parse time so the building paints sooner and
+       the un-pinned load window shrinks. -->
+  {heroBaseImages.map((href) => (
+    <link rel="preload" as="image" href={href} type="image/webp" fetchpriority="high" />
+  ))}
 
   <!-- All font families used by the theme switcher must be loaded here -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
