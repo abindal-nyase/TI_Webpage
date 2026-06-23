@@ -16,23 +16,42 @@ const SECTIONS = [
 // The blend factor t (0=light, 1=dark) is the real pixel-sampled background
 // darkness behind each pill, so the nav flips white↔black as the page scrolls.
 const COLOR_PAIRS = {
-  num:     { light: 'var(--color-gray-700)',  dark: 'rgba(255,255,255,0.6)'  },
-  numHi:   { light: 'var(--color-black)',     dark: '#ffffff'                },
-  label:   { light: 'var(--color-black)',     dark: '#ffffff'                },
-  border:  { light: 'rgba(0,0,0,0.08)',       dark: 'rgba(255,255,255,0.1)'  },
-  hoverBg: { light: 'rgba(0,0,0,0.05)',       dark: 'rgba(255,255,255,0.07)' },
+  num:     { light: 'var(--color-gray-700)',  dark: 'oklch(1 0 0 / 0.6)'  },
+  numHi:   { light: 'var(--color-black)',     dark: 'oklch(1 0 0)'                },
+  label:   { light: 'var(--color-black)',     dark: 'oklch(1 0 0)'                },
+  border:  { light: 'oklch(0 0 0 / 0.08)',       dark: 'oklch(1 0 0 / 0.1)'  },
+  hoverBg: { light: 'oklch(0 0 0 / 0.05)',       dark: 'oklch(1 0 0 / 0.07)' },
   fill:    { light: 'var(--color-primary)',   dark: 'var(--color-accent)'    },
 };
+
+// Rasterize ANY computed CSS color string to straight sRGB [r,g,b,a] bytes
+// (a in 0..1). Works for rgb()/rgba()/hex AND oklch()/color() — modern browsers
+// return the authored color space verbatim from getComputedStyle, so we paint a
+// pixel and read it back instead of string-parsing channels. Cannot resolve
+// var() (canvas has no CSS scope) — callers resolve vars via a probe first.
+let _rasterCtx = null;
+function rasterizeColor(str) {
+  if (!_rasterCtx) {
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 1;
+    _rasterCtx = cv.getContext('2d', { willReadFrequently: true });
+  }
+  const ctx = _rasterCtx;
+  ctx.clearRect(0, 0, 1, 1);
+  ctx.fillStyle = '#000';
+  ctx.fillStyle = str; // ignored if str is unparseable; falls back to #000
+  ctx.fillRect(0, 0, 1, 1);
+  const d = ctx.getImageData(0, 0, 1, 1).data;
+  return [d[0], d[1], d[2], d[3] / 255];
+}
 
 function parseCSSColor(value) {
   const probe = document.createElement('div');
   probe.style.cssText = `color:${value};position:absolute;pointer-events:none;opacity:0`;
   document.body.appendChild(probe);
-  const raw = getComputedStyle(probe).color; // always returns rgb() or rgba()
+  const raw = getComputedStyle(probe).color; // resolves var(); may be rgb()/oklch()/color()
   document.body.removeChild(probe);
-  const m = raw.match(/[\d.]+/g);
-  if (!m) return [0, 0, 0, 1];
-  return [+m[0], +m[1], +m[2], m[3] !== undefined ? +m[3] : 1];
+  return rasterizeColor(raw);
 }
 
 function resolveAllColors() {
@@ -74,11 +93,10 @@ function pixelIsDark(x, y, navEl) {
   for (const el of els) {
     if (navEl.contains(el)) continue; // skip the nav's own pills/labels
     const c = getComputedStyle(el).backgroundColor;
-    const m = c.match(/[\d.]+/g);
-    if (!m) continue;
-    const a = m[3] !== undefined ? +m[3] : 1;
+    if (!c || c === 'transparent') continue;
+    const [r, g, b, a] = rasterizeColor(c);
     if (a < 0.5) continue; // see-through layer — keep looking underneath
-    return luminance(+m[0], +m[1], +m[2]) < 0.5 ? 1 : 0;
+    return luminance(r, g, b) < 0.5 ? 1 : 0;
   }
   return null;
 }

@@ -135,9 +135,9 @@ export default function O3TrustWall() {
       ctx = gsap.context(() => {
         const cs = getComputedStyle(document.documentElement);
         const primaryColor = cs.getPropertyValue("--color-primary").trim();
-        const surfaceColor = cs.getPropertyValue("--surface-page").trim() || "#F8FAFC";
-        const blackColor = cs.getPropertyValue("--color-black").trim() || "#0F172A";
-        const whiteColor = cs.getPropertyValue("--color-white").trim() || "#FFFFFF";
+        const surfaceColor = cs.getPropertyValue("--surface-page").trim() || "oklch(0.9842 0.0034 247.8575)";
+        const blackColor = cs.getPropertyValue("--color-black").trim() || "oklch(0.2077 0.0398 265.7549)";
+        const whiteColor = cs.getPropertyValue("--color-white").trim() || "oklch(1 0 0)";
 
         const trigger = {
           trigger: sectionRef.current,
@@ -169,8 +169,8 @@ export default function O3TrustWall() {
 
         gsap.fromTo(
           bodyRef.current,
-          { color: "rgba(255,255,255,0.55)" },
-          { color: "rgba(15,23,42,0.72)", scrollTrigger: trigger },
+          { color: "oklch(1 0 0 / 0.55)" },
+          { color: "oklch(0.2077 0.0398 265.7549 / 0.72)", scrollTrigger: trigger },
         );
       }, sectionRef);
     }

@@ -99,7 +99,7 @@
   align-items: center;
   padding: 0 4vw;
   z-index: 60;
-  background: var(--color-primary, #0F172A);
+  background: var(--color-primary, oklch(0.2077 0.0398 265.7549));
 }
 
 .headerLogo {
@@ -232,7 +232,7 @@
   width: 100%;
   height: 120vh;
   top: 0;
-  background: var(--color-primary, #0F172A);
+  background: var(--color-primary, oklch(0.2077 0.0398 265.7549));
   clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%);
 }
 
@@ -268,7 +268,7 @@
 .bg2Backing {
   position: absolute;
   inset: 0;
-  background: var(--color-primary, #0F172A);
+  background: var(--color-primary, oklch(0.2077 0.0398 265.7549));
   clip-path: polygon(0 15.6%, 100% 6%, 100% 50%, 0 50%);
 }
 
@@ -294,20 +294,20 @@
   z-index: 1;
   mask-image: linear-gradient(
     to bottom,
-    #000 0%,
-    #000 25%,
-    rgba(0, 0, 0, 0.85) 32%,
-    rgba(0, 0, 0, 0.55) 39%,
-    rgba(0, 0, 0, 0.25) 45%,
+    oklch(0 0 0) 0%,
+    oklch(0 0 0) 25%,
+    oklch(0 0 0 / 0.85) 32%,
+    oklch(0 0 0 / 0.55) 39%,
+    oklch(0 0 0 / 0.25) 45%,
     transparent 50%
   );
   -webkit-mask-image: linear-gradient(
     to bottom,
-    #000 0%,
-    #000 25%,
-    rgba(0, 0, 0, 0.85) 32%,
-    rgba(0, 0, 0, 0.55) 39%,
-    rgba(0, 0, 0, 0.25) 45%,
+    oklch(0 0 0) 0%,
+    oklch(0 0 0) 25%,
+    oklch(0 0 0 / 0.85) 32%,
+    oklch(0 0 0 / 0.55) 39%,
+    oklch(0 0 0 / 0.25) 45%,
     transparent 50%
   );
 }
@@ -316,7 +316,7 @@
 .loadCover {
   position: absolute;
   inset: 0;
-  background: var(--color-primary, #0F172A);
+  background: var(--color-primary, oklch(0.2077 0.0398 265.7549));
   /* Above bg1/bg2 (z 1) to hide the white .home wedge, below the building
      (movehome z 50), header/title (z 60) and nav. Removed via display:none in
      buildTimeline once the building is visible. */

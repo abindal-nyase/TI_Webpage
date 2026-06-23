@@ -39,7 +39,7 @@ export function Intro() {
         const cs          = getComputedStyle(document.documentElement)
         const primaryColor = cs.getPropertyValue('--color-primary').trim()
         const accentColor  = cs.getPropertyValue('--color-accent').trim()
-        const blackColor   = cs.getPropertyValue('--color-black').trim() || '#0F172A'
+        const blackColor   = cs.getPropertyValue('--color-black').trim() || 'oklch(0.2077 0.0398 265.7549)'
 
         const trigger = {
           trigger: sectionRef.current,
@@ -58,7 +58,7 @@ export function Intro() {
         gsap.fromTo(
           sectionRef.current.parentElement,
           { backgroundColor: primaryColor },
-          { backgroundColor: '#ffffff', scrollTrigger: trigger },
+          { backgroundColor: 'oklch(1 0 0)', scrollTrigger: trigger },
         )
 
         gsap.fromTo(
@@ -69,8 +69,8 @@ export function Intro() {
 
         gsap.fromTo(
           subRef.current,
-          { color: 'rgba(255,255,255,0.55)' },
-          { color: 'rgba(15,23,42,0.72)', scrollTrigger: trigger },
+          { color: 'oklch(1 0 0 / 0.55)' },
+          { color: 'oklch(0.2077 0.0398 265.7549 / 0.72)', scrollTrigger: trigger },
         )
       }, sectionRef)
     }

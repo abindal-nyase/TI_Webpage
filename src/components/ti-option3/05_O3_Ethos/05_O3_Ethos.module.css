@@ -8,7 +8,7 @@
 
 /* ── Section ─────────────────────────────────────────────────────── */
 .section {
-  background: #ffffff;
+  background: oklch(1 0 0);
   width: 100%;
   overflow: hidden;
 }
@@ -17,69 +17,46 @@
 .inner {
   position: relative;
   width: 100%;
-  height: 62vh;
-  display: flex;
-  align-items: stretch;
+  height: 62vh;            /* crops the bleeding portrait at the chest */
+  padding: 7vh 0 0 6vw;
   overflow: hidden;
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   RIGHT COLUMN — portrait
+   PORTRAIT — floats right (original size/bleed), quote wraps around it
    ══════════════════════════════════════════════════════════════════ */
-
-.left {
-  flex: 0 0 46%;
-  position: relative;
-  /* no overflow clip — photo bleeds past this column to the section edge */
-}
 
 .photo {
   display: block;
-  height: 165%;          /* zoom in — head fills frame */
+  float: right;
+  height: 165%;          /* original sizing — head fills, bleeds, untouched */
   width: auto;
   max-width: none;
   object-fit: contain;
   object-position: top center;
-  position: absolute;
-  top: 0;                /* anchor head at top, crop bottom at chest */
-  right: 0;              /* flush to section's right edge, bleeds leftward */
+  /* image already has a transparent bg — wrap text to its alpha silhouette */
+  shape-outside: url('/pav-img/Nabih-5-2.png');
+  shape-image-threshold: 0.5;
+  shape-margin: 1.2rem;
   user-select: none;
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   LEFT COLUMN — quote
+   QUOTE
    ══════════════════════════════════════════════════════════════════ */
 
-.right {
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 0 4vw 0 6vw;
-}
-
-/* Large decorative opening quotation mark */
+/* Large decorative opening quotation mark — sits ABOVE the quote text */
 .openMark {
-  position: absolute;
-  top: 18%;
-  left: 5vw;
+  display: block;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(80px, 10vw, 140px);
+  font-size: clamp(70px, 8vw, 120px);
   font-style: italic;
-  color: #6B2D8B;
-  opacity: 0.12;
-  line-height: 1;
+  color: oklch(0.4285 0.1547 311.9825);
+  opacity: 0.18;
+  line-height: 0.4;
+  margin-bottom: 0.1em;
   pointer-events: none;
   user-select: none;
-}
-
-.slide {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
 }
 
 /* ── Quote text ──────────────────────────────────────────────────── */
@@ -87,21 +64,21 @@
   margin: 0;
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   font-style: italic;
-  font-size: clamp(18px, 2.2vw, 30px);
+  font-size: clamp(16px, 1.9vw, 26px);
   font-weight: 500;
   line-height: 1.6;
-  color: #1a1818;
+  color: oklch(0.2113 0.0032 17.407);
   letter-spacing: 0.01em;
   /* GSAP manages opacity/transform — starts hidden via gsap.set */
 }
 
 /* ── Signature — right-aligned ───────────────────────────────────── */
 .signature {
-  margin: 0;
+  margin: 0.5em 0 0;
   font-family: 'Great Vibes', cursive;
   font-size: clamp(28px, 3vw, 46px);
   font-weight: 400;
-  color: #6B2D8B;
+  color: oklch(0.4285 0.1547 311.9825);
   line-height: 1.2;
   text-align: right;
   align-self: flex-end;
@@ -114,23 +91,16 @@
    Quote font scales with viewport width. */
 @media (max-width: 834px) {
   .inner {
-    height: auto;
-    flex-direction: column;
+    padding: 14vh 7vw;
   }
-  .left,
   .photo {
     display: none;
   }
-  .right {
-    flex: 1 1 100%;
-    padding: 14vh 7vw;
-  }
   .openMark {
-    left: 6vw;
-    font-size: clamp(70px, 18vw, 130px);
+    font-size: clamp(60px, 16vw, 110px);
   }
   .quote {
-    font-size: clamp(22px, 5.2vw, 40px);
+    font-size: clamp(20px, 4.6vw, 36px);
   }
   .signature {
     font-size: clamp(30px, 7vw, 52px);

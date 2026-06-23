@@ -36,12 +36,12 @@
   width: 100%;
   box-sizing: border-box;
   transition: background 0.2s var(--ease-out);
-  border-top: 1px solid var(--pill-border, rgba(128,128,128,0.1));
+  border-top: 1px solid var(--pill-border, oklch(0.5999 0 0 / 0.1));
 }
 
 .item:first-child .btn { border-top: none; }
 
-.btn:hover { background: var(--pill-hover-bg, rgba(128,128,128,0.08)); }
+.btn:hover { background: var(--pill-hover-bg, oklch(0.5999 0 0 / 0.08)); }
 
 /* ── fill layer (top → down) ── */
 .fillBg {
@@ -76,7 +76,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   white-space: nowrap;
-  color: var(--pill-num, rgba(128,128,128,0.6));
+  color: var(--pill-num, oklch(0.5999 0 0 / 0.6));
   transition: color 0.25s var(--ease-out);
 }
 
