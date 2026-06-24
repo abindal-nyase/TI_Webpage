@@ -1,0 +1,38 @@
+---
+/*
+ * style-explorer.astro — local Section Style Explorer (client-approval tool).
+ *
+ * Standalone page (NOT linked from the live site / not in the page flow). Renders
+ * each Option-3 section in isolation with runtime-switchable fonts + color themes
+ * and a localStorage approval tracker. All logic lives in StyleExplorer.jsx.
+ *
+ * Imports BOTH index.css and design-system.css so the static design tokens
+ * (--surface-card, --sp-*, --radius-*, grays) resolve correctly — additive only,
+ * no existing file is modified. The explorer overrides the themeable vars on
+ * :root at runtime, which win over these stylesheets.
+ */
+import '../index.css';
+import '../design/design-system.css';
+import GlobalSetup from '../components/GlobalSetup/GlobalSetup';
+import StyleExplorer from '../components/style-explorer/StyleExplorer.jsx';
+import BackToHub from '../components/BackToHub.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+  <title>Section Style Explorer</title>
+  <!-- Google Fonts are loaded dynamically per pairing by StyleExplorer.jsx. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+  <BackToHub />
+  <GlobalSetup client:load />
+  <StyleExplorer client:only="react" />
+</body>
+</html>
