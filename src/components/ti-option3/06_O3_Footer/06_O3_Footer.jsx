@@ -16,7 +16,7 @@ const NAV_COLS = [
       { label: "info@nyase.com", href: "mailto:info@nyase.com" },
       { label: "(213) 362-0707", href: "tel:+12133620707" },
       {
-        label: "HQ: 350 S Grand Ave oklch(0.4446 0.147 141.2433 / 0)",
+        label: "HQ: 350 S Grand Ave #1600",
         label2: "Los Angeles, CA 90071",
         href: "https://maps.google.com/?q=350+S+Grand+Ave+1600+Los+Angeles+CA+90071",
         external: true,

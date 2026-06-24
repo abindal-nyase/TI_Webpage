@@ -35,7 +35,8 @@
   position: relative;
   z-index: 2;
   max-width: var(--max-w);
-  margin-inline: auto;
+  margin-inline: 0 auto;     /* left-align the header block (was centered) */
+  text-align: left;
   padding: clamp(2rem, 7vw, 4rem) var(--section-px) clamp(1rem, 3vw, 2rem);
 }
 .eyebrow {
@@ -150,6 +151,19 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bandBg, .pointTitle, .pointContent, .pointLabel { will-change: auto; }
+}
+
+/* Large desktops (2560+): the base caps hold the conveyor type tiny while the
+   100vh stage has loads of vertical room. The size already tracks viewport
+   HEIGHT (vh), so raising the caps just lets tall viewports breathe — short
+   ones stay clamped by the vh term and never overflow the pinned stage. */
+@media (min-width: 1800px) {
+  .isAnimated .pointTitle {
+    font-size: clamp(2rem, calc(1.2vw + 1.6vh), 3rem);
+  }
+  .isAnimated .pointContent {
+    font-size: clamp(1.1rem, calc(0.3vw + 1.6vh), 1.7rem);
+  }
 }
 
 /* Landscape phones (e.g. 844×390): the short viewport vertically centres each

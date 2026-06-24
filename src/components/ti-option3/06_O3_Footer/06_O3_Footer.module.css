@@ -146,6 +146,27 @@
 
 /* ── Responsive ───────────────────────────────────────────────────── */
 
+/* ── Large desktops — fixed-px fonts read tiny on 2560+; scale up. ──── */
+@media (min-width: 1800px) {
+  .footer     { padding: 100px 8vw 0; }
+  .logo       { height: 68px; margin-bottom: 64px; }
+  .eyebrow    { font-size: 16px; }
+  .cta        { font-size: 14px; padding: 16px 42px; }
+  .colHeading { font-size: 13px; }
+  .link       { font-size: 19px; }
+  .copy       { font-size: 13px; }
+}
+
+@media (min-width: 2400px) {
+  .logo       { height: 80px; }
+  .eyebrow    { font-size: 18px; }
+  .cta        { font-size: 16px; }
+  .colHeading { font-size: 15px; }
+  .link       { font-size: 22px; }
+  .copy       { font-size: 14px; }
+  .grid       { gap: 64px; }
+}
+
 @media (max-width: 768px) {
   .footer { padding: 60px 6vw 0; }
   .grid   { grid-template-columns: repeat(2, 1fr); gap: 40px; }

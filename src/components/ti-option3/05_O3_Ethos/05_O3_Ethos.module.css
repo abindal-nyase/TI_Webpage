@@ -64,7 +64,7 @@
   margin: 0;
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   font-style: italic;
-  font-size: clamp(16px, 1.9vw, 26px);
+  font-size: clamp(18px, 1.7vw, 30px);
   font-weight: 500;
   line-height: 1.6;
   color: oklch(0.2113 0.0032 17.407);
@@ -76,7 +76,7 @@
 .signature {
   margin: 0.5em 0 0;
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(28px, 3vw, 46px);
+  font-size: clamp(28px, 2.6vw, 50px);
   font-weight: 400;
   color: oklch(0.4285 0.1547 311.9825);
   line-height: 1.2;
@@ -91,18 +91,45 @@
    Quote font scales with viewport width. */
 @media (max-width: 834px) {
   .inner {
-    padding: 14vh 7vw;
+    /* photo dropped — let content set the height so the quote never clips
+       against the desktop 62vh box (overflow:hidden was cutting it off). */
+    height: auto;
+    overflow: visible;
+    padding: 12vh 7vw;
   }
   .photo {
     display: none;
   }
   .openMark {
-    font-size: clamp(60px, 16vw, 110px);
+    font-size: clamp(54px, 13vw, 90px);
   }
   .quote {
-    font-size: clamp(20px, 4.6vw, 36px);
+    font-size: clamp(18px, 3.4vw, 27px);
   }
   .signature {
-    font-size: clamp(30px, 7vw, 52px);
+    font-size: clamp(26px, 5vw, 40px);
+  }
+}
+
+/* ── Large desktops — base caps leave the quote tiny in a sea of white;
+   grow type with the viewport so the column fills its space. ──────── */
+@media (min-width: 1800px) {
+  .openMark {
+    font-size: clamp(120px, 7vw, 170px);
+  }
+  .quote {
+    font-size: clamp(30px, 1.9vw, 40px);
+  }
+  .signature {
+    font-size: clamp(46px, 2.8vw, 60px);
+  }
+}
+
+@media (min-width: 2400px) {
+  .quote {
+    font-size: clamp(40px, 1.85vw, 50px);
+  }
+  .signature {
+    font-size: clamp(56px, 2.6vw, 70px);
   }
 }
