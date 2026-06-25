@@ -73,7 +73,7 @@ export function DiscTextCol({ items, dropped, droppedGreen, activeI, phase }) {
                         <path d="M11.5 2.5a1.5 1.5 0 0 1 2 2L5 13l-3 1 1-3 8.5-8.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                     </span>
-                    <p key={`pos-${i}-${posOn}`} className={[s.discPosTxt, posOn && s.discPosTxtWrite].filter(Boolean).join(' ')}>
+                    <p key={`pos-${i}-${posOn}`} className={[s.discPosTxt, posOn && s.discPosTxtWrite, posLive && s.discPosTxtLive].filter(Boolean).join(' ')}>
                       {item.ptext}
                     </p>
                   </div>

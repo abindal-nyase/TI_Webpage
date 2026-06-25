@@ -8,7 +8,7 @@ export const DISCS = {
   scrollVhPerPhase:   30,
   baselinePct:        0,
   fontScale:          1.0,
-  posNegFontRatio:    0.9,
+  posNegFontRatio:    1.1,   // solution text larger than risk text (prominence)
   dropAnimDuration:   0.58,
   riskBarH:           14,
   riskBarMaxW:        null,
