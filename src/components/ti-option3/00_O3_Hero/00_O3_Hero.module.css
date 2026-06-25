@@ -318,10 +318,20 @@
   position: absolute;
   inset: 0;
   background: var(--color-primary, oklch(0.2077 0.0398 265.7549));
-  /* Above bg1/bg2 (z 1) to hide the white .home wedge, below the building
-     (movehome z 50), header/title (z 60) and nav. Removed via display:none in
-     buildTimeline once the building is visible. */
-  z-index: 2;
+  /* z-index 40: deliberately ABOVE the next section (TIDifferences, z-index:36)
+     and below the LOWEST building layer (l8, z-index:42), the header/title
+     (z 60) and nav.
+
+     Why above 36: .home does NOT create a stacking context (see .home note),
+     so during the pre-pin load window the next section — which overlaps ≈450px
+     up into the hero's 100vh before its pin-spacer exists — competes with the
+     cover at the root level. At the old z-index:2 it painted OVER the navy
+     cover, flashing the next section's cyan headline (and the white .home wedge)
+     into the hero until the building loaded. z-index:40 keeps the cover on top
+     of that bleed; it's still below every building layer so the building rides
+     over it, and the cover is removed (display:none) in buildTimeline the
+     instant the building paints. */
+  z-index: 40;
 }
 
 /* ── exit overlay — scrubbed white fade before pin releases ──────── */
