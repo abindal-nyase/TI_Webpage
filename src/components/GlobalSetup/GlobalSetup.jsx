@@ -24,10 +24,23 @@ export default function GlobalSetup() {
     // Refresh all ScrollTrigger positions after the initial hydration burst.
     // client:visible islands mount incrementally, adding height to the page.
     // This ensures every trigger's start/end is calculated against final layout.
+    //
+    // A single timed refresh is fragile: pinned sections (Hero, ClientCare)
+    // derive their pin-spacer height from window.innerHeight / font-sized
+    // elements measured at build time. If fonts or hero images settle AFTER
+    // that refresh, every downstream section (Ethos worst) gets displaced —
+    // it lands thousands of px below the reachable scroll range on first load.
+    // Refresh on every signal that can change layout height: the hydration
+    // timeout, fonts ready, and window load (all images decoded).
     const t = setTimeout(() => ScrollTrigger.refresh(), 400)
+    document.fonts.ready.then(() => ScrollTrigger.refresh())
+    const onLoad = () => ScrollTrigger.refresh()
+    if (document.readyState === 'complete') onLoad()
+    else window.addEventListener('load', onLoad)
 
     return () => {
       clearTimeout(t)
+      window.removeEventListener('load', onLoad)
       lenis.destroy()
     }
   }, [])

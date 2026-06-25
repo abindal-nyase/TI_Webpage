@@ -537,11 +537,30 @@
   font-weight: 400;
   font-style: normal;
   line-height: 1.6;
-  color: oklch(0.7343 0.0218 81.7627 / 0.62);
+  /* Prominence ladder (5 tiers). ALL tiers stay high-contrast on the dark navy
+     backdrop — the hierarchy is carried mostly by weight + small brightness
+     steps, never by dropping text into an unreadable low-contrast range. Risks
+     are warm cream (hue 82); solutions are near-white (hue 86) and always out-
+     rank every risk in both brightness and weight.
+
+     TIER 2 — risk dropped, not current, no solution yet. */
+  color: oklch(0.86 0.018 81.7627 / 0.95);
   margin: 0;
-  transition: color 0.4s ease;
+  transition: color 0.4s ease, font-weight 0.4s ease;
 }
-.discCardRed .discNegTxt { color: var(--text); }
+/* TIER 3 — current risk (red phase, no solution yet). Brightest + heaviest of
+   the risks; still below every solution. */
+.discCardRed .discNegTxt {
+  color: oklch(0.90 0.016 81.7627 / 1);
+  font-weight: 450;
+}
+/* TIER 1 — risk whose solution is written. Eases to the dimmest risk as the
+   solution lands, but stays high-contrast (≈0.76 effective L on dark). Defined
+   after .discCardRed so it wins when a card carries both classes. */
+.discCardGreen .discNegTxt {
+  color: oklch(0.82 0.016 81.7627 / 0.9);
+  font-weight: 400;
+}
 
 /* ── POSITIVE SLOT ────────────────────────────────────────────────────────── */
 .discPosSlotReserved {
@@ -572,17 +591,24 @@
 }
 .pencilSvg { width: 13px; height: 13px; display: block; }
 
+/* TIER 4 — a written solution (not the current one). Brighter + heavier than
+   every risk, so all solutions read as the dominant layer. */
 .discPosTxt {
   font-family: var(--font-display);
   font-size: calc(clamp(1rem, 1.35vw, 1.18rem) * var(--font-scale, 1) * var(--pos-neg-ratio, 1));
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.65;
-  color: var(--white);
+  color: oklch(0.95 0.01 86.8308 / 1);
   margin: 0;
   clip-path: inset(0 100% 0 0);
+  transition: color 0.4s ease;
 }
 .discPosTxtWrite {
   animation: handwrite 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+/* TIER 5 — the current solution being written. Brightest element in the list. */
+.discPosTxtLive {
+  color: oklch(0.99 0.005 86.8308 / 1);
 }
 
 /* ── OPTION LABELS ────────────────────────────────────────────────────────── */

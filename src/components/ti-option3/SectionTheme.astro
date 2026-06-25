@@ -36,6 +36,12 @@ const SECTION_OVERRIDES = {
     '--font-display': "'Cormorant Garamond', Georgia, serif",
     '--font-body': "'Montserrat', system-ui, sans-serif",
   },
+  // "Academic Precision" pairing for the Hero (EB Garamond + Fira Sans).
+  // Fonts loaded in index.astro's <head>.
+  'hero': {
+    '--font-display': "'EB Garamond', Georgia, serif",
+    '--font-body': "'Fira Sans', system-ui, sans-serif",
+  },
 };
 
 const { scheme, font, section, vars = {} } = Astro.props;

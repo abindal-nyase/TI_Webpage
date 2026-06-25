@@ -14,6 +14,11 @@
   color: var(--white);
 }
 
+/* Positioning context for the absolutely-placed Contact Us CTA in BOTH modes
+   (static fallback + animated). In animated mode .isAnimated also sets
+   position:relative; this covers the static-fallback / no-JS case. */
+.stage { position: relative; }
+
 /* ── Background layers ── */
 .bgLayers { position: absolute; inset: 0; z-index: 0; }
 .bandBg {
@@ -27,7 +32,19 @@
   position: absolute;
   inset: 0;
   background: var(--color-primary);
-  opacity: 0.62;               /* photo reads through; text stays legible */
+  opacity: 0.72;               /* photo reads through; text stays legible */
+}
+/* Animated mode centres every point's text. A flat tint can't beat the
+   brightest patches of high-key photos (applause, bright boardrooms), so the
+   body copy failed AA there. Add a centred scrim: near-opaque primary behind
+   the text band, fading to a light tint at the edges so the photo still reads. */
+.isAnimated .overlay {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 85% 68% at 50% 50%,
+      color-mix(in oklch, var(--color-primary) 92%, transparent),
+      color-mix(in oklch, var(--color-primary) 60%, transparent) 64%,
+      color-mix(in oklch, var(--color-primary) 48%, transparent));
 }
 
 /* ── Header ── */
@@ -149,8 +166,70 @@
   will-change: transform;
 }
 
+/* ── Contact Us CTA — subtle, persistent through the section ──────────
+   Sits inside the pinned stage so it holds its bottom-right spot for the whole
+   pinned run, then scrolls away with the section. Above the points (z 1) and
+   header (z 2) and re-enables pointer events (points set them off). */
+.contactCta {
+  position: absolute;
+  right: var(--section-px);
+  bottom: clamp(1.25rem, 3.5vh, 2.75rem);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.15rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  text-decoration: none;
+  white-space: nowrap;
+  background: color-mix(in oklch, var(--color-primary) 52%, transparent);
+  border: 1px solid oklch(1 0 0 / 0.30);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+  transition:
+    background 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out),
+    color 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+.contactCta:hover,
+.contactCta:focus-visible {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+.contactCta:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+.contactCtaArrow {
+  font-size: 1.05em;
+  line-height: 1;
+  transition: transform 0.25s var(--ease-out);
+}
+.contactCta:hover .contactCtaArrow,
+.contactCta:focus-visible .contactCtaArrow {
+  transform: translateX(3px);
+}
+
+/* Landscape phones (short viewport): shrink so it doesn't crowd the conveyor. */
+@media (orientation: landscape) and (max-height: 600px) {
+  .contactCta {
+    padding: 0.4rem 0.85rem;
+    bottom: 0.75rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bandBg, .pointTitle, .pointContent, .pointLabel { will-change: auto; }
+  .contactCta { transition: none; }
 }
 
 /* Large desktops (2560+): the base caps hold the conveyor type tiny while the

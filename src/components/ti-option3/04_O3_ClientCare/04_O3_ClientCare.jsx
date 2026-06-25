@@ -18,7 +18,7 @@ import partnershipBg from '../../../assets/client-care/partnership.webp'
 gsap.registerPlugin(ScrollTrigger)
 
 const DESCRIPTION =
-  'How NYA treats tenant improvement work — and the clients behind it.'
+  'How NYA treats tenant improvement work, and the clients behind it.'
 
 const BUCKETS = [
   {
@@ -269,7 +269,7 @@ export default function O3ClientCare() {
         </div>
 
         <div className={s.header}>
-          <h2 className={s.title}>A Culture of Trust</h2>
+          <h2 className={s.title}>The Experience of Working With NYA</h2>
           <p className={s.intro}>{DESCRIPTION}</p>
         </div>
 
@@ -285,6 +285,18 @@ export default function O3ClientCare() {
             </div>
           ))}
         </div>
+
+        {/* Persistent contact affordance. Lives INSIDE the pinned stage, so it
+            stays put for the whole pinned ClientCare run (the only conversion
+            path before the footer ~26k px down — audit v2 remaining #2) and
+            scrolls away cleanly once the section unpins. Subtle by design. */}
+        <a
+          className={s.contactCta}
+          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
+        >
+          <span className={s.contactCtaText}>Contact Us</span>
+          <span className={s.contactCtaArrow} aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </section>
   );

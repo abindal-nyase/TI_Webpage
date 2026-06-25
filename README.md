@@ -55,11 +55,15 @@ TI_Webpage/
 │   │   └── ti-hotspots.json     # Hotspot overlays for map
 │   ├── hooks/
 │   │   └── useIsomorphicLayoutEffect.js  # SSR-safe layout effect hook
-│   └── index.css                # Global styles
+│   ├── index.css                # Global styles
+│   └── assets/                  # Bundled via Vite import (?url) — NOT public/
+│       ├── nya-logo.svg         # NYA logo (white) — imported by Hero + Footer
+│       ├── nya-blue.png         # NYA logo (blue)
+│       ├── hero-images/         # Hero building-layer images
+│       ├── company-logos/       # Client/partner logos
+│       └── client-care/         # Client-care section imagery
 ├── public/                      # Static assets served at root
 │   ├── Hero.jpg                 # Hero background image
-│   ├── nya-logo.png             # NYA logo (white)
-│   ├── nya-blue.png             # NYA logo (blue)
 │   ├── favicon.svg
 │   ├── option2/                 # Assets for ti-option2 concept
 │   └── .htaccess                # GoDaddy rewrite rules

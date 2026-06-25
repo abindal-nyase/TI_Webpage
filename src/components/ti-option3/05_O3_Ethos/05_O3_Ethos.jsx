@@ -62,7 +62,7 @@ export default function O3Ethos() {
           {QUOTE}
         </blockquote>
         <p ref={sigRef} className={s.signature}>
-          — Nabih Youssef
+          - Nabih Youssef
         </p>
 
       </div>
