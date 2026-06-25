@@ -17,29 +17,43 @@
 .inner {
   position: relative;
   width: 100%;
-  min-height: 62vh;        /* crops the bleeding portrait at the chest, but
-                              grows if the quote is taller so text never clips */
+  min-height: 54vh;        /* the crop band — photo is bottom-clipped to this */
   padding: 7vh 0 0 6vw;
-  overflow: hidden;
+  overflow: hidden;        /* crops the absolutely-positioned portrait at chest */
 }
 
 /* ══════════════════════════════════════════════════════════════════
    PORTRAIT — floats right (original size/bleed), quote wraps around it
    ══════════════════════════════════════════════════════════════════ */
 
+/* Portrait is taken OUT OF FLOW (absolute) on purpose. As a float inside an
+   overflow:hidden BFC it forced .inner to grow to the photo's full height, so
+   the chest crop was lost and the head ballooned. Absolute = it can't grow the
+   section; .inner stays at its min-height crop band and overflow:hidden clips
+   the portrait at the chest, exactly like the reference. */
 .photo {
+  position: absolute;
+  top: 3vh;
+  right: 2vw;
   display: block;
-  float: right;
-  height: 165%;          /* original sizing — head fills, bleeds, untouched */
+  height: 88vh;          /* head-to-chest; bottom is cropped by .inner */
   width: auto;
   max-width: none;
   object-fit: contain;
   object-position: top center;
-  /* image already has a transparent bg — wrap text to its alpha silhouette */
-  shape-outside: url('/pav-img/Nabih-5-2.png');
-  shape-image-threshold: 0.5;
-  shape-margin: 1.2rem;
+  pointer-events: none;
   user-select: none;
+  z-index: 0;
+}
+
+/* Keep the quote clear of the portrait (no shape-outside now that the photo
+   is out of flow — the text would otherwise run under it). */
+.openMark,
+.quote,
+.signature {
+  position: relative;
+  z-index: 1;
+  max-width: 52%;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -100,6 +114,12 @@
   }
   .photo {
     display: none;
+  }
+  /* photo gone — let the quote use the full column again */
+  .openMark,
+  .quote,
+  .signature {
+    max-width: 100%;
   }
   .openMark {
     font-size: clamp(54px, 13vw, 90px);
