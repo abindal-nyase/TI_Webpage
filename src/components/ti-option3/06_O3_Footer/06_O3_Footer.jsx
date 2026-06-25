@@ -1,4 +1,5 @@
 import s from './06_O3_Footer.module.css';
+import nyaLogo from '../../../assets/nya-logo.svg?url';
 
 const NAV_COLS = [
   {
@@ -76,7 +77,7 @@ export default function O3Footer() {
     <footer id="section-footer" className={s.footer}>
 
       {/* ── NYA Logo ── */}
-      <img src="/nya-logo.png" alt="Nabih Youssef Associates" className={s.logo} />
+      <img src={nyaLogo} alt="Nabih Youssef Associates" className={s.logo} />
 
       {/* ── Top — headline + CTA ── */}
       <div className={s.top}>

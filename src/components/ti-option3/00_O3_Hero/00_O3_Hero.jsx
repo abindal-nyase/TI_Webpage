@@ -20,7 +20,7 @@ import i7 from '../../../assets/hero-images/i7.webp?url'
 import i7I from '../../../assets/hero-images/i7I.webp?url'
 import i8 from '../../../assets/hero-images/i8.webp?url'
 import i8I from '../../../assets/hero-images/i8I.webp?url'
-import nyaWhite from '../../../assets/nya-white.webp?url'
+import nyaWhite from '../../../assets/nya-logo.svg?url'
 
 gsap.registerPlugin(ScrollTrigger)
 
