@@ -83,14 +83,14 @@ const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 const LAYERS = [
-  { id: 1, base: i1,  hover: i1I },
-  { id: 2, base: i2,  hover: i2I },
-  { id: 3, base: i3,  hover: i3I },
-  { id: 4, base: i4,  hover: i4I },
-  { id: 5, base: i5,  hover: i5I },
-  { id: 6, base: i6,  hover: i6I },
-  { id: 7, base: i7,  hover: i7I },
-  { id: 8, base: i8,  hover: i8I },
+  { id: 1, base: i1,  hover: i1I, captionSide: 'left',  caption: "Rooftops have become some of the most valuable real estate in a building, transforming into destinations for outdoor dining, lounge areas, green roofs, solar canopies, and other amenities, while also accommodating the critical infrastructure that supports building performance, connection, wellness, and unforgettable occupant experiences." },
+  { id: 2, base: i2,  hover: i2I, captionSide: 'right', caption: "Some of the most transformative tenant improvements happen outdoors, where patios, roof decks, canopies, lighting, and built-up rooftop spaces turn previously overlooked areas into vibrant extensions of the building." },
+  { id: 3, base: i3,  hover: i3I, captionSide: 'left', caption: "Transforming an ordinary space into a theater, atrium, or interconnected workplace often begins with rethinking the structure itself, unlocking the kinds of memorable experiences that help buildings stand apart in a competitive market." },
+  { id: 4, base: i4,  hover: i4I, captionSide: 'right', captionColor: 'var(--color-primary)', caption: "The right tenant improvement can breathe new life into a floor, transforming outdated space through dynamic lobbies, multimedia experiences, flexible meeting environments, movable partitions, statement art, and thoughtful reconfiguration that makes the entire floor feel new again." },
+  { id: 5, base: i5,  hover: i5I, captionSide: 'left', captionColor: 'var(--color-primary)', caption: "The most impactful office transformations reshape how people move, connect, and collaborate, opening floors, adding feature staircases and mezzanines, introducing glass-enclosed spaces and office pods, and reconfiguring layouts to unlock the full potential of the workplace." },
+  { id: 6, base: i6,  hover: i6I, captionSide: 'right', captionColor: 'var(--color-primary)', caption: "The lobby sets the tone for everything that follows, and today's renovations are transforming these spaces through dramatic staircases, curated art, retail amenities, and elevated arrival experiences that strengthen a building's brand, attract tenants, and enhance asset value." },
+  { id: 7, base: i7,  hover: i7I, captionSide: 'left', captionColor: 'var(--color-primary)', caption: "Today's most successful properties extend beyond their walls, using retail spaces, outdoor patios, and activated streetscapes to attract visitors, enhance tenant experience, and strengthen the building's connection to its community." },
+  { id: 8, base: i8,  hover: i8I, captionSide: 'right', captionColor: 'var(--color-primary)', caption: "The performance of a building is often determined by what happens below ground, where infrastructure upgrades, critical equipment, and high-capacity storage quietly power everything that happens above it." },
 ]
 
 // ── Layer layout (USER-TUNABLE — SINGLE SOURCE OF TRUTH) ────────────────────
@@ -128,6 +128,7 @@ export default function O3Hero() {
   const bg2BackingRef  = useRef(null);
   const exitOverlayRef = useRef(null);
   const loadCoverRef   = useRef(null);
+  const captionRefs    = useRef([]);
   const mmRef          = useRef(null);
 
   useLayoutEffect(() => {
@@ -143,6 +144,7 @@ export default function O3Hero() {
       bg2ImgRef.current,
       exitOverlayRef.current,
       ...layerRefs.current,
+      ...captionRefs.current.filter(Boolean),
     ]);
 
     mm.add(
@@ -463,6 +465,21 @@ export default function O3Hero() {
               },
               CASCADE_START,
             );
+
+          // Caption reveal — fade each layer's description in as that layer rises,
+          // then fade it out just before the next layer begins to rise.
+          LAYERS.forEach((layer, i) => {
+            const captionEl = layer.caption && captionRefs.current[i];
+            if (!captionEl) return;
+            const isLast = i === LAYERS.length - 1;
+            const fadeIn  = CASCADE_START + i * LAYER_STEP;
+            const fadeOut = isLast ? cascadeEnd : CASCADE_START + (i + 1) * LAYER_STEP;
+            const FADE = 500;
+            tl.to(captionEl, { opacity: 1, duration: FADE, ease: 'power1.out' }, fadeIn);
+            tl.to(captionEl, { opacity: 0, duration: FADE, ease: 'power1.in' },
+              Math.max(fadeIn + FADE * 2, fadeOut - FADE));
+          });
+
         };;
 
         // Recompute fit before ScrollTrigger re-reads function-based values.
@@ -694,6 +711,20 @@ export default function O3Hero() {
             </div>
           ))}
         </div>
+
+        {/* Layer captions — outside movehome so they are NOT scaled with the
+            building. GSAP fades each one in/out synced to its layer's rise. */}
+        {LAYERS.map((layer, i) => layer.caption ? (
+          <div
+            key={`cap-${layer.id}`}
+            ref={el => { captionRefs.current[i] = el; }}
+            className={`${s.layerCaption} ${layer.captionSide === 'right' ? s.layerCaptionRight : ''}`}
+            style={layer.captionColor ? { color: layer.captionColor } : undefined}
+          >
+            {layer.caption}
+          </div>
+        ) : null)}
+
       </div>
     </section>
   );

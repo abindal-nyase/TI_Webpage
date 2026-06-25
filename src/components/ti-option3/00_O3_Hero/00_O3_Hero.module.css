@@ -103,12 +103,13 @@
 }
 
 .headerLogo {
-  height: 44px;
+  height: 56px;
   width: auto;
   display: block;
   object-fit: contain;
   user-select: none;
   margin-left: auto;
+  filter: brightness(0) invert(1);
 }
 
 /* Phones — shrink the logo top-right; width binds, height follows aspect ratio.
@@ -332,3 +333,39 @@
   z-index: 50;
   pointer-events: none;
 }
+
+/* ── Layer captions — scroll-revealed descriptions, one per building floor ─ */
+/* Positioned inside .trigger but OUTSIDE .movehome so they are not
+   scaled by the building's contain-fit transform. GSAP controls opacity.
+   Centered horizontally with left/right:0 + margin:auto (avoids transform
+   conflicts with GSAP's force3D default). */
+.layerCaption {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 4vw;
+  width: min(28vw, 400px);
+  text-align: left;
+  color: white;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.65;
+  opacity: 0;
+  z-index: 55;
+  pointer-events: none;
+}
+
+/* Right-column variant — mirrors the left default, anchored to the right edge */
+.layerCaptionRight {
+  left: auto;
+  right: 4vw;
+}
+
+/* Hide on non-desktop — building is scaled too small for text to fit cleanly */
+@media (max-width: 1023px) {
+  .layerCaption {
+    display: none;
+  }
+}
+
