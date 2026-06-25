@@ -5,21 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './00_O3_Hero.module.css'
 
 import i1 from '../../../assets/hero-images/i1.webp?url'
-import i1I from '../../../assets/hero-images/i1I.webp?url'
 import i2 from '../../../assets/hero-images/i2.webp?url'
-import i2I from '../../../assets/hero-images/i2I.webp?url'
 import i3 from '../../../assets/hero-images/i3.webp?url'
-import i3I from '../../../assets/hero-images/i3I.webp?url'
 import i4 from '../../../assets/hero-images/i4.webp?url'
-import i4I from '../../../assets/hero-images/i4I.webp?url'
 import i5 from '../../../assets/hero-images/i5.webp?url'
-import i5I from '../../../assets/hero-images/i5I.webp?url'
 import i6 from '../../../assets/hero-images/i6.webp?url'
-import i6I from '../../../assets/hero-images/i6I.webp?url'
 import i7 from '../../../assets/hero-images/i7.webp?url'
-import i7I from '../../../assets/hero-images/i7I.webp?url'
 import i8 from '../../../assets/hero-images/i8.webp?url'
-import i8I from '../../../assets/hero-images/i8I.webp?url'
 import nyaWhite from '../../../assets/nya-logo.svg?url'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -83,14 +75,14 @@ const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 const LAYERS = [
-  { id: 1, base: i1,  hover: i1I, captionSide: 'left',  caption: "Rooftops have become some of the most valuable real estate in a building, transforming into destinations for outdoor dining, lounge areas, green roofs, solar canopies, and other amenities, while also accommodating the critical infrastructure that supports building performance, connection, wellness, and unforgettable occupant experiences." },
-  { id: 2, base: i2,  hover: i2I, captionSide: 'right', caption: "Some of the most transformative tenant improvements happen outdoors, where patios, roof decks, canopies, lighting, and built-up rooftop spaces turn previously overlooked areas into vibrant extensions of the building." },
-  { id: 3, base: i3,  hover: i3I, captionSide: 'left',  caption: "Transforming an ordinary space into a theater, atrium, or interconnected workplace often begins with rethinking the structure itself, unlocking the kinds of memorable experiences that help buildings stand apart in a competitive market." },
-  { id: 4, base: i4,  hover: i4I, captionSide: 'right', caption: "The right tenant improvement can breathe new life into a floor, transforming outdated space through dynamic lobbies, multimedia experiences, flexible meeting environments, movable partitions, statement art, and thoughtful reconfiguration that makes the entire floor feel new again." },
-  { id: 5, base: i5,  hover: i5I, captionSide: 'left',  caption: "The most impactful office transformations reshape how people move, connect, and collaborate, opening floors, adding feature staircases and mezzanines, introducing glass-enclosed spaces and office pods, and reconfiguring layouts to unlock the full potential of the workplace." },
-  { id: 6, base: i6,  hover: i6I, captionSide: 'right', caption: "The lobby sets the tone for everything that follows, and today's renovations are transforming these spaces through dramatic staircases, curated art, retail amenities, and elevated arrival experiences that strengthen a building's brand, attract tenants, and enhance asset value." },
-  { id: 7, base: i7,  hover: i7I, captionSide: 'left',  caption: "Today's most successful properties extend beyond their walls, using retail spaces, outdoor patios, and activated streetscapes to attract visitors, enhance tenant experience, and strengthen the building's connection to its community." },
-  { id: 8, base: i8,  hover: i8I, captionSide: 'right', caption: "The performance of a building is often determined by what happens below ground, where infrastructure upgrades, critical equipment, and high-capacity storage quietly power everything that happens above it." },
+  { id: 1, base: i1,  captionSide: 'left',  caption: "Rooftops have become some of the most valuable real estate in a building, transforming into destinations for outdoor dining, lounge areas, green roofs, solar canopies, and other amenities, while also accommodating the critical infrastructure that supports building performance, connection, wellness, and unforgettable occupant experiences." },
+  { id: 2, base: i2,  captionSide: 'right', caption: "Some of the most transformative tenant improvements happen outdoors, where patios, roof decks, canopies, lighting, and built-up rooftop spaces turn previously overlooked areas into vibrant extensions of the building." },
+  { id: 3, base: i3,  captionSide: 'left',  caption: "Transforming an ordinary space into a theater, atrium, or interconnected workplace often begins with rethinking the structure itself, unlocking the kinds of memorable experiences that help buildings stand apart in a competitive market." },
+  { id: 4, base: i4,  captionSide: 'right', caption: "The right tenant improvement can breathe new life into a floor, transforming outdated space through dynamic lobbies, multimedia experiences, flexible meeting environments, movable partitions, statement art, and thoughtful reconfiguration that makes the entire floor feel new again." },
+  { id: 5, base: i5,  captionSide: 'left',  caption: "The most impactful office transformations reshape how people move, connect, and collaborate, opening floors, adding feature staircases and mezzanines, introducing glass-enclosed spaces and office pods, and reconfiguring layouts to unlock the full potential of the workplace." },
+  { id: 6, base: i6,  captionSide: 'right', caption: "The lobby sets the tone for everything that follows, and today's renovations are transforming these spaces through dramatic staircases, curated art, retail amenities, and elevated arrival experiences that strengthen a building's brand, attract tenants, and enhance asset value." },
+  { id: 7, base: i7,  captionSide: 'left',  caption: "Today's most successful properties extend beyond their walls, using retail spaces, outdoor patios, and activated streetscapes to attract visitors, enhance tenant experience, and strengthen the building's connection to its community." },
+  { id: 8, base: i8,  captionSide: 'right', caption: "The performance of a building is often determined by what happens below ground, where infrastructure upgrades, critical equipment, and high-capacity storage quietly power everything that happens above it." },
 ]
 
 // ── Layer layout (USER-TUNABLE — SINGLE SOURCE OF TRUTH) ────────────────────
@@ -466,16 +458,13 @@ export default function O3Hero() {
               CASCADE_START,
             );
 
-          // Read theme-aware colors at build time (same pattern as TrustWall).
-          const cs           = getComputedStyle(document.documentElement);
-          const colorWhite   = cs.getPropertyValue('--color-white').trim()   || 'oklch(1 0 0)';
-          const colorPrimary = cs.getPropertyValue('--color-primary').trim();
-
           // Caption reveal — fade each layer's description in as that layer rises,
           // then fade it out just before the next layer begins to rise.
-          // Color: each caption emerges OUT of its background (like "In Good Company"):
-          //   layers 1–3 appear over the dark primary bg  → primary → white
-          //   layers 4–8 appear over the revealed white bg → white  → primary
+          // Color is NOT animated here: each caption uses CSS mix-blend-mode:
+          // difference, so white text auto-inverts per-pixel against whatever is
+          // behind it — white over the dark bg, black over the revealed white bg —
+          // switching the instant the background changes under it. Pixel-perfect
+          // and theme-agnostic, with zero scroll-timed color tweens to mistune.
           // On mobile/tablet: also animate Y so the caption rises with the layer.
           LAYERS.forEach((layer, i) => {
             const captionEl = layer.caption && captionRefs.current[i];
@@ -486,43 +475,11 @@ export default function O3Hero() {
             const FADE    = 500;
 
             if (isDesktop) {
-              // ── Desktop color: tied to when bg1Shape diagonal crosses each column ──
-              // t_switch = 1200 + 186.67 × (70 − 33.6 × x)
-              const T_BG_LEFT  = 14000; // left  captions (x≈0.04)
-              const T_BG_RIGHT = 8200;  // right captions (x≈0.96)
-              const tBgSwitch  = layer.captionSide === 'right' ? T_BG_RIGHT : T_BG_LEFT;
-
-              if (isLast) {
-                tl.fromTo(captionEl,
-                  { color: colorPrimary },
-                  { color: colorWhite, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-              } else if (tBgSwitch <= fadeIn) {
-                tl.fromTo(captionEl,
-                  { color: colorWhite },
-                  { color: colorPrimary, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-              } else if (tBgSwitch >= fadeOut) {
-                tl.fromTo(captionEl,
-                  { color: colorPrimary },
-                  { color: colorWhite, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-              } else {
-                tl.fromTo(captionEl,
-                  { color: colorPrimary },
-                  { color: colorWhite, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-                const switchDur = Math.min(FADE, fadeOut - tBgSwitch);
-                tl.to(captionEl,
-                  { color: colorPrimary, ease: 'power1.inOut', duration: switchDur },
-                  tBgSwitch
-                );
-              }
-
+              // Color is owned by CSS (mix-blend-mode: difference) — only the
+              // opacity reveal is scrubbed here. Static top-region position
+              // (set in CSS) keeps each caption in the open sky above the rising
+              // building (dark for early layers, white for late ones) instead of
+              // the full-width building "waist" at vertical centre.
               tl.to(captionEl, { opacity: 1, duration: FADE, ease: 'power1.out' }, fadeIn);
               tl.to(captionEl, { opacity: 0, duration: FADE, ease: 'power1.in' },
                 Math.max(fadeIn + FADE * 2, fadeOut - FADE));
@@ -535,25 +492,9 @@ export default function O3Hero() {
 
               const mFadeIn = isFirst ? fadeIn + 300 : fadeIn;
 
-              // ── Mobile color: set correct color at caption start; smooth switch only
-              // when the background actually changes during this caption's window.
-              // Screen center (x=0.5) at 50vh turns white at t≈11100.
-              const T_BG_MOBILE = 11100;
-
-              if (isLast) {
-                tl.set(captionEl, { color: colorWhite }, mFadeIn);
-              } else if (T_BG_MOBILE <= fadeIn) {
-                tl.set(captionEl, { color: colorPrimary }, mFadeIn);
-              } else if (T_BG_MOBILE >= fadeOut) {
-                tl.set(captionEl, { color: colorWhite }, mFadeIn);
-              } else {
-                tl.set(captionEl, { color: colorWhite }, mFadeIn);
-                const switchDur = Math.min(FADE, fadeOut - T_BG_MOBILE);
-                tl.to(captionEl,
-                  { color: colorPrimary, ease: 'power1.inOut', duration: switchDur },
-                  T_BG_MOBILE
-                );
-              }
+              // Color is owned by CSS (mix-blend-mode: difference) — no scroll-
+              // timed color switch needed; the text inverts per-pixel against the
+              // background as it crosses the dark→white seam.
 
               // Y: caption starts just below the layer image and rises with it.
               const getStartY = () => {
@@ -802,13 +743,10 @@ export default function O3Hero() {
               className={`${s[`l${layer.id}`]} ${s.layer}`}
               ref={(el) => { layerRefs.current[i] = el; }}
             >
-              {/* Base layers gate the build + first paint → load them first.
-                  Hover variants (~half the total bytes, never shown at load) are
-                  deferred so they don't starve the base images' bandwidth — this
-                  removes the cold-load gap where the building hadn't appeared and
-                  the empty hero showed through. */}
+              {/* Single base layer per building section. The hover highlight is
+                  pure CSS (drop-shadow glow on :hover) — no second image — which
+                  halves the hero payload vs. the old baked-glow variants. */}
               <img src={layer.base} alt="" draggable={false} className={s.imgBase} fetchpriority="high" decoding="async" />
-              <img src={layer.hover} alt="" draggable={false} className={s.imgHover} loading="lazy" fetchpriority="low" decoding="async" />
             </div>
           ))}
         </div>
