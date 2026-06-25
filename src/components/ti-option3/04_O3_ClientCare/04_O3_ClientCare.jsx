@@ -285,6 +285,18 @@ export default function O3ClientCare() {
             </div>
           ))}
         </div>
+
+        {/* Persistent contact affordance. Lives INSIDE the pinned stage, so it
+            stays put for the whole pinned ClientCare run (the only conversion
+            path before the footer ~26k px down — audit v2 remaining #2) and
+            scrolls away cleanly once the section unpins. Subtle by design. */}
+        <a
+          className={s.contactCta}
+          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
+        >
+          <span className={s.contactCtaText}>Contact Us</span>
+          <span className={s.contactCtaArrow} aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </section>
   );
