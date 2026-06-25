@@ -18,7 +18,7 @@ import partnershipBg from '../../../assets/client-care/partnership.webp'
 gsap.registerPlugin(ScrollTrigger)
 
 const DESCRIPTION =
-  'How NYA treats tenant improvement work — and the clients behind it.'
+  'How NYA treats tenant improvement work, and the clients behind it.'
 
 const BUCKETS = [
   {
@@ -269,7 +269,7 @@ export default function O3ClientCare() {
         </div>
 
         <div className={s.header}>
-          <h2 className={s.title}>A Culture of Trust</h2>
+          <h2 className={s.title}>The Experience of Working With NYA</h2>
           <p className={s.intro}>{DESCRIPTION}</p>
         </div>
 
