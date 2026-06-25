@@ -65,10 +65,10 @@ const DEFAULT_FONT = 'spectral-work';
 
 // Theme CSS: lock the default scheme + font onto :root, then emit the
 // per-section [data-scheme]/[data-font] override rules (see SectionTheme.astro).
-const decls = (vars) => Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';');
-const byId = (list, id) => list.find((x) => x.id === id);
+const decls = (vars: Record<string, string>) => Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(';');
+const byId = (list: { id: string; vars: Record<string, string> }[], id: string) => list.find((x) => x.id === id);
 const themeCss = [
-  `:root{${decls(byId(SCHEMES, DEFAULT_SCHEME).vars)};${decls(byId(FONTS, DEFAULT_FONT).vars)}}`,
+  `:root{${decls(byId(SCHEMES, DEFAULT_SCHEME)!.vars)};${decls(byId(FONTS, DEFAULT_FONT)!.vars)}}`,
   ...SCHEMES.map((s) => `[data-scheme="${s.id}"]{${decls(s.vars)}}`),
   ...FONTS.map((f) => `[data-font="${f.id}"]{${decls(f.vars)}}`),
 ].join('\n');
@@ -94,7 +94,7 @@ const themeCss = [
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Work+Sans:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Work+Sans:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fira+Sans:wght@300;400;500;700&display=swap"
     rel="stylesheet"
   />
 
@@ -122,7 +122,7 @@ const themeCss = [
     Section overrides (e.g. section="hero") are defined in SectionTheme.astro.
   -->
   <main style="margin:0;padding:0">
-    <SectionTheme>
+    <SectionTheme section="hero">
       <O3Hero client:load />
     </SectionTheme>
     <SectionTheme section="ti-differences">

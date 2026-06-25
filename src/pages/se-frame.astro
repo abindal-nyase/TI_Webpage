@@ -41,7 +41,7 @@ import FrameSection from '../components/style-explorer/FrameSection.jsx';
       const d = e.data;
       if (!d || d.type !== 'se-theme') return;
       const root = document.documentElement;
-      if (d.vars) Object.entries(d.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+      if (d.vars) Object.entries(d.vars).forEach(([k, v]) => root.style.setProperty(k, String(v)));
       if (d.fontId && d.fontHref && !document.querySelector('link[data-se-font="' + d.fontId + '"]')) {
         const l = document.createElement('link');
         l.rel = 'stylesheet';
