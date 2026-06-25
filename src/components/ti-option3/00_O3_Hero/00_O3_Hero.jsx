@@ -126,6 +126,7 @@ export default function O3Hero() {
   const exitOverlayRef = useRef(null);
   const loadCoverRef   = useRef(null);
   const captionRefs    = useRef([]);
+  const ctaRef         = useRef(null);
   const mmRef          = useRef(null);
 
   useLayoutEffect(() => {
@@ -140,6 +141,7 @@ export default function O3Hero() {
       bg1ImgRef.current,
       bg2ImgRef.current,
       exitOverlayRef.current,
+      ctaRef.current,
       ...layerRefs.current,
       ...captionRefs.current.filter(Boolean),
     ]);
@@ -529,6 +531,21 @@ export default function O3Hero() {
             }
           });
 
+          // Hero CTA: stays visible the whole pinned scroll, then fades out as
+          // i8 (the last layer) clears the top of the viewport — anchored to the
+          // SAME point as the i8 caption exit (L8_CAPTION_EXIT), not the
+          // timeline end, so it leaves with the building instead of lingering.
+          if (ctaRef.current) {
+            const FADE = 500;
+            const ctaExit =
+              CASCADE_START + 7 * LAYER_STEP + L8_DUR * L8_CAPTION_EXIT;
+            tl.to(
+              ctaRef.current,
+              { opacity: 0, duration: FADE, ease: 'power1.in' },
+              ctaExit - FADE,
+            );
+          }
+
         };;
 
         // Recompute fit before ScrollTrigger re-reads function-based values.
@@ -771,6 +788,7 @@ export default function O3Hero() {
         ) : null)}
 
         <a
+          ref={ctaRef}
           className={s.heroCta}
           href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
         >
