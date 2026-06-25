@@ -10,10 +10,10 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './04_O3_ClientCare.module.css'
-import bg1 from '../../../assets/client-care/clientcare-bg-1.jpg'
-import bg2 from '../../../assets/client-care/clientcare-bg-2.jpg'
-import bg3 from '../../../assets/client-care/clientcare-bg-3.jpg'
-import bg4 from '../../../assets/client-care/clientcare-bg-4.jpg'
+import careBg from '../../../assets/client-care/care.webp'
+import reliabilityBg from '../../../assets/client-care/reliability.webp'
+import experienceBg from '../../../assets/client-care/experience.webp'
+import partnershipBg from '../../../assets/client-care/partnership.webp'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,75 +22,96 @@ const DESCRIPTION =
 
 const BUCKETS = [
   {
-    label: 'Care',
-    bg: bg1,
+    label: "Care",
+    bg: careBg,
     items: [
       {
-        id: 'advocate',
-        title: 'NYA acts as a true client advocate',
-        content: 'We take client care seriously. We listen closely, understand what matters most to the owner, architect, or project team, and work to protect those priorities. Our goal is not just to complete the structural scope, but to support clients, ensure they are informed, and make sure their needs are looked after.',
+        id: "client-advocate",
+        title: "A true client advocate",
+        content:
+          "We take client care seriously. We listen closely, understand what matters most and work to protect those priorities. Our goal is not just to complete the structural scope, but to support clients, and make sure their needs are looked after. ",
       },
       {
-        id: 'client-care',
-        title: 'We genuinely care for the client and the building itself',
-        content: 'Generic structural advice can miss what makes an existing building unique. We take the time to understand the inner workings of your building: its structural system, existing conditions, load paths, constraints, and hidden complexities. That allows our guidance to be grounded in how the building actually works, not in one-size-fits-all assumptions.',
+        id: "building-insight",
+        title: "Genuine care for the client and the building",
+        content:
+          "Generic structural advice can miss what makes an existing building unique. NYA takes the time to understand the inner workings of your building: its structural system, existing conditions, load paths, constraints, and hidden complexities. That allows our guidance to be grounded in how the building actually works, not in one-size-fits-all assumptions.",
+      },
+      {
+        id: "tailored-details",
+        title: "Details shaped with care, not copied from habit",
+        content:
+          "Existing buildings rarely behave like clean templates. Years of prior modifications, hidden as-built discrepancies, and on-site adaptations mean the real condition is always more particular than the record drawings suggest. We tailor our structural details to each project's actual conditions, reducing the risk of construction-phase surprises.",
       },
     ],
   },
   {
-    label: 'Precision',
-    bg: bg2,
+    label: "Reliability",
+    bg: reliabilityBg,
     items: [
       {
-        id: 'details',
-        title: 'Details shaped with care, not copied from habit',
-        content: 'Existing buildings rarely behave like clean templates. Years of prior modifications, hidden as-built discrepancies, and onsite adaptations mean the real condition is always more particular than the record drawings suggest. We tailor our structural details to each project’s actual conditions, reducing the risk of field conflicts, unclear connections, and construction-phase surprises.',
+        id: "trusted-quality",
+        title: "Quality that is trusted",
+        content:
+          "Our reputation was shaped by long-standing relationships with owners, architects, and property managers who experienced our founder's warmth, character, and care firsthand. Most of our work comes through recommendations today because clients know how we work, how we communicate, and how seriously we take their buildings.",
       },
       {
-        id: 'pricing',
-        title: 'Pricing that is reliable',
-        content: 'The ultimate goal is a predictable total project cost, which a complete proposal achieves by eliminating unexpected expenses and costly surprises rather than simply cutting upfront engineering fees. At NYA, experience is not overhead; it is efficiency. Because our engineers have navigated most TI challenges before, we do not learn at the client’s expense. Instead, we hit the ground running, leveraging past insights, automated tools, and advanced processes to accelerate the project timeline while drastically reducing risk.',
+        id: "reliable-pricing",
+        title: "Pricing that is reliable",
+        content:
+          "When it comes to quotes, our goal is a predictable total project cost. We provide transparent proposals that help clients avoid unexpected fees, surprise change orders, and budget uncertainty. Our experience allows us to see challenges coming early, creating confidence in project and cost.",
       },
     ],
   },
   {
-    label: 'Experience',
-    bg: bg3,
+    label: "Experience",
+    bg: experienceBg,
     items: [
       {
-        id: 'senior-engineers',
-        title: 'You work with senior engineers with decades of experience',
-        content: 'In tenant improvement work, slow communication and too many handoffs can quietly cost a project time. A bureaucratic process can delay decisions, create unnecessary back-and-forth, and make it harder to resolve issues when they come up. We replace that drag with seasoned structural judgment and direct, unfiltered access to the engineers closest to the work. The result is a team that keeps the project moving, not through rushed work, but through a process engineered to remove the waiting.',
+        id: "senior-engineers",
+        title: "You work with senior engineers with decades of experience",
+        content:
+          "In tenant improvement work, layers of process, slow communication and too many handoffs can quietly cost a project time. We replace that drag with seasoned structural judgment and direct, unfiltered access to the engineers closest to the work. The result is a team that keeps the project moving through a process that removes the waiting.",
       },
       {
-        id: 'make-it-work',
-        title: 'A “make it work” mindset',
-        content: 'Architects bring creative ambition to TI work, from unusual stairs and open lobbies to complex adaptive reuse concepts, and our role is to safeguard that ambition by translating it into structural solutions that are coordinated, code-conscious, and constructible. Because every design firm maintains its own unique priorities and workflows, we never ask a creative team to adapt to us; instead, we seamlessly calibrate our guidance, communication style, and level of detail to integrate directly into the architect\'s established process. This deeply adaptive collaboration ensures the original design vision moves forward with earned confidence rather than hope, delivering an engineering partnership that amplifies the architect\'s work without creating additional friction.',
+        id: "technical-judgment",
+        title: "Technical judgment that earns confidence",
+        content:
+          "Some of the industry's most complex tenant improvement projects come to us for a second look. Clients trust us to challenge assumptions, verify performance, and ensure every detail stands up to scrutiny.",
       },
       {
-        id: 'plan-check',
-        title: 'Plan check is easy with NYA’s experience',
-        content: 'When you begin a TI project with us, you start with a team that has already mapped the terrain: the building, the permitting path, the plan check culture, the ownership expectations, and the local players involved. That is the advantage we bring to TI work. Our familiarity helps teams begin with more clarity, reduce early friction, and move forward with confidence from the first conversation.',
+        id: "ti-familiarity",
+        title: "TIs are easy with NYA's experience",
+        content:
+          "Our team has already mapped the terrain: the building, the permitting path, the plan check culture, the ownership expectations, and the local players involved. That is the advantage we bring to TI work. Our familiarity helps teams move forward with confidence.",
       },
     ],
   },
   {
-    label: 'Confidence',
-    bg: bg4,
+    label: "Partnership",
+    bg: partnershipBg,
     items: [
       {
-        id: 'guidance',
-        title: 'Guidance clients can feel confident in',
-        content: 'Before a TI project is fully formalized, owners often need enough structural input to understand what is possible and what may create risk. We help teams have those early conversations with more confidence, offering quick guidance, feasibility input, and practical advice so the project can move forward with a clearer path.',
+        id: "make-it-work",
+        title: "A “make it work” mindset",
+        content:
+          "Architects bring the creative ambition to TI work: dramatic stairs, open lobbies, and floating floors. Our role is to protect that vision, translating it into structural solutions that are code-conscious, and constructible. Every architecture firm works differently, so we calibrate our guidance, communication, and level of support to fit the way each team works.",
       },
       {
-        id: 'communication',
-        title: 'Communication that reduces pressure, not adds to it',
-        content: 'Delays in TI projects rarely stem from sudden crises; they are more often caused by unanswered questions, delayed RFIs, and decisions that linger too long. To keep projects moving, we provide same-day responses, immediate phone consultations for field issues, and proactive communication throughout the design and construction process. Drawing on decades of experience, we adapt to each client’s preferred workflows and presentation standards, ensuring information is delivered clearly and decisions are made efficiently. The result is tighter cost control, reduced risk, and more predictable project schedules.',
+        id: "early-guidance",
+        title: "Early guidance clients can feel confident in",
+        content:
+          "Before a TI project is fully formalized, owners often need enough structural input to understand what is possible and what may create risk. We help teams have those early conversations with quick guidance, feasibility input, and practical advice.",
+      },
+      {
+        id: "responsive-communication",
+        title: "Communication that reduces pressure, not adds to it",
+        content:
+          "Delays in TI work rarely stem from sudden crises. They seep in through quieter gaps: the question left unanswered, or the decision that drifts because no one knew who owned it. To keep projects moving, we provide same-day responses, immediate phone consultations for field issues, and proactive communication throughout the design and construction process.",
       },
     ],
   },
-]
+];
 
 // Flattened points, each tagged with its bucket index (which background it rides).
 const POINTS = BUCKETS.flatMap((b, bi) =>
