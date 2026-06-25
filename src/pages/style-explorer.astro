@@ -15,7 +15,6 @@ import '../index.css';
 import '../design/design-system.css';
 import GlobalSetup from '../components/GlobalSetup/GlobalSetup';
 import StyleExplorer from '../components/style-explorer/StyleExplorer.jsx';
-import BackToHub from '../components/BackToHub.astro';
 ---
 
 <!DOCTYPE html>
@@ -31,7 +30,6 @@ import BackToHub from '../components/BackToHub.astro';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-  <BackToHub />
   <GlobalSetup client:load />
   <StyleExplorer client:only="react" />
 </body>

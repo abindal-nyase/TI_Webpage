@@ -1,0 +1,223 @@
+---
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <title>NYA TI — Dev Hub</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #0d0d0d;
+        color: #e5e5e5;
+        min-height: 100vh;
+        padding: 48px 32px;
+      }
+
+      header {
+        max-width: 900px;
+        margin: 0 auto 48px;
+        border-bottom: 1px solid #2a2a2a;
+        padding-bottom: 24px;
+      }
+
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      h1 span {
+        color: #4a7fe0;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #888;
+        line-height: 1.5;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+      }
+
+      section h2 {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #555;
+        margin-bottom: 16px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+      }
+
+      a.card {
+        display: block;
+        padding: 20px 24px;
+        border: 1px solid #222;
+        border-radius: 8px;
+        background: #141414;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.15s, background 0.15s;
+      }
+
+      a.card:hover {
+        border-color: #4a7fe0;
+        background: #161d2e;
+      }
+
+      a.card .label {
+        font-size: 15px;
+        font-weight: 500;
+        color: #e5e5e5;
+        margin-bottom: 4px;
+      }
+
+      a.card .meta {
+        font-size: 12px;
+        color: #555;
+      }
+
+      a.card.primary {
+        border-color: #2a3a5e;
+        background: #0f1829;
+      }
+
+      a.card.primary .label {
+        color: #7ba7f0;
+      }
+
+      a.card.primary:hover {
+        border-color: #4a7fe0;
+        background: #121e36;
+      }
+
+      footer {
+        max-width: 900px;
+        margin: 64px auto 0;
+        padding-top: 24px;
+        border-top: 1px solid #1a1a1a;
+        font-size: 12px;
+        color: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">Nabih Youssef Associates — Internal</p>
+      <h1>NYA TI <span>Dev Hub</span></h1>
+      <p class="subtitle">
+        Assembled page options and individual component showcases.<br />
+        This page is not deployed to production.
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Assembled Pages</h2>
+        <div class="grid">
+          <a class="card primary" href="/option1">
+            <div class="label">Option 1</div>
+            <div class="meta">Current build — production baseline</div>
+          </a>
+          <a class="card primary" href="/option2">
+            <div class="label">Option 2</div>
+            <div class="meta">New development — work in progress</div>
+          </a>
+          <a class="card primary" href="/option3">
+            <div class="label">Option 3</div>
+            <div class="meta">Skeleton — hero, video scroll, TI differences, caring firm, culture, CTA</div>
+          </a>
+          <a class="card primary" href="/innovation">
+            <div class="label">Engineering Innovation</div>
+            <div class="meta">3-project structural storytelling demo</div>
+          </a>
+          <a class="card primary" href="/AJ_MB_ShorthandOption.html" target="_blank">
+            <div class="label">AJ MB Option</div>
+            <div class="meta">Shorthand export — standalone HTML</div>
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <h2>Design Foundation</h2>
+        <div class="grid">
+          <a class="card" href="/design">
+            <div class="label">Design System</div>
+            <div class="meta">Colors · Typography · Spacing · Components · Alternates</div>
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <h2>Component Showcases</h2>
+        <div class="grid">
+          <a class="card" href="/hero">
+            <div class="label">Hero</div>
+            <div class="meta">Hero · HeroZoom</div>
+          </a>
+          <a class="card" href="/cta">
+            <div class="label">CTA</div>
+            <div class="meta">MidCTA · FinalCTA · FinalCTAOption2</div>
+          </a>
+          <a class="card" href="/audience">
+            <div class="label">Audience</div>
+            <div class="meta">AudienceCards · AudienceSwitcher</div>
+          </a>
+          <a class="card" href="/stats">
+            <div class="label">Stats</div>
+            <div class="meta">StatsStrip · StatsSection</div>
+          </a>
+          <a class="card" href="/offerings">
+            <div class="label">Offerings</div>
+            <div class="meta">Offerings</div>
+          </a>
+          <a class="card" href="/ProblemsSolutions">
+            <div class="label">TI Problems &amp; Solutions</div>
+            <div class="meta">Scroll-driven red → green narrative</div>
+          </a>
+          <a class="card" href="/ProblemsSolutionsOption1">
+            <div class="label">TI Problems &amp; Solutions — Team Choice</div>
+            <div class="meta">Scroll-driven red → green narrative</div>
+          </a>
+          <a class="card" href="/ProblemsSolutionsNewOptions">
+            <div class="label">TI Problems &amp; Solutions — Bars & Bubbles and Collapsing Discs</div>
+            <div class="meta">Scroll-driven red → green narrative</div>
+          </a>
+          <a class="card" href="/TIDifferencesOption3">
+            <div class="label">TI Differences — Option 3 Ideas</div>
+            <div class="meta">BarsAndBubbles1 · BarsAndBubbles2 · CollapsingDiscs1–4</div>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Dev hub — retire this page and move chosen components to root before launch.
+    </footer>
+  </body>
+</html>
