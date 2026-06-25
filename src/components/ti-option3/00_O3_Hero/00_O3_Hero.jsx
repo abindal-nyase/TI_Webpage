@@ -490,7 +490,7 @@ export default function O3Hero() {
               const layerDur = isLast ? L8_DUR : LAYER_DUR;
               const isFirst  = i === 0;
 
-              const mFadeIn = isFirst ? fadeIn + 350 : fadeIn;
+              const mFadeIn = isFirst ? fadeIn + 300 : fadeIn;
 
               // Color is owned by CSS (mix-blend-mode: difference) — no scroll-
               // timed color switch needed; the text inverts per-pixel against the
@@ -762,6 +762,14 @@ export default function O3Hero() {
             {layer.caption}
           </div>
         ) : null)}
+
+        <a
+          className={s.heroCta}
+          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
+        >
+          <span className={s.heroCtaText}>Contact Us</span>
+          <span className={s.heroCtaArrow} aria-hidden="true">&rarr;</span>
+        </a>
 
       </div>
     </section>
