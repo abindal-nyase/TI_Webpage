@@ -458,16 +458,13 @@ export default function O3Hero() {
               CASCADE_START,
             );
 
-          // Read theme-aware colors at build time (same pattern as TrustWall).
-          const cs           = getComputedStyle(document.documentElement);
-          const colorWhite   = cs.getPropertyValue('--color-white').trim()   || 'oklch(1 0 0)';
-          const colorPrimary = cs.getPropertyValue('--color-primary').trim();
-
           // Caption reveal — fade each layer's description in as that layer rises,
           // then fade it out just before the next layer begins to rise.
-          // Color: each caption emerges OUT of its background (like "In Good Company"):
-          //   layers 1–3 appear over the dark primary bg  → primary → white
-          //   layers 4–8 appear over the revealed white bg → white  → primary
+          // Color is NOT animated here: each caption uses CSS mix-blend-mode:
+          // difference, so white text auto-inverts per-pixel against whatever is
+          // behind it — white over the dark bg, black over the revealed white bg —
+          // switching the instant the background changes under it. Pixel-perfect
+          // and theme-agnostic, with zero scroll-timed color tweens to mistune.
           // On mobile/tablet: also animate Y so the caption rises with the layer.
           LAYERS.forEach((layer, i) => {
             const captionEl = layer.caption && captionRefs.current[i];
@@ -478,43 +475,11 @@ export default function O3Hero() {
             const FADE    = 500;
 
             if (isDesktop) {
-              // ── Desktop color: tied to when bg1Shape diagonal crosses each column ──
-              // t_switch = 1200 + 186.67 × (70 − 33.6 × x)
-              const T_BG_LEFT  = 14000; // left  captions (x≈0.04)
-              const T_BG_RIGHT = 8200;  // right captions (x≈0.96)
-              const tBgSwitch  = layer.captionSide === 'right' ? T_BG_RIGHT : T_BG_LEFT;
-
-              if (isLast) {
-                tl.fromTo(captionEl,
-                  { color: colorPrimary },
-                  { color: colorWhite, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-              } else if (tBgSwitch <= fadeIn) {
-                tl.fromTo(captionEl,
-                  { color: colorWhite },
-                  { color: colorPrimary, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-              } else if (tBgSwitch >= fadeOut) {
-                tl.fromTo(captionEl,
-                  { color: colorPrimary },
-                  { color: colorWhite, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-              } else {
-                tl.fromTo(captionEl,
-                  { color: colorPrimary },
-                  { color: colorWhite, ease: 'power1.out', duration: FADE },
-                  fadeIn
-                );
-                const switchDur = Math.min(FADE, fadeOut - tBgSwitch);
-                tl.to(captionEl,
-                  { color: colorPrimary, ease: 'power1.inOut', duration: switchDur },
-                  tBgSwitch
-                );
-              }
-
+              // Color is owned by CSS (mix-blend-mode: difference) — only the
+              // opacity reveal is scrubbed here. Static top-region position
+              // (set in CSS) keeps each caption in the open sky above the rising
+              // building (dark for early layers, white for late ones) instead of
+              // the full-width building "waist" at vertical centre.
               tl.to(captionEl, { opacity: 1, duration: FADE, ease: 'power1.out' }, fadeIn);
               tl.to(captionEl, { opacity: 0, duration: FADE, ease: 'power1.in' },
                 Math.max(fadeIn + FADE * 2, fadeOut - FADE));
@@ -527,25 +492,9 @@ export default function O3Hero() {
 
               const mFadeIn = isFirst ? fadeIn + 350 : fadeIn;
 
-              // ── Mobile color: set correct color at caption start; smooth switch only
-              // when the background actually changes during this caption's window.
-              // Screen center (x=0.5) at 50vh turns white at t≈11100.
-              const T_BG_MOBILE = 11100;
-
-              if (isLast) {
-                tl.set(captionEl, { color: colorWhite }, mFadeIn);
-              } else if (T_BG_MOBILE <= fadeIn) {
-                tl.set(captionEl, { color: colorPrimary }, mFadeIn);
-              } else if (T_BG_MOBILE >= fadeOut) {
-                tl.set(captionEl, { color: colorWhite }, mFadeIn);
-              } else {
-                tl.set(captionEl, { color: colorWhite }, mFadeIn);
-                const switchDur = Math.min(FADE, fadeOut - T_BG_MOBILE);
-                tl.to(captionEl,
-                  { color: colorPrimary, ease: 'power1.inOut', duration: switchDur },
-                  T_BG_MOBILE
-                );
-              }
+              // Color is owned by CSS (mix-blend-mode: difference) — no scroll-
+              // timed color switch needed; the text inverts per-pixel against the
+              // background as it crosses the dark→white seam.
 
               // Y: caption starts just below the layer image and rises with it.
               const getStartY = () => {
