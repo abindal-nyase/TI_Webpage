@@ -825,6 +825,14 @@ export default function O3Hero() {
           </div>
         ) : null)}
 
+        <a
+          className={s.heroCta}
+          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
+        >
+          <span className={s.heroCtaText}>Contact Us</span>
+          <span className={s.heroCtaArrow} aria-hidden="true">&rarr;</span>
+        </a>
+
       </div>
     </section>
   );
