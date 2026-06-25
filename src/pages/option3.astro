@@ -19,7 +19,6 @@ import O3Ethos from '../components/ti-option3/05_O3_Ethos/05_O3_Ethos.jsx';
 import O3Footer from '../components/ti-option3/06_O3_Footer/06_O3_Footer';
 import O3SideNav from '../components/ti-option3/O3_SideNav/O3_SideNav';
 import SectionTheme from '../components/ti-option3/SectionTheme.astro';
-import BackToHub from '../components/BackToHub.astro';
 
 // Hero building base layers — preloaded in <head> so the browser starts
 // fetching the ~4.7MB stack at HTML-parse time (in parallel with the JS
@@ -286,7 +285,6 @@ const themeOverrideCss = [
 </head>
 
 <body>
-  <BackToHub />
   <GlobalSetup client:load />
 
   <!-- ── Theme switcher bar ── -->
