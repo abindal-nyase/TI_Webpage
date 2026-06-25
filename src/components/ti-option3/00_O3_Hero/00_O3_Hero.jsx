@@ -533,7 +533,7 @@ export default function O3Hero() {
               const layerDur = isLast ? L8_DUR : LAYER_DUR;
               const isFirst  = i === 0;
 
-              const mFadeIn = isFirst ? fadeIn + 350 : fadeIn;
+              const mFadeIn = isFirst ? fadeIn + 300 : fadeIn;
 
               // ── Mobile color: set correct color at caption start; smooth switch only
               // when the background actually changes during this caption's window.
