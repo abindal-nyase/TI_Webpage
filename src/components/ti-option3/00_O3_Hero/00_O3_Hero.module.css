@@ -372,10 +372,23 @@
   right: 4vw;
 }
 
-/* Hide on non-desktop — building is scaled too small for text to fit cleanly */
+/* Mobile — reset desktop left/right positioning; GSAP controls Y entirely */
 @media (max-width: 1023px) {
   .layerCaption {
-    display: none;
+    top: 0;
+    left: 5vw;
+    right: 5vw;
+    width: auto;
+    transform: none;
+    text-align: center;
+    color: white;
+    font-size: clamp(0.82rem, 3.5vw, 1rem);
+  }
+
+  /* Right variant: same centered position on mobile */
+  .layerCaptionRight {
+    left: 5vw;
+    right: 5vw;
   }
 }
 
