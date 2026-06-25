@@ -16,25 +16,18 @@
  * no Astro-config changes. Only this file + style-explorer.astro are new.
  */
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import O3Hero from '../ti-option3/00_O3_Hero/00_O3_Hero.jsx';
-import O3TIDifferences from '../ti-option3/01_O3_TIDifferences/01_O3_TIDifferences.jsx';
-import O3FirmCulture from '../ti-option3/02_O3_FirmCulture/02_O3_FirmCulture.jsx';
-import O3TrustWall from '../ti-option3/03_O3_TrustWall/03_O3_TrustWall.jsx';
-import O3ClientCare from '../ti-option3/04_O3_ClientCare/04_O3_ClientCare.jsx';
-import O3Ethos from '../ti-option3/05_O3_Ethos/05_O3_Ethos.jsx';
-import O3Footer from '../ti-option3/06_O3_Footer/06_O3_Footer.jsx';
-
-/* ── Sections (page order, mapped to the real components) ── */
+/* Sections render inside an <iframe> (/se-frame?section=<id>) so each gets its
+   own viewport — 100vw, GSAP pins and Lenis resolve to the frame, not the
+   window — which keeps the panel from overlapping the section. */
 const SECTIONS = [
-  { id: 'hero',         label: 'Hero',                 Comp: O3Hero },
-  { id: 'risk',         label: 'Risk & Solutions',     Comp: O3TIDifferences },
-  { id: 'culture',      label: 'Company Culture',      Comp: O3FirmCulture },
-  { id: 'trust',        label: 'Trust Wall',           Comp: O3TrustWall },
-  { id: 'care',         label: 'Client Care',          Comp: O3ClientCare },
-  { id: 'vision',       label: 'Founder Vision',       Comp: O3Ethos },
-  { id: 'footer',       label: 'Footer',               Comp: O3Footer },
+  { id: 'hero',    label: 'Hero' },
+  { id: 'risk',    label: 'Risk & Solutions' },
+  { id: 'culture', label: 'Company Culture' },
+  { id: 'trust',   label: 'Trust Wall' },
+  { id: 'care',    label: 'Client Care' },
+  { id: 'vision',  label: 'Founder Vision' },
+  { id: 'footer',  label: 'Footer' },
 ];
 
 /*
@@ -106,6 +99,41 @@ const COLORS = [
   { id: 'arctic',        name: 'Arctic',           bg: '#EEF2F7', text: '#1A2332', accent: '#4A7FA5' },
 ];
 
+/*
+ * ── Live-site baseline ──
+ * The exact default theme of the production page (index.astro): the
+ * `charcoal-cyan` scheme + `spectral-work` font pair. `color.vars` is the
+ * verbatim oklch var set from index.astro so Reset matches the live page
+ * pixel-for-pixel (not a hex approximation). Surfaced via the Reset button,
+ * not the chip lists.
+ */
+const LIVE = {
+  color: {
+    id: 'live', name: 'Live site · Charcoal + Cyan', bg: '#0F172A', text: '#FFFFFF', accent: '#06B6D4',
+    vars: {
+      '--color-primary':       'oklch(0.2077 0.0398 265.7549)',
+      '--color-primary-light': 'oklch(0.2795 0.0368 260.031)',
+      '--color-accent':        'oklch(0.7148 0.1257 215.2209)',
+      '--color-accent-hover':  'oklch(0.6089 0.1109 221.7231)',
+      '--border-accent':       'oklch(0.7148 0.1257 215.2209 / 0.25)',
+      '--shadow-accent':       '0 8px 28px oklch(0.7148 0.1257 215.2209 / 0.28)',
+      '--surface-dark':        'oklch(0.2077 0.0398 265.7549)',
+      '--surface-dark-mid':    'oklch(0.2795 0.0368 260.031)',
+      '--white':               '#FFFFFF',
+      '--color-white':         '#FFFFFF',
+    },
+  },
+  font: {
+    id: 'live', label: 'Live site · Spectral + Work', sub: 'Spectral + Work Sans',
+    ds: "'Spectral', Georgia, serif",  dq: 'Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400',
+    bs: "'Work Sans', system-ui, sans-serif", bq: 'Work+Sans:wght@300;400;500;600;700',
+  },
+};
+
+/* lookups that include the live-site preset (it isn't in the chip arrays) */
+const findColor = (id) => (id === 'live' ? LIVE.color : COLORS.find((c) => c.id === id));
+const findFont  = (id) => (id === 'live' ? LIVE.font  : FONTS.find((f) => f.id === id));
+
 /* ── Color helpers ── */
 const hexToRgb = (h) => {
   let x = h.replace('#', '');
@@ -151,7 +179,8 @@ export default function StyleExplorer() {
   const [collapsed, setCollapsed] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [hidePanel, setHidePanel] = useState(false);
-  const loadedFonts = useRef(new Set());
+  const [frameReady, setFrameReady] = useState(0); // bumps each time the frame signals se-ready
+  const frameRef = useRef(null);
 
   /* hydrate persisted state once on mount (client:only — safe to touch window) */
   useEffect(() => {
@@ -160,8 +189,8 @@ export default function StyleExplorer() {
       setApproved(new Set(a));
       const st = JSON.parse(localStorage.getItem(LS_STATE) || '{}');
       if (st.section && SECTIONS.some((s) => s.id === st.section)) setSection(st.section);
-      if (st.font && FONTS.some((f) => f.id === st.font)) setFont(st.font);
-      if (st.color && COLORS.some((c) => c.id === st.color)) setColor(st.color);
+      if (st.font && findFont(st.font)) setFont(st.font);
+      if (st.color && findColor(st.color)) setColor(st.color);
     } catch { /* ignore corrupt storage */ }
   }, []);
 
@@ -170,33 +199,27 @@ export default function StyleExplorer() {
     localStorage.setItem(LS_STATE, JSON.stringify({ section, font, color }));
   }, [section, font, color]);
 
-  /* inject Google Fonts for the active pairing (once per pairing, cached) */
+  /* listen for the frame announcing it's ready (after load / section swap) */
   useEffect(() => {
-    const f = FONTS.find((x) => x.id === font);
-    if (!f || loadedFonts.current.has(f.id)) return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.dataset.seFont = f.id;
-    link.href = `https://fonts.googleapis.com/css2?family=${f.dq}&family=${f.bq}&display=swap`;
-    document.head.appendChild(link);
-    loadedFonts.current.add(f.id);
-  }, [font]);
+    const onMsg = (e) => { if (e.data?.type === 'se-ready') setFrameReady((n) => n + 1); };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
 
-  /* inject CSS variables onto :root so every section island reacts */
+  /* push the active theme (color vars + font vars + Google Fonts href) into the frame.
+     Re-runs on color/font change and whenever the frame re-announces ready (section swap). */
   useEffect(() => {
-    const root = document.documentElement;
-    const c = COLORS.find((x) => x.id === color);
-    const f = FONTS.find((x) => x.id === font);
-    const vars = { ...themeVars(c), '--font-display': f.ds, '--font-body': f.bs };
-    Object.entries(vars).forEach(([k, v]) => root.style.setProperty(k, v));
-  }, [color, font]);
-
-  /* recalc pinned/scroll triggers after the active section swaps in */
-  useEffect(() => {
-    const t = setTimeout(() => ScrollTrigger.refresh(), 300);
-    window.scrollTo(0, 0);
-    return () => clearTimeout(t);
-  }, [section]);
+    const win = frameRef.current?.contentWindow;
+    if (!win) return;
+    const c = findColor(color);
+    const f = findFont(font);
+    win.postMessage({
+      type: 'se-theme',
+      vars: { ...(c.vars ?? themeVars(c)), '--font-display': f.ds, '--font-body': f.bs },
+      fontId: f.id,
+      fontHref: `https://fonts.googleapis.com/css2?family=${f.dq}&family=${f.bq}&display=swap`,
+    }, '*');
+  }, [color, font, frameReady]);
 
   const curKey = comboKey(section, font, color);
   const isApproved = approved.has(curKey);
@@ -219,16 +242,28 @@ export default function StyleExplorer() {
     });
   };
 
-  const ActiveComp = SECTIONS.find((s) => s.id === section).Comp;
-  const curColor = COLORS.find((c) => c.id === color);
-  const curFont = FONTS.find((f) => f.id === font);
+  const curColor = findColor(color);
+  const curFont = findFont(font);
+
+  const resetToLive = () => { setColor('live'); setFont('live'); };
+
+  /* space reserved by the panel — the frame fills the rest of the window */
+  const panelW = hidePanel ? 0 : (collapsed ? 52 : 320);
 
   return (
     <>
-      {/* ── Active section, full-width, rendered as on the live site ── */}
-      <main style={{ margin: 0, padding: 0 }}>
-        <ActiveComp key={section} />
-      </main>
+      {/* ── Active section in its own viewport, filling the space beside the panel ── */}
+      <iframe
+        ref={frameRef}
+        title="Section preview"
+        src={`/se-frame?section=${section}`}
+        style={{
+          position: 'fixed', top: 0, right: 0,
+          width: `calc(100vw - ${panelW}px)`, height: '100vh',
+          border: 'none', display: 'block', background: '#fff',
+          transition: 'width 0.2s ease',
+        }}
+      />
 
       {/* ── Floating reopen button when panel hidden ── */}
       {hidePanel && (
@@ -248,7 +283,7 @@ export default function StyleExplorer() {
           </div>
 
           {!collapsed && (
-            <div style={styles.body}>
+            <div style={styles.body} data-lenis-prevent>
               {/* current combo + approve */}
               <div style={styles.current}>
                 <div style={styles.currentLine}>
@@ -261,6 +296,10 @@ export default function StyleExplorer() {
                 </button>
                 <button onClick={() => setShowSummary(true)} style={styles.summaryBtn}>
                   View approved ({approved.size})
+                </button>
+                <button onClick={resetToLive} style={styles.resetBtn}
+                  title="Match the production page (Charcoal + Cyan · Spectral + Work Sans)">
+                  ↺ Reset to live site
                 </button>
               </div>
 
@@ -344,8 +383,8 @@ function Swatch({ color }) {
 }
 
 function ApprovalSummary({ approved, onClose, onRemove }) {
-  const fLabel = (id) => FONTS.find((f) => f.id === id)?.label ?? id;
-  const cName = (id) => COLORS.find((c) => c.id === id)?.name ?? id;
+  const fLabel = (id) => findFont(id)?.label ?? id;
+  const cName = (id) => findColor(id)?.name ?? id;
   const sLabel = (id) => SECTIONS.find((s) => s.id === id)?.label ?? id;
 
   // group by section, in page order
@@ -356,7 +395,7 @@ function ApprovalSummary({ approved, onClose, onRemove }) {
 
   return (
     <div style={styles.modalWrap} onClick={onClose}>
-      <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+      <div style={styles.modal} onClick={(e) => e.stopPropagation()} data-lenis-prevent>
         <div style={styles.modalHead}>
           <span style={styles.title}>Approved combinations ({approved.size})</span>
           <button onClick={onClose} style={styles.iconBtn}>✕</button>
@@ -406,7 +445,7 @@ const styles = {
   title: { fontWeight: 700, letterSpacing: '0.02em', fontSize: 14 },
   iconBtn: { background: ui.chipBg, color: ui.text, border: `1px solid ${ui.panelBorder}`,
     borderRadius: 6, width: 28, height: 28, cursor: 'pointer', fontSize: 14, lineHeight: 1 },
-  body: { overflowY: 'auto', padding: 14, display: 'flex', flexDirection: 'column', gap: 16 },
+  body: { flex: 1, minHeight: 0, overflowY: 'auto', padding: 14, display: 'flex', flexDirection: 'column', gap: 16 },
   current: { background: ui.chipBg, borderRadius: 10, padding: 12, display: 'flex', flexDirection: 'column', gap: 8 },
   currentLine: { fontSize: 14 },
   currentSub: { color: ui.dim, fontSize: 12 },
@@ -414,6 +453,8 @@ const styles = {
     cursor: 'pointer', fontWeight: 600, fontSize: 12 },
   summaryBtn: { background: 'transparent', color: ui.dim, border: `1px solid ${ui.panelBorder}`,
     borderRadius: 8, padding: '7px 10px', cursor: 'pointer', fontSize: 12 },
+  resetBtn: { background: 'transparent', color: ui.text, border: `1px solid ${ui.panelBorder}`,
+    borderRadius: 8, padding: '7px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
   group: { display: 'flex', flexDirection: 'column', gap: 7 },
   groupLabel: { fontSize: 10, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: ui.dim },
   groupItems: { display: 'flex', flexDirection: 'column', gap: 5 },

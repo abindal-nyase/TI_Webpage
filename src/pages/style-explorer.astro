@@ -13,7 +13,6 @@
  */
 import '../index.css';
 import '../design/design-system.css';
-import GlobalSetup from '../components/GlobalSetup/GlobalSetup';
 import StyleExplorer from '../components/style-explorer/StyleExplorer.jsx';
 ---
 
@@ -30,7 +29,6 @@ import StyleExplorer from '../components/style-explorer/StyleExplorer.jsx';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
 <body>
-  <GlobalSetup client:load />
   <StyleExplorer client:only="react" />
 </body>
 </html>

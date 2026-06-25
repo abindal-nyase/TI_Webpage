@@ -1,0 +1,67 @@
+---
+/*
+ * se-frame.astro — single-section render target for the Style Explorer iframe.
+ *
+ * Renders ONE Option-3 section, full-page, in its own document so that
+ * 100vw / GSAP pins / Lenis all resolve to the iframe's own viewport (the
+ * remaining space beside the explorer panel) instead of the whole window.
+ *
+ * Which section: `?section=<id>` (server-read in dev). Theme (colors + fonts)
+ * is pushed in live by the parent via postMessage — see the inline listener
+ * below — so font/color switches never reload the frame.
+ *
+ * Local tool only (noindex). Not linked from the live site.
+ */
+import '../index.css';
+import '../design/design-system.css';
+import GlobalSetup from '../components/GlobalSetup/GlobalSetup';
+import FrameSection from '../components/style-explorer/FrameSection.jsx';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+  <title>Section frame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <script>
+    // Module script (bundled) so we can import ScrollTrigger and re-measure the
+    // Hero pin after the web font swaps in — otherwise the cascade is pinned
+    // against fallback-font sizes and renders collapsed.
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    const refresh = () => ScrollTrigger.refresh();
+
+    // Apply theme pushed from the parent explorer (mirrors the old :root override).
+    window.addEventListener('message', (e) => {
+      const d = e.data;
+      if (!d || d.type !== 'se-theme') return;
+      const root = document.documentElement;
+      if (d.vars) Object.entries(d.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+      if (d.fontId && d.fontHref && !document.querySelector('link[data-se-font="' + d.fontId + '"]')) {
+        const l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.dataset.seFont = d.fontId;
+        l.href = d.fontHref;
+        document.head.appendChild(l);
+      }
+      // Fonts/colours just changed sizes — re-measure pins once the font is ready.
+      document.fonts.ready.then(refresh);
+      setTimeout(refresh, 400); // fallback if the font was already cached
+    });
+
+    window.addEventListener('load', () => { document.fonts.ready.then(refresh); });
+
+    // Tell the parent we're ready so it pushes the current theme immediately.
+    if (window.parent) window.parent.postMessage({ type: 'se-ready' }, '*');
+  </script>
+</head>
+<body>
+  <GlobalSetup client:load />
+  <FrameSection client:only="react" />
+</body>
+</html>
