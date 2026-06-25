@@ -33,3 +33,9 @@ Reference/
 # responsive audit (temp)
 responsive-audit/
 _orig_backup/
+_archive/
+docs/
+.firecrawl/
+backend/
+ref_docs/
+designIdeas/
