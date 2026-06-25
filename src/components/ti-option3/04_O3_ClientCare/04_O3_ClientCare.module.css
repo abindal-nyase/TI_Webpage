@@ -27,7 +27,19 @@
   position: absolute;
   inset: 0;
   background: var(--color-primary);
-  opacity: 0.62;               /* photo reads through; text stays legible */
+  opacity: 0.72;               /* photo reads through; text stays legible */
+}
+/* Animated mode centres every point's text. A flat tint can't beat the
+   brightest patches of high-key photos (applause, bright boardrooms), so the
+   body copy failed AA there. Add a centred scrim: near-opaque primary behind
+   the text band, fading to a light tint at the edges so the photo still reads. */
+.isAnimated .overlay {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 85% 68% at 50% 50%,
+      color-mix(in oklch, var(--color-primary) 92%, transparent),
+      color-mix(in oklch, var(--color-primary) 60%, transparent) 64%,
+      color-mix(in oklch, var(--color-primary) 48%, transparent));
 }
 
 /* ── Header ── */
