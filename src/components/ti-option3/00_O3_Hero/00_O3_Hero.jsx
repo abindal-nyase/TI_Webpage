@@ -44,6 +44,11 @@ const LAYER_DUR = 3600
 // viewport between "l8 half-up" and "l8 fully up", l8's own scroll window must
 // be ≈ one viewport. With this duration l8 occupies ≈1vh of the pin distance.
 const L8_DUR    = 8000
+// Fraction of L8_DUR at which i8 has cleared the top of the viewport. l8 uses a
+// power1.in ease (travels 1.5vh), so it leaves screen well before the tween's
+// mathematical end — caption fade-out is anchored here, not at cascadeEnd, so
+// the i8 caption disappears as i8 flies out instead of lingering ~1.4s after.
+const L8_CAPTION_EXIT = 0.82
 const LAYER_GAP = 0
 const BG2_REST  = '-135vh'
 // Scroll distance (in viewport heights) the hero pin scrubs the whole cascade
@@ -471,7 +476,9 @@ export default function O3Hero() {
             if (!captionEl) return;
             const isLast  = i === LAYERS.length - 1;
             const fadeIn  = CASCADE_START + i * LAYER_STEP;
-            const fadeOut = isLast ? cascadeEnd : CASCADE_START + (i + 1) * LAYER_STEP;
+            const fadeOut = isLast
+              ? CASCADE_START + 7 * LAYER_STEP + L8_DUR * L8_CAPTION_EXIT
+              : CASCADE_START + (i + 1) * LAYER_STEP;
             const FADE    = 500;
 
             if (isDesktop) {
