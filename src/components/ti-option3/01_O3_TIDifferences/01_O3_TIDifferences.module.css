@@ -18,9 +18,12 @@
   --intro-font-scale: 1.2;
 
   position: relative;
-  z-index: 36;          /* above Hero4 (z-index:35). Hero4 is one stacking context,
-                           so this section paints over ALL of it — bg2 and the
-                           building base (l8) included (bg2 < l8 < section). */
+  z-index: 36;          /* above Hero4 at REST. NOTE: while Hero4's pin is active
+                           its .trigger is lifted to z-index:37 (see hero4-pin
+                           onToggle in 00_O3_Hero.jsx) so the building rides OVER
+                           this rising navy during its exit instead of being wiped
+                           behind it. The lift is removed the instant the pin
+                           releases, so this section then takes over cleanly. */
   margin-top: -50vh;    /* pulled up so the section top sits at ~50% viewport
                            exactly when l8 finishes flying up (pin release) */
   /* Starts matching Hero4's bg2 (primary) — no seam — then GSAP fades this

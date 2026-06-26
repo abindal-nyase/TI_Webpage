@@ -187,6 +187,25 @@ scrollTrigger: {
 window.__lenis?.scrollTo(element, { offset: -80, duration: 1.4 })
 ```
 
+### Hero → next-section seam (z-index invariant — easy to break)
+
+The Hero (`00_O3_Hero`) and the next section (`01_O3_TIDifferences`, `z-index:36`)
+overlap at the seam: TIDifferences has `margin-top:-50vh` so it rises in while the
+hero is still pinned. **The building must ride OVER the rising navy, not behind it.**
+
+Pinning makes `.trigger` `position:fixed` → its own stacking context at z-auto, so
+at the root the section (`z-36`) would paint over the whole pinned hero. To prevent
+that, the `hero4-pin` ScrollTrigger's `onToggle` lifts `.trigger` to `z-index:37`
+**only while the pin is active**, then clears it on release so the section takes
+over cleanly (leaving it set permanently would cover the section with the hero's
+white `.home` bg → white wedge).
+
+- The building rises over the hero's own `bg2` navy shape (which mimics/merges into
+  the next section), so visually the navy is continuous through the seam.
+- If you change hero or section z-indexes, preserve: `bg1/bg2 (1) < section (36) <
+  trigger-while-pinned (37) < building layers`. Don't give `.home` or `.trigger` a
+  permanent z-index above the section.
+
 ## Dev server
 
 ```bash

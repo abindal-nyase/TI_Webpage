@@ -329,6 +329,19 @@ export default function O3Hero() {
               pin: true,
               scrub: true,
               invalidateOnRefresh: true,
+              // Lift the pinned hero above the next section (TIDifferences,
+              // z-index:36) WHILE the pin is active, so the building's last
+              // layer (l8/i8) flies up OVER the rising navy instead of being
+              // wiped behind it. Cleared the instant the pin releases, so the
+              // section then takes over cleanly (no permanent white-wedge cover
+              // — see .home / bg2 notes in the CSS). Pinning makes .trigger
+              // position:fixed → its own stacking context, so this z-index
+              // competes directly with the section at the root.
+              onToggle: (self) => {
+                if (triggerRef.current) {
+                  triggerRef.current.style.zIndex = self.isActive ? "37" : "";
+                }
+              },
             },
           });
           tl.duration(cascadeEnd);
