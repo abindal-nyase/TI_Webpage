@@ -109,7 +109,7 @@
   font-family: var(--font-body);
   font-size: calc(clamp(1rem, 1.5vw, 1.4rem) * var(--intro-font-scale, 1));
   line-height: 1.7;
-  color: oklch(1 0 0 / 0.55);
+  color: oklch(1 0 0 / 0.72);
   margin: 0;
 }
 
@@ -384,7 +384,7 @@
 }
 .valueBarLabel {
   font-family: var(--font-body);
-  font-size: calc(clamp(0.62rem, 0.85vw, 0.8rem) / var(--fit-scale, 1));
+  font-size: calc(clamp(0.85rem, 0.95vw, 1rem) / var(--fit-scale, 1));
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -422,7 +422,7 @@
 }
 .riskBarTitle {
   font-family: var(--font-body);
-  font-size: calc(clamp(0.68rem, 0.95vw, 0.88rem) * var(--font-scale, 1) / var(--fit-scale, 1));
+  font-size: calc(clamp(0.92rem, 1vw, 1.05rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -436,7 +436,7 @@
 }
 .riskBarCat {
   font-family: var(--font-body);
-  font-size: calc(clamp(0.6rem, 0.82vw, 0.78rem) * var(--font-scale, 1) / var(--fit-scale, 1));
+  font-size: calc(clamp(0.82rem, 0.9vw, 1rem) * var(--font-scale, 1) / var(--fit-scale, 1));
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -499,7 +499,7 @@
   font-family: var(--font-body);
   font-size: calc(1.3rem * var(--font-scale, 1));
   letter-spacing: 0.08em;
-  color: oklch(1 0 0 / 0.42);
+  color: oklch(1 0 0 / 0.62);
   flex-shrink: 0;
   min-width: 2ch;
   transition: color 0.35s ease;
@@ -523,7 +523,7 @@
 }
 .discCat {
   font-family: var(--font-body);
-  font-size: calc(clamp(0.68rem, 0.9vw, 0.85rem) * var(--font-scale, 1));
+  font-size: calc(clamp(0.9rem, 0.95vw, 1.05rem) * var(--font-scale, 1));
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -536,7 +536,7 @@
 
 .discNegTxt {
   font-family: var(--font-display);
-  font-size: calc(clamp(0.95rem, 1.3vw, 1.15rem) * var(--font-scale, 1));
+  font-size: calc(clamp(1.125rem, 1.4vw, 1.4rem) * var(--font-scale, 1));
   font-weight: 400;
   font-style: normal;
   line-height: 1.6;
