@@ -728,6 +728,21 @@ export default function O3Hero() {
 
   return (
     <section ref={sectionRef} id="hero4" className={s.home}>
+      {/* Hard-outline filter for the layer :hover state. One feMorphology dilate
+          pass traces the building's alpha edge in gold — crisp line, single GPU
+          pass, no extra image payload. Referenced via filter:url(#hero-outline)
+          in 00_O3_Hero.module.css. */}
+      <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
+        <filter id="hero-outline" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+          <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="dilated" />
+          <feFlood floodColor="#FAF369" result="gold" />
+          <feComposite in="gold" in2="dilated" operator="in" result="outline" />
+          <feMerge>
+            <feMergeNode in="outline" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </svg>
       <div ref={triggerRef} className={s.trigger}>
         <header ref={headerRef} className={s.header}>
           <img

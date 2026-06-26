@@ -58,14 +58,14 @@
    drop-shadow follows the layer's alpha edge, so the glow hugs the building
    outline exactly like the old baked variant — at zero extra bytes. Gold
    #FAF369 sampled from the original i*I glow pixels. */
-.layer .imgBase {
-  transition: filter .25s var(--ease-out);
-}
 .layer:hover .imgBase {
-  filter: drop-shadow(0 0 10px rgba(250, 243, 120, 0.9))
-          drop-shadow(0 0 22px rgba(250, 243, 105, 0.5));
+  /* Hard yellow outline (like the baked i*I variant), not an ethereal glow.
+     ONE SVG feMorphology dilate pass (#hero-outline, defined in the JSX) traces
+     the alpha edge as a crisp line. Single GPU pass — no 8x drop-shadow stack,
+     no extra image payload, no filter transition (it snapped + re-rasterized the
+     big webp each frame = slow/glitchy). Gold #FAF369 lives in the filter def. */
+  filter: url(#hero-outline);
 }
-
 /* ── Shared image rules ───────────────────────────────────────────── */
 .imgBase {
   position: absolute;
