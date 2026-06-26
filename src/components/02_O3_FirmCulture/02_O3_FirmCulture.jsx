@@ -56,46 +56,55 @@ export default function O3FirmCulture() {
 
     let cancelled = false;
 
-    document.fonts.ready.then(() => {
-      if (cancelled) return;
-      ScrollTrigger.refresh();
-      context.add(() => {
-        const mm = gsap.matchMedia();
-        mm.add(
-          {
-            isSmall360: '(max-width: 375px)',
-            isPort390:  '(min-width: 376px) and (max-width: 430px)',
-            isWide:     '(min-width: 431px)',
+    // Build the pin SYNCHRONOUSLY — do NOT gate it behind document.fonts.ready.
+    // The pin trigger is the 300vh section (font-independent), so it can exist
+    // from the first frame. Gating it behind fonts.ready left a window with no
+    // pin: the section scrolled free while the flash loop ran → load glitch.
+    // (Hero solves the same problem with a placeholder hold-pin.) Fonts only
+    // affect the giant tagline/NYA size, so just refresh once they settle.
+    const mm = gsap.matchMedia();
+    mm.add(
+      {
+        isSmall360: '(max-width: 375px)',
+        isPort390:  '(min-width: 376px) and (max-width: 430px)',
+        isWide:     '(min-width: 431px)',
+      },
+      (mmCtx) => {
+        const { isSmall360, isPort390 } = mmCtx.conditions;
+
+        // End scale = the readable resting size. Narrow phones scaled the
+        // tagline + NYA down too far, so raise the floor on Mobile Small 360.
+        const endScale = isSmall360 ? 0.042 : 0.03;
+        // power4.out rushes the scale down through the giant, unreadable
+        // letterform-wedge phase quickly, then lingers in the small/readable
+        // range where the word-wall shows behind the text. On Mobile Port 390
+        // the entrance read too small, so a gentler ease keeps the initial
+        // readable frames larger while landing on the same 0.03 final size.
+        const ease = isPort390 ? 'power2.out' : 'power4.out';
+
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end:   'bottom bottom',
+            scrub: 0.3,
+            pin:   sticky,
+            invalidateOnRefresh: true,
+            // Middle pinned section: Hero(3) → here(2) → ClientCare(1). Forces
+            // top-to-bottom refresh order across resize. (ST mistake #5)
+            refreshPriority: 2,
           },
-          (mmCtx) => {
-            const { isSmall360, isPort390 } = mmCtx.conditions;
+          // No trailing dead-hold tween: the zoom now spans the FULL pin
+          // distance and ends exactly at pin release. The old tl.to({},{1}) tail
+          // froze the composition tiny on plain --color-primary for the last
+          // ~1/9 of the scroll → the "blue gap before the last frame".
+        }).fromTo(composition, { scale: 1, yPercent: -22 }, { scale: endScale, yPercent: 0, ease, duration: 8 }, 0);
+      }
+    );
 
-            // End scale = the readable resting size. Narrow phones scaled the
-            // tagline + NYA down too far, so raise the floor on Mobile Small 360.
-            const endScale = isSmall360 ? 0.042 : 0.03;
-            // power4.out rushes the scale down through the giant, unreadable
-            // letterform-wedge phase quickly, then lingers in the small/readable
-            // range where the word-wall shows behind the text. On Mobile Port 390
-            // the entrance read too small, so a gentler ease keeps the initial
-            // readable frames larger while landing on the same 0.03 final size.
-            const ease = isPort390 ? 'power2.out' : 'power4.out';
-
-            const tl = gsap.timeline({
-              scrollTrigger: {
-                trigger: section,
-                start: 'top top',
-                end:   'bottom bottom',
-                scrub: 0.3,
-                pin:   sticky,
-                invalidateOnRefresh: true,
-              },
-            });
-            tl.fromTo(composition, { scale: 1, yPercent: -22 }, { scale: endScale, yPercent: 0, ease, duration: 8 }, 0);
-            tl.to({}, { duration: 1 }, 8);
-          }
-        );
-      });
-    });
+    // Fonts change the measured size of the giant tagline/NYA — refresh once so
+    // pin start/end and the scrub map against final type metrics.
+    document.fonts.ready.then(() => { if (!cancelled) ScrollTrigger.refresh(); });
 
     // word flash loop — tracked automatically by useGSAP context
     const words = wordRefs.current.filter(Boolean);

@@ -187,6 +187,10 @@ export default function O3ClientCare() {
                 pin: stage,
                 scrub: 1,
                 invalidateOnRefresh: true,
+                // Last pinned section in scroll order — lowest priority so ST
+                // refreshes Hero(3) → FirmCulture(2) → here(1) top-to-bottom,
+                // keeping pin distances consistent across resize. (ST mistake #5)
+                refreshPriority: 1,
               },
             })
 
