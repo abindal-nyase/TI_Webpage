@@ -274,7 +274,7 @@ export default function O3ClientCare() {
 
         <div className={s.header}>
           <h2 className={s.title}>The Experience of Working With NYA</h2>
-          <p className={s.intro}>{DESCRIPTION}</p>
+          {/* <p className={s.intro}>{DESCRIPTION}</p> */}
         </div>
 
         <div className={s.points}>

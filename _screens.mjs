@@ -5,7 +5,7 @@ import { PRESETS, viewports, withBrowser, openPage, ensureDir, overflow, scrollT
 //   node _screens.mjs mobile-port-390       # just one
 //   node _screens.mjs desktop-1440 laptop-1366
 //   VP=mobile node _screens.mjs             # substring filter
-const OUT = '/Users/abindal/dev/NYAScripts/TIPage/responsive-audit/screens';
+const OUT = './responsive-audit/screens';
 const args = process.argv.slice(2);
 const VPS = viewports(args.length ? args : Object.keys(PRESETS));
 

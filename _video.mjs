@@ -8,7 +8,7 @@ import { PRESETS, viewports, withBrowser, openPage, ensureDir, humanScroll } fro
 //   node _video.mjs mobile-port-390         # just one
 //   node _video.mjs desktop-1440 mobile-port-390
 //   VP=mobile node _video.mjs               # substring filter
-const OUT = ensureDir('/Users/abindal/dev/NYAScripts/TIPage/responsive-audit/video');
+const OUT = ensureDir('./responsive-audit/video');
 const args = process.argv.slice(2);
 const VPS = viewports(args.length ? args : Object.keys(PRESETS));
 
