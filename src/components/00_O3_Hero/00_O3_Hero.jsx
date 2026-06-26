@@ -136,7 +136,40 @@ export default function O3Hero() {
     const mm = gsap.matchMedia();
     mmRef.current = mm;
 
-    // saveStyles prevents inline-style bleed when context reverts across breakpoints
+    // ── Apply the static LAYOUT table ONCE, BEFORE saveStyles ──────────────
+    // The LAYOUT (top/left/width per layer) is breakpoint-INDEPENDENT — the
+    // same table was applied identically in every matchMedia branch — so it
+    // belongs here, applied once. Doing it before ScrollTrigger.saveStyles is
+    // critical: saveStyles snapshots these elements NOW, so the snapshot
+    // captures the widths. Crossing a breakpoint (1024/768/480) reverts the
+    // matchMedia context, and saveStyles restores each element to its snapshot.
+    // Previously the layout was applied INSIDE the matchMedia callback (after
+    // saveStyles snapshotted width:auto) → on revert the layer divs were
+    // restored to no-width. l1 is position:relative so it still filled
+    // .movehome and looked fine, but l2..l8 are position:absolute → collapsed
+    // to 0 width → ONLY i1 showed after a resize. (resize→only-i1 bug)
+    const layerImgs = layerRefs.current.flatMap((el) =>
+      el ? Array.from(el.querySelectorAll("img")) : [],
+    );
+    LAYERS.forEach((layer, i) => {
+      const cfg = LAYOUT[layer.id];
+      const el = layerRefs.current[i];
+      if (!el || !cfg) return;
+      gsap.set(el, {
+        top: cfg.top + "vw",
+        left: cfg.left + "vw",
+        width: cfg.width + "vw",
+      });
+      gsap.set(el.querySelectorAll("img"), {
+        width: cfg.width + "vw",
+        left: 0,
+        top: 0,
+      });
+    });
+
+    // saveStyles prevents inline-style bleed when context reverts across
+    // breakpoints. Includes the layer imgs (set above) so their width is
+    // snapshotted + restored on revert too, not just the containers.
     ScrollTrigger.saveStyles([
       movehomeRef.current,
       titleRef.current,
@@ -146,6 +179,7 @@ export default function O3Hero() {
       exitOverlayRef.current,
       ctaRef.current,
       ...layerRefs.current,
+      ...layerImgs,
       ...captionRefs.current.filter(Boolean),
     ]);
 
@@ -171,25 +205,9 @@ export default function O3Hero() {
           transformOrigin: "top left",
         });
 
-        // Apply the static layout from the LAYOUT table (single source of
-        // truth — see top of file). Must run BEFORE computeFit() measures the
-        // union rect. The container box carries top/left/width; the artwork
-        // sits flush at its origin (left/top 0) so one row = one position.
-        LAYERS.forEach((layer, i) => {
-          const cfg = LAYOUT[layer.id];
-          const el = layerRefs.current[i];
-          if (!el || !cfg) return;
-          gsap.set(el, {
-            top: cfg.top + "vw",
-            left: cfg.left + "vw",
-            width: cfg.width + "vw",
-          });
-          gsap.set(el.querySelectorAll("img"), {
-            width: cfg.width + "vw",
-            left: 0,
-            top: 0,
-          });
-        });
+        // (LAYOUT table is applied ONCE before saveStyles — see top of effect.
+        // It is breakpoint-independent, and applying it pre-snapshot is what
+        // keeps the layer widths surviving a matchMedia revert on resize.)
 
         // ── Contain-fit + bottom-centre anchor ───────────────────────────
         // Matches paveletsky.org: the assembled building sits stacked at the
@@ -332,6 +350,15 @@ export default function O3Hero() {
               pin: true,
               scrub: true,
               invalidateOnRefresh: true,
+              // Hero is the first pinned section. Pinned triggers add scroll
+              // distance that downstream pinned sections (FirmCulture:2,
+              // ClientCare:1) must subtract on refresh — and these are separate
+              // React islands hydrating in nondeterministic order, so creation
+              // order != scroll order. Descending refreshPriority forces ST to
+              // recalc top-to-bottom on every resize. Without it, a resize can
+              // recompute this pin's start/end against a stale downstream layout
+              // → cascade playhead lands offset → only l1 shows. (ST mistake #5)
+              refreshPriority: 3,
               // Lift the pinned hero above the next section (TIDifferences,
               // z-index:36) WHILE the pin is active, so the building's last
               // layer (l8/i8) flies up OVER the rising navy instead of being
@@ -384,7 +411,9 @@ export default function O3Hero() {
             .to(
               bg1ImgRef.current,
               {
-                y: "-180dvh",
+                // vh, not dvh: dvh recalcs on every dynamic-viewport change
+                // (browser chrome show/hide) mid-scroll → bg1 jumps. vh is fixed.
+                y: "-180vh",
                 duration: cascadeEnd - (300 + CASCADE_OFFSET),
                 ease: "none",
               },
@@ -612,6 +641,9 @@ export default function O3Hero() {
           pin: true,
           pinSpacing: true,
           invalidateOnRefresh: true,
+          // Match the real pin's priority so the placeholder participates in the
+          // same top-to-bottom refresh order (see hero4-pin note above).
+          refreshPriority: 3,
         });
 
         // getBoundingClientRect height is only real once images have loaded
