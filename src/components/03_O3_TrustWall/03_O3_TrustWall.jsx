@@ -169,8 +169,8 @@ export default function O3TrustWall() {
 
         gsap.fromTo(
           bodyRef.current,
-          { color: "oklch(1 0 0 / 0.55)" },
-          { color: "oklch(0.2077 0.0398 265.7549 / 0.72)", scrollTrigger: trigger },
+          { color: "oklch(1 0 0 / 0.72)" },
+          { color: "oklch(0.2077 0.0398 265.7549 / 0.86)", scrollTrigger: trigger },
         );
       }, sectionRef);
     }
