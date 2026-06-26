@@ -741,9 +741,9 @@ export default function O3Hero() {
         <div ref={titleRef} className={s.heroTitle}>
           <div className={s.titleRow}>
             <span className={`${s.titleWord} ${s.titleWordTenant}`}>
-              <span className={s.firstLetter}>T</span>enant 
-            </span> 
-            
+              <span className={s.firstLetter}>T</span>enant
+            </span>
+
             <span className={`${s.titleWord} ${s.titleWordImprovements}`}>
               <span className={s.firstLetter}>I</span>mprovements
             </span>
@@ -765,7 +765,6 @@ export default function O3Hero() {
           </div>
         </div>
 
-
         <div ref={exitOverlayRef} className={s.exitOverlay} />
 
         {/* Navy cover shown until the building paints (removed in buildTimeline).
@@ -778,37 +777,40 @@ export default function O3Hero() {
             <div
               key={layer.id}
               className={`${s[`l${layer.id}`]} ${s.layer}`}
-              ref={(el) => { layerRefs.current[i] = el; }}
+              ref={(el) => {
+                layerRefs.current[i] = el;
+              }}
             >
               {/* Single base layer per building section. The hover highlight is
                   pure CSS (drop-shadow glow on :hover) — no second image — which
                   halves the hero payload vs. the old baked-glow variants. */}
-              <img src={layer.base} alt="" draggable={false} className={s.imgBase} fetchpriority="high" decoding="async" />
+              <img
+                src={layer.base}
+                alt=""
+                draggable={false}
+                className={s.imgBase}
+                fetchpriority="high"
+                decoding="async"
+              />
             </div>
           ))}
         </div>
 
         {/* Layer captions — outside movehome so they are NOT scaled with the
             building. GSAP fades each one in/out synced to its layer's rise. */}
-        {LAYERS.map((layer, i) => layer.caption ? (
-          <div
-            key={`cap-${layer.id}`}
-            ref={el => { captionRefs.current[i] = el; }}
-            className={`${s.layerCaption} ${layer.captionSide === 'right' ? s.layerCaptionRight : ''}`}
-          >
-            {layer.caption}
-          </div>
-        ) : null)}
-
-        <a
-          ref={ctaRef}
-          className={s.heroCta}
-          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
-        >
-          <span className={s.heroCtaText}>Contact Us</span>
-          <span className={s.heroCtaArrow} aria-hidden="true">&rarr;</span>
-        </a>
-
+        {LAYERS.map((layer, i) =>
+          layer.caption ? (
+            <div
+              key={`cap-${layer.id}`}
+              ref={(el) => {
+                captionRefs.current[i] = el;
+              }}
+              className={`${s.layerCaption} ${layer.captionSide === "right" ? s.layerCaptionRight : ""}`}
+            >
+              {layer.caption}
+            </div>
+          ) : null,
+        )}
       </div>
     </section>
   );

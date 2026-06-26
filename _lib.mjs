@@ -5,7 +5,7 @@ import fs from 'fs';
 // entrypoint (its own output dir + mode); all the Playwright boilerplate,
 // viewport presets, scroll loops, and page measurements live here.
 
-export const URL = process.env.URL || 'http://localhost:4321/option3';
+export const URL = process.env.URL || 'http://localhost:4321/';
 
 // Canonical viewport matrix, small -> large. Widths chosen to bracket the
 // CSS breakpoints actually used in src (heaviest: 640, 768, 860/900/960, 1024).
