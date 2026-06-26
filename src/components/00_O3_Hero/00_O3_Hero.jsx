@@ -31,6 +31,9 @@ const BUILDING_OFFSET_Y = 0.4; // landscape/desktop: dropped below bottom-centre
 // phones (390×844) — previously only the roof peeked above the fold.
 const BUILDING_OFFSET_Y_PORTRAIT = 0.18;
 const BUILDING_OFFSET_X = 0;
+// Fine vertical nudge for the whole stacked building, in screen px, applied
+// on top of BUILDING_OFFSET_Y. -ve lifts up, +ve drops down.
+const BUILDING_NUDGE_Y_PX = -20;
 
 // ── Intro config ───────────────────────────────────────────────────────────
 const INTRO_DURATION = 1600   // settle-into-rest before the cascade
@@ -106,9 +109,9 @@ const LAYOUT = {
   1: { top: -9, left: 26.05, width: 55.4 },
   2: { top: -4.875, left: 13.32, width: 41 },
   3: { top: -1.95, left: 26.05, width: 55.44 },
-  4: { top: -0.4, left: 13.4, width: 68 },
+  4: { top: -0.4, left: 13.4, width: 68.1 },
   5: { top: 1.0, left: 13.44, width: 35.68 },
-  6: { top: 7.9, left: 26.55, width: 55.1 },
+  6: { top: 7.9, left: 26.55, width: 55.46 },
   7: { top: 18.625, left: 4.7, width: 54 },
   8: { top: 7.9125, left: 4.8, width: 76.6175 },
 };
@@ -270,7 +273,7 @@ export default function O3Hero() {
             ? BUILDING_OFFSET_Y_PORTRAIT
             : BUILDING_OFFSET_Y;
           fit.x = (vw - r.width) / 2 - relLeft + vw * BUILDING_OFFSET_X;
-          fit.y = yBottom + vh * offsetY;
+          fit.y = yBottom + vh * offsetY + BUILDING_NUDGE_Y_PX;
           gsap.set(mh, { scale: cs, x: cx, y: cy }); // restore scrub state
           restoreLayers();
         };
@@ -732,9 +735,26 @@ export default function O3Hero() {
           pass traces the building's alpha edge in gold — crisp line, single GPU
           pass, no extra image payload. Referenced via filter:url(#hero-outline)
           in 00_O3_Hero.module.css. */}
-      <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
-        <filter id="hero-outline" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
-          <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="dilated" />
+      <svg
+        width="0"
+        height="0"
+        aria-hidden="true"
+        style={{ position: "absolute" }}
+      >
+        <filter
+          id="hero-outline"
+          x="-10%"
+          y="-10%"
+          width="120%"
+          height="120%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feMorphology
+            in="SourceAlpha"
+            operator="dilate"
+            radius="2"
+            result="dilated"
+          />
           <feFlood floodColor="#FAF369" result="gold" />
           <feComposite in="gold" in2="dilated" operator="in" result="outline" />
           <feMerge>
@@ -763,11 +783,9 @@ export default function O3Hero() {
               <span className={s.firstLetter}>I</span>mprovements
             </span>
           </div>
-          {/*<div className={`${s.titleRow} ${s.titleRowIndent}`}>
-            <span className={`${s.titleWord} ${s.titleWordImprovements}`}>
-              <span className={s.firstLetter}>I</span>mprovements
-            </span>
-          </div>*/}
+          <p className={s.heroTagline}>
+            Structural reinvention, floor by floor.
+          </p>
         </div>
 
         <div className={s.bg1}>

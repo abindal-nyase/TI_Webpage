@@ -143,44 +143,60 @@
   }
 }
 
-/* ── Hero title — small-caps "Tenant / Improvements" ─────────────── */
+/* ── Hero title — small-caps "Tenant Improvements" + tagline ─────────
+   Left-aligned editorial cluster under the (top-right) logo. Kept quiet
+   and modest so the rising building stays the hero — title supports, it
+   doesn't compete. Margin matches the header's 4vw padding. */
 .heroTitle {
   position: absolute;
-  top: calc(96px + 3vh);
+  top: calc(96px + 4vh);
   left: 0;
   width: 100%;
   z-index: 60;
   color: var(--white);
   pointer-events: none;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0 4vw;
+  text-align: center;
 }
 
 .titleRow {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  line-height: 0.85;
-  gap: clamp(0.5rem, 5vw, 5rem);
+  line-height: 0.9;
+  gap: 0.32em;        /* normal word space — reads as one phrase, not two blocks */
   flex-wrap: wrap;
 }
 
-/* Second line ("Improvements") staggers right + drops down from the first */
-.titleRowIndent {
-  margin-left: 7vw;
-  margin-top: 2.5vh;
-}
-
-/* Single word, petite/small-caps. Initial letter enlarged via ::first-letter
-   so "Tenant" → big T + small-cap ENANT, all one word with no gap. */
+/* Single word, petite/small-caps. Initial letter enlarged so
+   "Tenant" → big T + small-cap ENANT, all one word with no gap. */
 .titleWord {
   display: inline-block;
   font-family: var(--font-display, 'Spectral', Georgia, serif);
   font-variant-caps: small-caps;
-  font-size: clamp(2rem, 2rem + 7vw, 10.5vw);
+  font-size: clamp(1.5rem, 0.5rem + 2.8vw, 3.25rem);
   font-weight: 400;
   letter-spacing: 0.04em;
-  line-height: 0.85;
+  line-height: 0.9;
+}
+
+/* Tagline — italic display serif for a subtle contrast against the
+   small-caps title; muted so it reads as a quiet subtitle, not a
+   second headline. Evokes the floor-by-floor cascade animation. */
+.heroTagline {
+  margin: 0;
+  font-family: var(--font-display, 'Spectral', Georgia, serif);
+  font-weight: 400;
+  font-size: clamp(0.95rem, 0.6rem + 0.9vw, 1.35rem);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  color: var(--white);
+  opacity: 0.72;
+  max-width: 32ch;
 }
 
 .firstLetter {
@@ -204,10 +220,10 @@
 @media (min-width: 1024px) {
   .titleRow {
     flex-wrap: nowrap;
-    gap: clamp(0.5rem, 4vw, 4rem);
+    gap: 0.32em;
   }
   .titleWord {
-    font-size: clamp(2rem, 1rem + 7vw, 9.2vw);
+    font-size: clamp(2.25rem, 0.5rem + 2.6vw, 3.5rem);
     white-space: nowrap;
   }
 }
@@ -218,11 +234,14 @@
 @media (orientation: landscape) and (max-height: 600px) {
   .titleRow {
     flex-wrap: nowrap;
-    gap: clamp(0.4rem, 2vw, 1.5rem);
+    gap: 0.32em;
   }
   .titleWord {
-    font-size: clamp(1.4rem, 4.8vw, 2.6rem);
+    font-size: clamp(1.4rem, 4.4vw, 2.4rem);
     white-space: nowrap;
+  }
+  .heroTagline {
+    font-size: clamp(0.8rem, 2.4vw, 1.05rem);
   }
 }
 
