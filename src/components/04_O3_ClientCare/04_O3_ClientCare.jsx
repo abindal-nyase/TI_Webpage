@@ -10,10 +10,10 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './04_O3_ClientCare.module.css'
-import careBg from '../../../assets/client-care/care.webp'
-import reliabilityBg from '../../../assets/client-care/reliability.webp'
-import experienceBg from '../../../assets/client-care/experience.webp'
-import partnershipBg from '../../../assets/client-care/partnership.webp'
+import careBg from '../../assets/client-care/care.webp'
+import reliabilityBg from '../../assets/client-care/reliability.webp'
+import experienceBg from '../../assets/client-care/experience.webp'
+import partnershipBg from '../../assets/client-care/partnership.webp'
 
 gsap.registerPlugin(ScrollTrigger)
 

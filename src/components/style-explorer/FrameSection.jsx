@@ -7,13 +7,13 @@
  * section). Reading location.search at mount works in dev and static alike.
  * client:only React, so window is always available here.
  */
-import O3Hero from '../ti-option3/00_O3_Hero/00_O3_Hero.jsx';
-import O3TIDifferences from '../ti-option3/01_O3_TIDifferences/01_O3_TIDifferences.jsx';
-import O3FirmCulture from '../ti-option3/02_O3_FirmCulture/02_O3_FirmCulture.jsx';
-import O3TrustWall from '../ti-option3/03_O3_TrustWall/03_O3_TrustWall.jsx';
-import O3ClientCare from '../ti-option3/04_O3_ClientCare/04_O3_ClientCare.jsx';
-import O3Ethos from '../ti-option3/05_O3_Ethos/05_O3_Ethos.jsx';
-import O3Footer from '../ti-option3/06_O3_Footer/06_O3_Footer.jsx';
+import O3Hero from '../00_O3_Hero/00_O3_Hero.jsx';
+import O3TIDifferences from '../01_O3_TIDifferences/01_O3_TIDifferences.jsx';
+import O3FirmCulture from '../02_O3_FirmCulture/02_O3_FirmCulture.jsx';
+import O3TrustWall from '../03_O3_TrustWall/03_O3_TrustWall.jsx';
+import O3ClientCare from '../04_O3_ClientCare/04_O3_ClientCare.jsx';
+import O3Ethos from '../05_O3_Ethos/05_O3_Ethos.jsx';
+import O3Footer from '../06_O3_Footer/06_O3_Footer.jsx';
 
 const MAP = {
   hero:    O3Hero,

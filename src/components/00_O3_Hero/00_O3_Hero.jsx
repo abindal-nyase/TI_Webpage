@@ -1,18 +1,18 @@
 import { useRef } from 'react'
-import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../../hooks/useIsomorphicLayoutEffect'
+import { useIsomorphicLayoutEffect as useLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './00_O3_Hero.module.css'
 
-import i1 from '../../../assets/hero-images/i1.webp?url'
-import i2 from '../../../assets/hero-images/i2.webp?url'
-import i3 from '../../../assets/hero-images/i3.webp?url'
-import i4 from '../../../assets/hero-images/i4.webp?url'
-import i5 from '../../../assets/hero-images/i5.webp?url'
-import i6 from '../../../assets/hero-images/i6.webp?url'
-import i7 from '../../../assets/hero-images/i7.webp?url'
-import i8 from '../../../assets/hero-images/i8.webp?url'
-import nyaWhite from '../../../assets/nya-logo.svg?url'
+import i1 from '../../assets/hero-images/i1.webp?url'
+import i2 from '../../assets/hero-images/i2.webp?url'
+import i3 from '../../assets/hero-images/i3.webp?url'
+import i4 from '../../assets/hero-images/i4.webp?url'
+import i5 from '../../assets/hero-images/i5.webp?url'
+import i6 from '../../assets/hero-images/i6.webp?url'
+import i7 from '../../assets/hero-images/i7.webp?url'
+import i8 from '../../assets/hero-images/i8.webp?url'
+import nyaWhite from '../../assets/nya-logo.svg?url'
 
 gsap.registerPlugin(ScrollTrigger)
 

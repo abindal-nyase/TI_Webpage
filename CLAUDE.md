@@ -3,11 +3,13 @@
 ## Theme System (CRITICAL — read before touching any component)
 
 ### How it works
-`option3.astro` has a sticky theme-switcher bar that lets users pick a **color scheme** and a **font pair** at runtime. It works by calling `document.documentElement.style.setProperty(...)` to override CSS custom properties on `:root`.
+The production page (`src/pages/index.astro`) is **locked to one color scheme + font pair** (`DEFAULT_SCHEME` / `DEFAULT_FONT`), written statically onto `:root` in `<head>`. The `SCHEMES` / `FONTS` data and the generated `[data-scheme]` / `[data-font]` rules are the single source of truth, defined at the top of `index.astro` (`themeCss`).
 
-Every component reads these variables — so when the user switches theme, the whole page updates instantly with no re-render.
+The old runtime theme-switcher bar was removed for production. To preview alternate schemes/fonts at runtime, use `/style-explorer`.
 
-### Rules for every component in `src/components/ti-option3/`
+Every component reads these CSS variables, so swapping the default (or a per-section override) restyles the whole subtree with no re-render.
+
+### Rules for every component in `src/components/`
 
 **DO use CSS variables for every color and font:**
 ```css
@@ -26,16 +28,16 @@ font-family: 'Playfair Display', serif;
 background: #2F80ED;
 ```
 
-**DO NOT create new color schemes.** The six schemes below are the complete set. Design decisions happen in the switcher data in `option3.astro`, not in component CSS.
+**DO NOT create new color schemes.** The seven schemes below are the complete set. Design decisions happen in the `SCHEMES` / `FONTS` data in `index.astro`, not in component CSS.
 
 ### Per-section theme overrides
 
-The theme switcher sets the **global default** on `:root`. To give a section a
+`index.astro` sets the **global default** on `:root`. To give a section a
 different color scheme or font, wrap it in `SectionTheme.astro`:
 
 ```astro
 <SectionTheme scheme="maroon-gold" font="playfair-inter">
-  <Hero4 client:load />
+  <O3Hero client:load />
 </SectionTheme>
 ```
 
@@ -45,7 +47,7 @@ name. Apply it with `section="…"`:
 
 ```astro
 <SectionTheme section="ti-differences">
-  <TIDifferencesOption3 client:load />
+  <O3TIDifferences client:load />
 </SectionTheme>
 ```
 
@@ -58,14 +60,15 @@ is applied inline and wins over everything else.
 - All props optional. Omit `scheme`/`font` to inherit the global default for that axis.
 - `SectionTheme` renders a `display:contents` box — zero layout impact, safe to
   wrap around GSAP-pinned sections.
-- It works by setting `data-scheme` / `data-font` attributes, matched by scoped
-  CSS rules in `option3.astro` that re-declare the theme variables on that subtree.
-- Global default (theme switcher start state) is `charcoal-cyan` + `spectral-work`.
+- It works by setting `data-scheme` / `data-font` attributes, matched by the
+  `[data-scheme]` / `[data-font]` rules `index.astro` generates from `SCHEMES` /
+  `FONTS` and emits into `<head>` (`themeCss`).
+- Global default (`DEFAULT_SCHEME` / `DEFAULT_FONT`) is `charcoal-cyan` + `spectral-work`.
 - **Valid ids are ONLY the schemes/fonts in the tables below.** Do not invent new
-  ones. The scoped CSS in `option3.astro` mirrors the switcher's `SCHEMES`/`FONTS`
-  data — if you change a scheme value, update both places.
+  ones. `SCHEMES` / `FONTS` in `index.astro` is the single source of truth — the
+  scoped rules are generated from it, so editing a value there updates everything.
 
-### Available CSS variables (set by theme switcher)
+### Available CSS variables (set by the active scheme/font)
 
 | Variable | Purpose |
 |---|---|
@@ -93,7 +96,9 @@ is applied inline and wins over everything else.
 --container / --container-narrow / --margin-desktop / --section-padding
 ```
 
-### The six color schemes (in `option3.astro` — DO NOT add more)
+### The seven color schemes (in `index.astro` `SCHEMES` — DO NOT add more)
+
+Exact values are oklch in `index.astro`; hex below are approximate references.
 
 | ID | Name | Primary | Accent |
 |---|---|---|---|
@@ -103,8 +108,11 @@ is applied inline and wins over everything else.
 | `forest-stone` | Forest + Stone | `#1A2E1A` | `#6B9B6B` |
 | `violet-gold` | Deep Violet | `#1E1B4B` | `#7C3AED` |
 | `navy-gold` | Navy + Gold | `#1E3A8A` | `#B45309` |
+| `maroon-gold` | Maroon + Gold | `#5E2424` | `#C49A4E` |
 
-### The five font pairs (in `option3.astro` — DO NOT add more)
+Default (`DEFAULT_SCHEME`) is `charcoal-cyan`.
+
+### The five font pairs (in `index.astro` `FONTS` — DO NOT add more)
 
 | ID | Display | Body |
 |---|---|---|
@@ -114,30 +122,38 @@ is applied inline and wins over everything else.
 | `baskerville-source` | Libre Baskerville | Source Sans 3 |
 | `spectral-work` | Spectral | Work Sans |
 
-All fonts are preloaded in `option3.astro`'s `<head>`. If you add a new component that needs a font not in this list, load it there — but do not add a new font pair to the switcher.
+All fonts are preloaded in `index.astro`'s `<head>` (default `DEFAULT_FONT` is `spectral-work`). If you add a new component that needs a font not in this list, load it there — but do not add a new font pair.
 
 ## Project structure
 
 ```
 src/
   pages/
-    option3.astro        ← Option 3 page + theme switcher
-    option1.astro        ← Production baseline
-    option2.astro        ← Option 2 WIP
+    index.astro          ← Production landing page (the site, at /) + theme tokens
+    style-explorer.astro ← Runtime scheme/font explorer
+    se-frame.astro       ← Style-explorer iframe target
     design.astro         ← Design system showcase
-    index.astro          ← Dev hub (links to all pages)
   components/
-    ti-option3/          ← Option 3 components (skeleton, WIP)
-    ti-option2/          ← Option 2 components
-    [GlobalSetup, Nav, Hero, ...]  ← Shared / Option 1 components
+    00_O3_Hero/ … 06_O3_Footer/  ← The page sections, in scroll order
+    O3_SideNav/          ← Section side-nav
+    SectionTheme.astro   ← Per-section scheme/font/token overrides
+    GlobalSetup/         ← Lenis + GSAP ScrollTrigger init (global)
+    style-explorer/      ← Style-explorer UI
+  hooks/                 ← Shared hooks (e.g. useIsomorphicLayoutEffect)
+  assets/                ← Images (hero-images, company-logos, client-care, …)
+  index.css              ← Global page CSS
   design/
     design-system.css    ← Source of truth for all static tokens
     NYA_Tenant_Improvement_Figma_File_Blueprint.md
 ```
 
-## Lenis + GSAP ScrollTrigger (option3 components)
+Components are flat under `src/components/` (the old `ti-option3/` wrapper was
+removed). The `O3_` prefix on component names is legacy and no longer implies a
+separate "option".
 
-Every option3 component that uses scroll animation relies on **Lenis** (smooth scroll) + **GSAP ScrollTrigger** (scrub/pin). GlobalSetup.jsx initializes both globally — do not reinitialize them in individual components.
+## Lenis + GSAP ScrollTrigger
+
+Every component that uses scroll animation relies on **Lenis** (smooth scroll) + **GSAP ScrollTrigger** (scrub/pin). GlobalSetup.jsx initializes both globally — do not reinitialize them in individual components.
 
 ### How GlobalSetup wires them
 
@@ -150,7 +166,7 @@ gsap.ticker.lagSmoothing(0)
 
 No `ScrollTrigger.scrollerProxy()` needed — Lenis v1 uses native scroll so `window.scrollY` stays accurate.
 
-### Rules for every animated component in `src/components/ti-option3/`
+### Rules for every animated component in `src/components/`
 
 **DO use `gsap.context()` inside `useEffect` for cleanup:**
 ```js
@@ -214,4 +230,4 @@ npm run build    # production build
 npm run preview  # preview build locally
 ```
 
-Option 3 is at `/option3`. Dev hub (all page links) at `/`.
+The site is at `/` (`index.astro`). Scheme/font explorer at `/style-explorer`.

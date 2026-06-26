@@ -1,5 +1,5 @@
 import s from './06_O3_Footer.module.css';
-import nyaLogo from '../../../assets/nya-logo.svg?url';
+import nyaLogo from '../../assets/nya-logo.svg?url';
 
 const NAV_COLS = [
   {
