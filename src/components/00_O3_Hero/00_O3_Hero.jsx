@@ -93,15 +93,15 @@ const getVH = () =>
 // Add more layers by keying arrays to their layer id (2–8).
 const LABELS = {
   1: [
-    { id: 'solar-canopies',  title: 'Solar Canopies',           x: 58, y: 28, dx: -85, dy: -32 },
-    { id: 'mep',             title: 'MEP System',               x: 73, y: 14, dx:  65, dy: -28 },
-    { id: 'green-roof',      title: 'Green Roof',               x: 23, y: 40, dx: -72, dy: -18 },
-    { id: 'guardrails',      title: 'Guardrails',               x: 87, y: 53, dx:  55, dy: -14 },
-    { id: 'window-washing',  title: 'Window Washing Systems',   x: 92, y: 36, dx:  52, dy:  14 },
-    { id: 'skylights',       title: 'Skylights',                x: 47, y: 22, dx: -78, dy: -30 },
-    { id: 'outdoor-dining',  title: 'Outdoor Dining Area',      x: 63, y: 61, dx:  68, dy: -26 },
-    { id: 'lounge',          title: 'Rooftop Lounge Area',      x: 26, y: 54, dx: -68, dy: -20 },
-    { id: 'staircase',       title: 'Staircase Access to Roof', x: 47, y: 72, dx: -58, dy:  24 },
+    { id: 'solar-canopies',  title: 'Solar Canopies',           x: 63, y: 34, dx: -90, dy: -42 },
+    { id: 'mep',             title: 'MEP System',               x: 75, y: 16, dx:  70, dy: -28 },
+    { id: 'green-roof',      title: 'Green Roof',               x: 22, y: 35, dx: -72, dy: -22 },
+    { id: 'guardrails',      title: 'Guardrails',               x: 84, y: 52, dx:  58, dy: -16 },
+    { id: 'window-washing',  title: 'Window Washing Systems',   x: 88, y: 40, dx:  58, dy:  16 },
+    { id: 'skylights',       title: 'Skylights',                x: 55, y: 30, dx: -80, dy: -30 },
+    { id: 'outdoor-dining',  title: 'Outdoor Dining Area',      x: 50, y: 60, dx: -80, dy:  28 },
+    { id: 'lounge',          title: 'Rooftop Lounge Area',      x: 23, y: 44, dx: -72, dy: -22 },
+    { id: 'staircase',       title: 'Staircase Access to Roof', x: 65, y: 76, dx:  65, dy:  24 },
   ],
 };
 
