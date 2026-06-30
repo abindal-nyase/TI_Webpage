@@ -82,21 +82,22 @@ const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 // ── Layer annotation labels (USER-TUNABLE) ────────────────────────────────
-// x / y: anchor point as % of the layer image (0-100).
-// side: 'right' → line + text extends right of the dot;
-//       'left'  → text + line extends left, dot stays at (x,y).
-// Other layers: add an array keyed by layer id when labels are ready.
+// x / y : anchor dot position as % of the layer image (0–100).
+// dx / dy: line vector in px (layer image coordinate space, before .movehome
+//          scale). Negative dx = line extends left; negative dy = line goes up.
+//          Text anchors to the far end of the line and aligns outward from it.
+// Add more layers by keying arrays to their layer id (2–8).
 const LABELS = {
   1: [
-    { id: 'solar-canopies',  title: 'Solar Canopies',           body: 'Unlock rooftop solar through condition-specific engineering, not standard details.',                                           x: 56, y: 27, side: 'left'  },
-    { id: 'mep',             title: 'MEP System',               body: 'Complex MEP upgrades require structural engineers who solve coordination challenges before they reach the field.',            x: 73, y: 15, side: 'left'  },
-    { id: 'green-roof',      title: 'Green Roof',               body: 'Successful green roofs begin with a complete understanding of how the entire building will support them.',                    x: 24, y: 42, side: 'right' },
-    { id: 'guardrails',      title: 'Guardrails',               body: 'Creating safe rooftop experiences begins with guardrails engineered to perform for decades.',                                 x: 86, y: 54, side: 'left'  },
-    { id: 'window-washing',  title: 'Window Washing Systems',   body: 'Window washing systems demand structural engineering that integrates maintenance without compromising the architecture.',      x: 91, y: 37, side: 'left'  },
-    { id: 'skylights',       title: 'Skylights',                body: 'Create new skylight openings with structural engineering that transforms the roof into an architectural asset.',              x: 46, y: 21, side: 'right' },
-    { id: 'outdoor-dining',  title: 'Outdoor Dining Area',      body: 'Create inviting outdoor dining spaces by unlocking the structural potential of your existing building.',                      x: 63, y: 60, side: 'left'  },
-    { id: 'lounge',          title: 'Rooftop Lounge Area',      body: 'Bring people to the rooftop with structural solutions that make extraordinary spaces possible.',                             x: 27, y: 55, side: 'right' },
-    { id: 'staircase',       title: 'Staircase Access to Roof', body: 'Introduce rooftop access with structural modifications that feel like part of the original design.',                         x: 46, y: 71, side: 'right' },
+    { id: 'solar-canopies',  title: 'Solar Canopies',           x: 58, y: 28, dx: -85, dy: -32 },
+    { id: 'mep',             title: 'MEP System',               x: 73, y: 14, dx:  65, dy: -28 },
+    { id: 'green-roof',      title: 'Green Roof',               x: 23, y: 40, dx: -72, dy: -18 },
+    { id: 'guardrails',      title: 'Guardrails',               x: 87, y: 53, dx:  55, dy: -14 },
+    { id: 'window-washing',  title: 'Window Washing Systems',   x: 92, y: 36, dx:  52, dy:  14 },
+    { id: 'skylights',       title: 'Skylights',                x: 47, y: 22, dx: -78, dy: -30 },
+    { id: 'outdoor-dining',  title: 'Outdoor Dining Area',      x: 63, y: 61, dx:  68, dy: -26 },
+    { id: 'lounge',          title: 'Rooftop Lounge Area',      x: 26, y: 54, dx: -68, dy: -20 },
+    { id: 'staircase',       title: 'Staircase Access to Roof', x: 47, y: 72, dx: -58, dy:  24 },
   ],
 };
 
@@ -557,13 +558,19 @@ export default function O3Hero() {
               const windowEnd   = isLast
                 ? CASCADE_START + 7 * LAYER_STEP + L8_DUR * L8_CAPTION_EXIT
                 : CASCADE_START + (i + 1) * LAYER_STEP;
-              const LABEL_FADE  = 250;
-              const stagger     = Math.max(180, (windowEnd - windowStart - 600) / labels.length);
+              const LABEL_FADE  = 300;
+              // Stagger labels within the layer's window; each appears in sequence.
+              const stagger = Math.min(450, (LAYER_STEP - 400) / Math.max(1, labels.length));
+              // Labels fade out 1.5× into the window, bleeding into the next
+              // layer's scroll so they stay readable before the next image rises.
+              const allFadeOut = isLast
+                ? windowEnd - LABEL_FADE
+                : windowStart + LAYER_STEP * 1.5 - LABEL_FADE;
 
               els.forEach((el, li) => {
                 const fadeIn = windowStart + 350 + li * stagger;
                 tl.to(el, { opacity: 1, duration: LABEL_FADE, ease: 'power1.out' }, fadeIn);
-                tl.to(el, { opacity: 0, duration: LABEL_FADE, ease: 'power1.in' },  windowEnd - LABEL_FADE - 100);
+                tl.to(el, { opacity: 0, duration: LABEL_FADE, ease: 'power1.in' }, allFadeOut);
               });
             });
           }
@@ -834,26 +841,36 @@ export default function O3Hero() {
                 fetchpriority="high"
                 decoding="async"
               />
-              {(LABELS[layer.id] || []).map((label, li) => (
-                <div
-                  key={label.id}
-                  ref={(el) => {
-                    if (!labelRefs.current[i]) labelRefs.current[i] = [];
-                    labelRefs.current[i][li] = el;
-                  }}
-                  className={`${s.labelWrap} ${label.side === 'right' ? s.labelWrapRight : s.labelWrapLeft}`}
-                  style={{ left: `${label.x}%`, top: `${label.y}%` }}
-                >
-                  <span className={s.labelDot} />
-                  <div className={s.labelCard}>
-                    <span className={s.labelLine} />
-                    <span className={s.labelText}>
-                      <span className={s.labelTitle}>{label.title}</span>
-                      <span className={s.labelBody}>{label.body}</span>
+              {(LABELS[layer.id] || []).map((label, li) => {
+                const angle  = Math.atan2(label.dy, label.dx) * 180 / Math.PI;
+                const length = Math.sqrt(label.dx * label.dx + label.dy * label.dy);
+                const textLeft = label.dx < 0
+                  ? 'translate(calc(-100% - 5px), -50%)'
+                  : 'translate(5px, -50%)';
+                return (
+                  <div
+                    key={label.id}
+                    ref={(el) => {
+                      if (!labelRefs.current[i]) labelRefs.current[i] = [];
+                      labelRefs.current[i][li] = el;
+                    }}
+                    className={s.labelAnchor}
+                    style={{ left: `${label.x}%`, top: `${label.y}%` }}
+                  >
+                    <span className={s.labelDot} />
+                    <span
+                      className={s.labelLine}
+                      style={{ width: length + 'px', transform: `rotate(${angle}deg)` }}
+                    />
+                    <span
+                      className={s.labelTitle}
+                      style={{ left: label.dx + 'px', top: label.dy + 'px', transform: textLeft }}
+                    >
+                      {label.title}
                     </span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </div>
