@@ -48,9 +48,8 @@ const LAYER_DUR = 3600
 // be ≈ one viewport. With this duration l8 occupies ≈1vh of the pin distance.
 const L8_DUR    = 8000
 // Fraction of L8_DUR at which i8 has cleared the top of the viewport. l8 uses a
-// power1.in ease (travels 1.5vh), so it leaves screen well before the tween's
-// mathematical end — caption fade-out is anchored here, not at cascadeEnd, so
-// the i8 caption disappears as i8 flies out instead of lingering ~1.4s after.
+// power1.in ease so it leaves screen before the tween's mathematical end —
+// CTA fade-out is anchored here so it leaves with the building instead of lingering.
 const L8_CAPTION_EXIT = 0.82
 const LAYER_GAP = 0
 const BG2_REST  = '-135vh'
@@ -83,14 +82,14 @@ const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 const LAYERS = [
-  { id: 1, base: i1,  captionSide: 'left',  caption: "Rooftops have become some of the most valuable real estate in a building, transforming into destinations for outdoor dining, lounge areas, green roofs, solar canopies, and other amenities, while also accommodating the critical infrastructure that supports building performance, connection, wellness, and unforgettable occupant experiences." },
-  { id: 2, base: i2,  captionSide: 'right', caption: "Some of the most transformative tenant improvements happen outdoors, where patios, roof decks, canopies, lighting, and built-up rooftop spaces turn previously overlooked areas into vibrant extensions of the building." },
-  { id: 3, base: i3,  captionSide: 'left',  caption: "Transforming an ordinary space into a theater, atrium, or interconnected workplace often begins with rethinking the structure itself, unlocking the kinds of memorable experiences that help buildings stand apart in a competitive market." },
-  { id: 4, base: i4,  captionSide: 'right', caption: "The right tenant improvement can breathe new life into a floor, transforming outdated space through dynamic lobbies, multimedia experiences, flexible meeting environments, movable partitions, statement art, and thoughtful reconfiguration that makes the entire floor feel new again." },
-  { id: 5, base: i5,  captionSide: 'left',  caption: "The most impactful office transformations reshape how people move, connect, and collaborate, opening floors, adding feature staircases and mezzanines, introducing glass-enclosed spaces and office pods, and reconfiguring layouts to unlock the full potential of the workplace." },
-  { id: 6, base: i6,  captionSide: 'right', caption: "The lobby sets the tone for everything that follows, and today's renovations are transforming these spaces through dramatic staircases, curated art, retail amenities, and elevated arrival experiences that strengthen a building's brand, attract tenants, and enhance asset value." },
-  { id: 7, base: i7,  captionSide: 'left',  caption: "Today's most successful properties extend beyond their walls, using retail spaces, outdoor patios, and activated streetscapes to attract visitors, enhance tenant experience, and strengthen the building's connection to its community." },
-  { id: 8, base: i8,  captionSide: 'right', caption: "The performance of a building is often determined by what happens below ground, where infrastructure upgrades, critical equipment, and high-capacity storage quietly power everything that happens above it." },
+  { id: 1, base: i1 },
+  { id: 2, base: i2 },
+  { id: 3, base: i3 },
+  { id: 4, base: i4 },
+  { id: 5, base: i5 },
+  { id: 6, base: i6 },
+  { id: 7, base: i7 },
+  { id: 8, base: i8 },
 ]
 
 // ── Layer layout (USER-TUNABLE — SINGLE SOURCE OF TRUTH) ────────────────────
@@ -128,7 +127,6 @@ export default function O3Hero() {
   const bg2BackingRef  = useRef(null);
   const exitOverlayRef = useRef(null);
   const loadCoverRef   = useRef(null);
-  const captionRefs    = useRef([]);
   const ctaRef         = useRef(null);
   const mmRef          = useRef(null);
 
@@ -180,7 +178,6 @@ export default function O3Hero() {
       ctaRef.current,
       ...layerRefs.current,
       ...layerImgs,
-      ...captionRefs.current.filter(Boolean),
     ]);
 
     mm.add(
@@ -510,72 +507,6 @@ export default function O3Hero() {
               CASCADE_START,
             );
 
-          // Caption reveal — fade each layer's description in as that layer rises,
-          // then fade it out just before the next layer begins to rise.
-          // Color is NOT animated here: each caption uses CSS mix-blend-mode:
-          // difference, so white text auto-inverts per-pixel against whatever is
-          // behind it — white over the dark bg, black over the revealed white bg —
-          // switching the instant the background changes under it. Pixel-perfect
-          // and theme-agnostic, with zero scroll-timed color tweens to mistune.
-          // On mobile/tablet: also animate Y so the caption rises with the layer.
-          LAYERS.forEach((layer, i) => {
-            const captionEl = layer.caption && captionRefs.current[i];
-            if (!captionEl) return;
-            const isLast  = i === LAYERS.length - 1;
-            const fadeIn  = CASCADE_START + i * LAYER_STEP;
-            const fadeOut = isLast
-              ? CASCADE_START + 7 * LAYER_STEP + L8_DUR * L8_CAPTION_EXIT
-              : CASCADE_START + (i + 1) * LAYER_STEP;
-            const FADE    = 500;
-
-            if (isDesktop) {
-              // Color is owned by CSS (mix-blend-mode: difference) — only the
-              // opacity reveal is scrubbed here. Static top-region position
-              // (set in CSS) keeps each caption in the open sky above the rising
-              // building (dark for early layers, white for late ones) instead of
-              // the full-width building "waist" at vertical centre.
-              tl.to(captionEl, { opacity: 1, duration: FADE, ease: 'power1.out' }, fadeIn);
-              tl.to(captionEl, { opacity: 0, duration: FADE, ease: 'power1.in' },
-                Math.max(fadeIn + FADE * 2, fadeOut - FADE));
-            }
-
-            if (!isDesktop) {
-              const layerEl  = layerRefs.current[i];
-              const layerDur = isLast ? L8_DUR : LAYER_DUR;
-              const isFirst  = i === 0;
-
-              const mFadeIn = isFirst ? fadeIn + 300 : fadeIn;
-
-              // Color is owned by CSS (mix-blend-mode: difference) — no scroll-
-              // timed color switch needed; the text inverts per-pixel against the
-              // background as it crosses the dark→white seam.
-
-              // Y: caption starts just below the layer image and rises with it.
-              const getStartY = () => {
-                if (!layerEl || !triggerRef.current) return getVH() * 0.78;
-                const savedMhX    = gsap.getProperty(mh, 'x');
-                const savedMhY    = gsap.getProperty(mh, 'y');
-                const savedLayerY = gsap.getProperty(layerEl, 'y');
-                gsap.set(mh, { x: fit.x, y: fit.y });
-                gsap.set(layerEl, { y: 0 });
-                const img = layerEl.querySelector('img');
-                const r   = img?.getBoundingClientRect();
-                const t   = triggerRef.current.getBoundingClientRect();
-                gsap.set(mh, { x: savedMhX, y: savedMhY });
-                gsap.set(layerEl, { y: savedLayerY });
-                return r && t ? r.bottom - t.top + 16 : getVH() * 0.78;
-              };
-              const getEndY = () =>
-                getStartY() - getVH() * (isFirst ? l1Mult() : l2Mult());
-
-              tl.set(captionEl, { opacity: 0, y: getStartY }, mFadeIn);
-              tl.to(captionEl, { opacity: 1, duration: FADE, ease: 'power1.out' }, mFadeIn);
-              tl.to(captionEl, { y: getEndY, duration: layerDur, ease: 'power1.in', immediateRender: false }, mFadeIn);
-              tl.to(captionEl, { opacity: 0, duration: FADE, ease: 'power1.in' },
-                Math.max(mFadeIn + FADE * 2, fadeOut - FADE));
-            }
-          });
-
           // Hero CTA: stays visible the whole pinned scroll, then fades out as
           // i8 (the last layer) clears the top of the viewport — anchored to the
           // SAME point as the i8 caption exit (L8_CAPTION_EXIT), not the
@@ -861,21 +792,7 @@ export default function O3Hero() {
           ))}
         </div>
 
-        {/* Layer captions — outside movehome so they are NOT scaled with the
-            building. GSAP fades each one in/out synced to its layer's rise. */}
-        {LAYERS.map((layer, i) =>
-          layer.caption ? (
-            <div
-              key={`cap-${layer.id}`}
-              ref={(el) => {
-                captionRefs.current[i] = el;
-              }}
-              className={`${s.layerCaption} ${layer.captionSide === "right" ? s.layerCaptionRight : ""}`}
-            >
-              {layer.caption}
-            </div>
-          ) : null,
-        )}
+
       </div>
     </section>
   );

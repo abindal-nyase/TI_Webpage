@@ -379,64 +379,6 @@
   pointer-events: none;
 }
 
-/* ── Layer captions — scroll-revealed descriptions, one per building floor ─ */
-/* Positioned inside .trigger but OUTSIDE .movehome so they are not
-   scaled by the building's contain-fit transform. GSAP controls opacity.
-   Centered horizontally with left/right:0 + margin:auto (avoids transform
-   conflicts with GSAP's force3D default). */
-.layerCaption {
-  position: absolute;
-  /* Top-region anchor (not vertical centre). Centre is the building's full-width
-     "waist" where the side gutters shrink to ~140px — far too narrow for text,
-     so the old top:50% guaranteed overlap. The top band is open sky throughout
-     the cascade: dark for the early layers, white once the building has risen
-     for the late ones — and the caption clears the building on its own side. */
-  top: 9vh;
-  left: 3vw;
-  width: min(24vw, 360px);
-  text-align: left;
-  /* Color via blend, not a fixed value: difference inverts the white text
-     per-pixel against whatever is behind it — white over dark bg, black over
-     white bg — flipping the instant the background changes. isolation:auto so
-     the caption blends against the hero backdrop, not just itself. */
-  color: #fff;
-  mix-blend-mode: difference;
-  isolation: auto;
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.55vw, 1.35rem);
-  font-weight: 400;
-  letter-spacing: 0.005em;
-  line-height: 1.55;
-  opacity: 0;
-  z-index: 55;
-  pointer-events: none;
-}
-
-/* Right-column variant — mirrors the left default, anchored to the right edge */
-.layerCaptionRight {
-  left: auto;
-  right: 4vw;
-}
-
-/* Mobile — reset desktop left/right positioning; GSAP controls Y entirely */
-@media (max-width: 1023px) {
-  .layerCaption {
-    top: 0;
-    left: 5vw;
-    right: 5vw;
-    width: auto;
-    transform: none;
-    text-align: center;
-    color: white;
-    font-size: clamp(1.125rem, 4.2vw, 1.35rem);
-  }
-
-  /* Right variant: same centered position on mobile */
-  .layerCaptionRight {
-    left: 5vw;
-    right: 5vw;
-  }
-}
 
 /* ── Hero CTA — frosted-glass pill, bottom-right of pinned hero ─────── */
 .heroCta {
