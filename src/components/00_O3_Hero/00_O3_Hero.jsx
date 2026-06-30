@@ -51,7 +51,9 @@ const L8_DUR    = 8000
 // power1.in ease so it leaves screen before the tween's mathematical end —
 // CTA fade-out is anchored here so it leaves with the building instead of lingering.
 const L8_CAPTION_EXIT = 0.82
-const LAYER_GAP = 0
+// Increased from 0 → 4000 so each layer's window is wide enough for labels
+// to appear visibly one-by-one before the next layer starts rising.
+const LAYER_GAP = 4000
 const BG2_REST  = '-135vh'
 // Scroll distance (in viewport heights) the hero pin scrubs the whole cascade
 // over. Total scroll from hero top to the intro section reaching the viewport
@@ -60,13 +62,15 @@ const BG2_REST  = '-135vh'
 // scrubbed across this distance, so a smaller value transits the whole hero —
 // including the building's fly-up through open space — over less scroll, which
 // cuts the near-empty mid-flight frames (dead-scroll). Was 4.35.
-const PIN_LENGTH = 2.2
+// Increased from 2.2 → 5.0 to give labels enough scroll room to appear
+// one-by-one visibly (each label now ≈ 60 px of scroll on a 900 px screen).
+const PIN_LENGTH = 5.0
 // Portrait phones are tall, so the same cascade scrubbed over PIN_LENGTH felt
 // like the stack shot up too fast. A longer pin scrubs the SAME timeline over
 // more scroll → gentler rise. Seam stays synced: the next section's layout
 // position (pin-spacer height) AND the pin release both scale with this, so
 // their offset is unchanged.
-const PIN_LENGTH_PORTRAIT = 3.3
+const PIN_LENGTH_PORTRAIT = 7.5
 const pinLength = () =>
   (typeof window !== 'undefined' &&
    window.matchMedia('(orientation: portrait)').matches)
@@ -559,13 +563,14 @@ export default function O3Hero() {
                 ? CASCADE_START + 7 * LAYER_STEP + L8_DUR * L8_CAPTION_EXIT
                 : CASCADE_START + (i + 1) * LAYER_STEP;
               const LABEL_FADE  = 300;
-              // Stagger labels within the layer's window; each appears in sequence.
-              const stagger = Math.min(450, (LAYER_STEP - 400) / Math.max(1, labels.length));
-              // Labels fade out 1.5× into the window, bleeding into the next
-              // layer's scroll so they stay readable before the next image rises.
+              // Divide the layer's scroll window evenly across the labels so
+              // each one appears at a clearly different scroll position.
+              const stagger = Math.round((LAYER_STEP - 400) / Math.max(1, labels.length));
+              // Keep all labels visible for 1.4× the layer window so there is
+              // time to read them before they fade together.
               const allFadeOut = isLast
                 ? windowEnd - LABEL_FADE
-                : windowStart + LAYER_STEP * 1.5 - LABEL_FADE;
+                : windowStart + LAYER_STEP * 1.4 - LABEL_FADE;
 
               els.forEach((el, li) => {
                 const fadeIn = windowStart + 350 + li * stagger;
