@@ -380,6 +380,80 @@
 }
 
 
+/* ── Layer annotation labels — dot · line · title + description ──────── */
+/* Zero-size anchor at (x%, y%) on the layer image. Dot is centered here.
+   Card floats right or left via absolute children. GSAP drives opacity only. */
+.labelWrap {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.labelDot {
+  position: absolute;
+  top: -3.5px;
+  left: -3.5px;
+  width: 7px;
+  height: 7px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px color-mix(in oklch, var(--color-accent) 35%, transparent),
+    0 0 10px var(--color-accent);
+}
+
+/* Card: shared layout — line → text, or reversed for left side */
+.labelWrapRight .labelCard,
+.labelWrapLeft  .labelCard {
+  position: absolute;
+  top: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center; /* line stays at the text optical mid-point */
+  gap: 0;
+}
+
+.labelWrapRight .labelCard { left: 4px;  flex-direction: row; }
+.labelWrapLeft  .labelCard { right: 4px; flex-direction: row-reverse; }
+
+.labelLine {
+  width: 44px;
+  height: 1px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.labelText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 6px;
+}
+
+.labelTitle {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.labelBody {
+  font-family: var(--font-body);
+  font-size: 0.5625rem;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.45;
+  max-width: 155px;
+  white-space: normal;
+}
+
 /* ── Hero CTA — frosted-glass pill, bottom-right of pinned hero ─────── */
 .heroCta {
   position: absolute;

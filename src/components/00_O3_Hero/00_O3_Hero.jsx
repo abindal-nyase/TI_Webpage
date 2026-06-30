@@ -81,6 +81,25 @@ const NATURAL_W = 1024
 const getVH = () =>
   window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
+// ── Layer annotation labels (USER-TUNABLE) ────────────────────────────────
+// x / y: anchor point as % of the layer image (0-100).
+// side: 'right' → line + text extends right of the dot;
+//       'left'  → text + line extends left, dot stays at (x,y).
+// Other layers: add an array keyed by layer id when labels are ready.
+const LABELS = {
+  1: [
+    { id: 'solar-canopies',  title: 'Solar Canopies',           body: 'Unlock rooftop solar through condition-specific engineering, not standard details.',                                           x: 56, y: 27, side: 'left'  },
+    { id: 'mep',             title: 'MEP System',               body: 'Complex MEP upgrades require structural engineers who solve coordination challenges before they reach the field.',            x: 73, y: 15, side: 'left'  },
+    { id: 'green-roof',      title: 'Green Roof',               body: 'Successful green roofs begin with a complete understanding of how the entire building will support them.',                    x: 24, y: 42, side: 'right' },
+    { id: 'guardrails',      title: 'Guardrails',               body: 'Creating safe rooftop experiences begins with guardrails engineered to perform for decades.',                                 x: 86, y: 54, side: 'left'  },
+    { id: 'window-washing',  title: 'Window Washing Systems',   body: 'Window washing systems demand structural engineering that integrates maintenance without compromising the architecture.',      x: 91, y: 37, side: 'left'  },
+    { id: 'skylights',       title: 'Skylights',                body: 'Create new skylight openings with structural engineering that transforms the roof into an architectural asset.',              x: 46, y: 21, side: 'right' },
+    { id: 'outdoor-dining',  title: 'Outdoor Dining Area',      body: 'Create inviting outdoor dining spaces by unlocking the structural potential of your existing building.',                      x: 63, y: 60, side: 'left'  },
+    { id: 'lounge',          title: 'Rooftop Lounge Area',      body: 'Bring people to the rooftop with structural solutions that make extraordinary spaces possible.',                             x: 27, y: 55, side: 'right' },
+    { id: 'staircase',       title: 'Staircase Access to Roof', body: 'Introduce rooftop access with structural modifications that feel like part of the original design.',                         x: 46, y: 71, side: 'right' },
+  ],
+};
+
 const LAYERS = [
   { id: 1, base: i1 },
   { id: 2, base: i2 },
@@ -128,6 +147,7 @@ export default function O3Hero() {
   const exitOverlayRef = useRef(null);
   const loadCoverRef   = useRef(null);
   const ctaRef         = useRef(null);
+  const labelRefs      = useRef([]);
   const mmRef          = useRef(null);
 
   useLayoutEffect(() => {
@@ -178,6 +198,7 @@ export default function O3Hero() {
       ctaRef.current,
       ...layerRefs.current,
       ...layerImgs,
+      ...labelRefs.current.flatMap(arr => arr || []).filter(Boolean),
     ]);
 
     mm.add(
@@ -522,6 +543,31 @@ export default function O3Hero() {
             );
           }
 
+          // Layer annotation labels — stagger in sequentially as each layer
+          // rises, then all fade out together when the next layer starts.
+          // Desktop only: too small to read at mobile building scale.
+          if (isDesktop) {
+            LAYERS.forEach((layer, i) => {
+              const labels = LABELS[layer.id] || [];
+              const els = (labelRefs.current[i] || []).filter(Boolean);
+              if (!labels.length || !els.length) return;
+
+              const isLast      = i === LAYERS.length - 1;
+              const windowStart = CASCADE_START + i * LAYER_STEP;
+              const windowEnd   = isLast
+                ? CASCADE_START + 7 * LAYER_STEP + L8_DUR * L8_CAPTION_EXIT
+                : CASCADE_START + (i + 1) * LAYER_STEP;
+              const LABEL_FADE  = 250;
+              const stagger     = Math.max(180, (windowEnd - windowStart - 600) / labels.length);
+
+              els.forEach((el, li) => {
+                const fadeIn = windowStart + 350 + li * stagger;
+                tl.to(el, { opacity: 1, duration: LABEL_FADE, ease: 'power1.out' }, fadeIn);
+                tl.to(el, { opacity: 0, duration: LABEL_FADE, ease: 'power1.in' },  windowEnd - LABEL_FADE - 100);
+              });
+            });
+          }
+
         };;
 
         // Recompute fit before ScrollTrigger re-reads function-based values.
@@ -788,6 +834,26 @@ export default function O3Hero() {
                 fetchpriority="high"
                 decoding="async"
               />
+              {(LABELS[layer.id] || []).map((label, li) => (
+                <div
+                  key={label.id}
+                  ref={(el) => {
+                    if (!labelRefs.current[i]) labelRefs.current[i] = [];
+                    labelRefs.current[i][li] = el;
+                  }}
+                  className={`${s.labelWrap} ${label.side === 'right' ? s.labelWrapRight : s.labelWrapLeft}`}
+                  style={{ left: `${label.x}%`, top: `${label.y}%` }}
+                >
+                  <span className={s.labelDot} />
+                  <div className={s.labelCard}>
+                    <span className={s.labelLine} />
+                    <span className={s.labelText}>
+                      <span className={s.labelTitle}>{label.title}</span>
+                      <span className={s.labelBody}>{label.body}</span>
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
