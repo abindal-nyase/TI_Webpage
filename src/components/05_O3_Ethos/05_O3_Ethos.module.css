@@ -1,103 +1,103 @@
 /* ─────────────────────────────────────────────────────────────────────
    NYA Culture / Ethos — two quotes (sequential fade) + portrait
-   Quote LEFT, wrapping around the portrait on the RIGHT (head & shoulders,
-   cut clean at the chest). Signature stays clear of the photo.
+   Layout fills the pinned 100dvh stage so no empty white band shows:
+     • Phones (portrait): quote column on top, zoomed portrait below.
+     • Wide (landscape + desktop, ≥835px): portrait LEFT, quote RIGHT.
+   Portrait is a transparent head→chest cutout (no box). Text no longer
+   wraps around the silhouette.
    Fonts: Cormorant Garamond (quote + “ mark) · Great Vibes (signature).
-   Monitor: section ≤ half the viewport height.
    ───────────────────────────────────────────────────────────────────── */
 
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&display=swap');
 
 /* ── Section ─────────────────────────────────────────────────────── */
 .section {
-  /* Layout knobs — mobile-first defaults; overridden for monitors below. */
-  --band: 100vh;        /* section height */
-  --photo-w: 50vw;      /* portrait footprint width (also the text-wrap width) */
-  --mark-space: 2.4rem; /* clearance so the first quote line clears the “ mark */
-  /* PERMANENT CROP: the portrait is cover-cropped to this width:height ratio,
-     locked to the image so it always shows head → chest regardless of the
-     viewport height. (2378 × 2689 source, revealing the top ~57%.) */
-  --photo-ar: 1.55;
+  /* Portrait footprint width (drives the zoom crop). Overridden ≥835px. */
+  --photo-w: 150vw;
 
   background: oklch(1 0 0);
   width: 100%;
   overflow: hidden;
 }
 
-/* ── Inner layout (pinned during the fade) ───────────────────────── */
+/* ── Inner layout (pinned during the fade) ───────────────────────────
+   Fills one screen so the pinned stage never exposes white. Phones use
+   block flow (quote column at top, photo absolute at the bottom edge). */
 .inner {
   position: relative;
   width: 100%;
-  min-height: var(--band);
-  padding: 8vh 6vw 0;
-  overflow: hidden;      /* clips the portrait at the chest + keeps the band height */
+  min-height: 100vh;       /* fallback */
+  min-height: 100dvh;      /* avoids mobile browser-chrome gap */
+  padding: 7dvh 6vw 0;
+  overflow: hidden;        /* crops the cover-cropped portrait cleanly */
+  display: flex;
+  flex-direction: column;  /* phones: quote column on top, photo fills below */
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PORTRAIT — absolute in .quotes; top:0 = top of the quote stack (same
-   origin as the “ mark and the wrap spacers). overflow on .inner clips
-   it clean at the chest if it runs past the band.
+   PORTRAIT — head→chest cover crop (transparent PNG → no box). On phones
+   it fills the leftover height under the quote (flex:1) so there is no gap
+   and no empty band; overflow on .inner crops the zoom. z-index:0.
    ══════════════════════════════════════════════════════════════════ */
 .photo {
-  position: absolute;
-  top: 0;                  /* stack top → level with the “ mark */
-  right: 0;
-  width: var(--photo-w);
-  aspect-ratio: var(--photo-ar);  /* permanent head→chest crop, locked to the image */
-  height: auto;
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
   max-width: none;
+  margin-top: 2vh;
   object-fit: cover;
-  object-position: top center;    /* keep the head; crop the chest off the bottom */
+  object-position: top center;   /* keep the head; crop the chest off */
+  transform: scale(1.3);         /* zoom 30% */
+  transform-origin: top center;  /* anchor top → the extra crops off the bottom */
   pointer-events: none;
   user-select: none;
-  z-index: 0;              /* under the text; text never sits over the face */
+  z-index: 0;
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   QUOTE
+   QUOTE COLUMN — top on phones, right on wide screens. Vertically
+   centered so it helps fill the stage.
    ══════════════════════════════════════════════════════════════════ */
+.quoteCol {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-/* Large decorative opening quotation mark — top-left of the stack, top:0 so it
-   is level with the portrait top. Out of flow → doesn't push the quote down. */
+/* Large decorative opening quotation mark — in flow above the quotes. */
 .openMark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
+  display: block;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(54px, 10vw, 200px);
+  font-size: clamp(48px, 9vw, 150px);
   font-style: italic;
+  line-height: 0.5;
   color: oklch(0.4285 0.1547 311.9825);
   opacity: 0.18;
-  line-height: 0.4;
+  margin-bottom: 0.1em;
   pointer-events: none;
   user-select: none;
 }
 
-/* Stack wrapper — quote 1 sets the height, quote 2 overlays it exactly.
-   position:relative → containing block for the absolute portrait, so
-   .photo top:0 lines up with the top of the quote text (= the spacer top). */
+/* Stack wrapper — quote 1 sets the height, quote 2 overlays it exactly. */
 .quotes {
   position: relative;
-  z-index: 1;
 }
 .quoteStacked {
   position: absolute;   /* overlays quote 1 at the same top-left origin */
   top: 0;
   left: 0;
-  right: 0;             /* height auto → sizes to its own text (absolute = own BFC) */
+  right: 0;
 }
 
-/* ── Quote text — Cormorant italic, wraps around the portrait ─────── */
+/* ── Quote text — Cormorant italic ────────────────────────────────── */
 .quote {
   margin: 0;
-  padding-top: var(--mark-space);  /* first line clears the “ mark */
-  /* NOT flow-root: the spacer float escapes to .inner's BFC, so the quote
-     shrinks to its text (signature sits right under it) and the float keeps
-     the signature clear of the photo too. */
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   font-style: italic;
-  font-size: clamp(22px, 2.1vw, 40px);
+  font-size: clamp(24px, 2.2vw, 40px);
   font-weight: 500;
   line-height: 1.45;
   color: oklch(0.2113 0.0032 17.407);
@@ -105,40 +105,12 @@
   /* GSAP manages opacity/transform — starts hidden via gsap.set */
 }
 
-/* Invisible float that reserves the portrait's footprint inside each quote,
-   so the text wraps around it. Kept in each quote so BOTH wrap identically. */
-.wrapSpacer {
-  float: right;
-  width: var(--photo-w);
-  height: calc(var(--photo-w) / var(--photo-ar));  /* == the cropped photo box */
-  /* Pull up by the mark clearance so the spacer's top == the photo top, i.e.
-     the shape below maps 1:1 onto the portrait. */
-  margin: calc(-1 * var(--mark-space)) 0 0.4rem 1rem;
-  /* Polygon traces Nabih's LEFT silhouette (measured from the PNG), so the
-     text hugs him: close by the head up top, stepping back at the shoulders.
-     Points are top-left → top-right → bottom-right → up the left contour.
-     x% across the photo box, y% down it. Nudge x's to hug tighter/looser. */
-  shape-outside: polygon(
-    45% 0%,
-    100% 0%,
-    100% 100%,
-    6% 100%,
-    18% 92%,
-    32% 84%,
-    40% 67%,
-    36% 50%,
-    39% 33%,
-    45% 8%
-  );
-  shape-margin: 0.7rem;
-}
-
-/* ── Signature — script, right-aligned but CLEAR of the portrait ──── */
+/* ── Signature — script, right-aligned ────────────────────────────── */
 .signature {
   position: relative;
   z-index: 1;
-  max-width: 55%;          /* reaches further right, still clear of the portrait */
-  margin: 1.1em 0 0;       /* a line of space below the quote */
+  max-width: 100%;
+  margin: 0.7em 0 0;
   font-family: 'Great Vibes', cursive;
   font-size: clamp(34px, 3vw, 58px);
   font-weight: 400;
@@ -149,25 +121,43 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — wide (landscape phones + desktop): photo LEFT, quote RIGHT
    ══════════════════════════════════════════════════════════════════ */
-
-/* Monitors — short landscape banner (≤ half the viewport height). */
 @media (min-width: 835px) {
   .section {
-    --band: 50vh;
-    --photo-w: 44vw;
-    --mark-space: 3.2rem;   /* bigger “ on monitors → more clearance */
+    --photo-w: 53vw;
   }
   .inner {
-    padding: 6vh 6vw 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;   /* quote column pinned to the right */
+    padding: 0 6vw;
+  }
+  /* photo LEFT, vertically centered, soft edge bleeding off the left */
+  .photo {
+    position: absolute;
+    top: 50%;
+    left: -2vw;
+    transform: translateY(-50%);
+    flex: none;
+    width: var(--photo-w);
+    aspect-ratio: 1.55;          /* existing head→chest crop */
+    height: auto;
+    margin-top: 0;
+    object-position: top center; /* keep the head; crop the chest, not the hair */
+  }
+  .quoteCol {
+    flex: 0 0 48%;
+  }
+  .quote {
+    font-size: clamp(26px, 2.1vw, 40px);
   }
 }
 
 /* Large desktops — grow type so the banner doesn't look sparse. */
 @media (min-width: 1800px) {
   .section {
-    --photo-w: 42vw;
+    --photo-w: 50vw;
   }
   .quote {
     font-size: clamp(38px, 2.1vw, 48px);

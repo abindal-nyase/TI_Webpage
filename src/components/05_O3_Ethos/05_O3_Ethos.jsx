@@ -76,38 +76,35 @@ export default function O3Ethos() {
     <section ref={sectionRef} id="nya-culture" className={s.section}>
       <div ref={innerRef} className={s.inner}>
 
-        {/* Portrait + “ mark + quotes all share the same top origin (top of the
-            quote stack), so the wrap spacers line up exactly with the photo. */}
-        <div className={s.quotes}>
-
-          {/* Portrait — top:0 = stack top; overlays the wrap spacers. */}
-          <img
-            ref={photoRef}
-            src="/pav-img/Nabih-5-2.png"
-            alt="Nabih Youssef"
-            draggable={false}
-            className={s.photo}
-          />
-
-          {/* “ mark — top:0 = same origin as the photo top. */}
+        {/* Quote column — TOP on phones (DOM order), RIGHT on wide screens
+            (photo is absolute there, so order doesn't affect the row). */}
+        <div className={s.quoteCol}>
           <span className={s.openMark}>&ldquo;</span>
 
-          {/* Two quotes stacked in the same spot — sequential fade on scroll.
-              Each carries a float spacer shaped to Nabih's silhouette so the
-              text hugs him; both quotes wrap identically. */}
-          <blockquote ref={quoteRef} className={s.quote}>
-            <span className={s.wrapSpacer} aria-hidden="true" />
-            {QUOTES[0]}
-          </blockquote>
-          <blockquote ref={quote2Ref} className={`${s.quote} ${s.quoteStacked}`}>
-            <span className={s.wrapSpacer} aria-hidden="true" />
-            {QUOTES[1]}
-          </blockquote>
+          {/* Two quotes stacked in the same spot — sequential fade on scroll. */}
+          <div className={s.quotes}>
+            <blockquote ref={quoteRef} className={s.quote}>
+              {QUOTES[0]}
+            </blockquote>
+            <blockquote ref={quote2Ref} className={`${s.quote} ${s.quoteStacked}`}>
+              {QUOTES[1]}
+            </blockquote>
+          </div>
+
+          <p ref={sigRef} className={s.signature}>
+            - Nabih Youssef
+          </p>
         </div>
 
-        <p ref={sigRef} className={s.signature}>
-          - Nabih Youssef
-        </p>
+        {/* Portrait — head→chest cover crop (transparent PNG → no box).
+            Fills below the quote on phones; absolute LEFT on wide screens. */}
+        <img
+          ref={photoRef}
+          src="/pav-img/Nabih-5-2.png"
+          alt="Nabih Youssef"
+          draggable={false}
+          className={s.photo}
+        />
 
       </div>
     </section>
