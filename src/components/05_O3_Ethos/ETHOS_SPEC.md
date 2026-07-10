@@ -17,8 +17,11 @@ Tick ✅keep / ✏️change and fill `→` blanks. Nothing is built yet.
   > That quiet dignity of doing the work well, where no one notices the structure
   > but everyone feels its safety is my art."
 - Big decorative **`“`** above the quote. ✅ (you like it)
-- Fonts: **Cormorant Garamond** italic (quote + mark) · **Great Vibes** (signature).
-  ✅ (the "earlier fonts" you like) — no new fonts added.
+- Fonts (updated 2026-07-10 for a professional-engineering tone): **Libre Baskerville**
+  upright (quote + mark, via `--font-display`) · **Source Sans 3** uppercase attribution
+  (signature, via `--font-signature`). Set through `<SectionTheme font="baskerville-source"
+  section="ethos">`. The original Cormorant Garamond italic + Great Vibes script were
+  dropped — too editorial/luxury for an engineering firm.
 - Colors: plum `“`+signature; near-black quote; white bg.
 - **Portrait right**, `object-fit: contain`, height 88vh, top-anchored, clipped to a
   **54vh band** → shows full head + shoulders, cut cleanly at the chest. No side
@@ -38,8 +41,9 @@ Tick ✅keep / ✏️change and fill `→` blanks. Nothing is built yet.
 - **Monitor height:** hard **50vh** cap; copy is **shortened** to fit comfortably.
 - **Quotes:** **two** quotes that **crossfade in succession** on scroll (restore the
   scrubbed crossfade). Each quote short enough to fit the 50vh band.
-- **Fonts / mark / colors:** unchanged — Cormorant Garamond italic + `“`, Great Vibes
-  signature, plum + near-black + white.
+- **Fonts / mark / colors:** superseded 2026-07-10 — see the Fonts line above. Now
+  Libre Baskerville (upright quote + `“`) + Source Sans 3 signature; colors read from
+  theme vars (`--color-accent` mark, `--color-primary` quote, `--color-signature` sig).
 
 **STILL NEEDED:** the exact text of the two short quotes (see §D).
 

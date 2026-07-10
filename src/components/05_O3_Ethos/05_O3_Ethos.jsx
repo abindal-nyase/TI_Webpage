@@ -6,9 +6,13 @@ import s from './05_O3_Ethos.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Quotes trimmed to <=3 lines each (2026-07-10) for landing-quote readability.
+// Original long-form versions kept for reference:
+//   [0] 'We do not measure success by how many projects we finish. We measure it by how many clients call us back for the next one. Because if they call back, we know we did more than just steel and concrete. We gave them trust.'
+//   [1] 'Some firms treat tenant improvements like fast food: quick, cheap, forgettable. We treat them like a home-cooked meal. We take our time, use good ingredients, and remember who we are cooking for.'
 const QUOTES = [
-  'We do not measure success by how many projects we finish. We measure it by how many clients call us back for the next one. Because if they call back, we know we did more than just steel and concrete. We gave them trust.',
-  'Some firms treat tenant improvements like fast food: quick, cheap, forgettable. We treat them like a home-cooked meal. We take our time, use good ingredients, and remember who we are cooking for.',
+  "We don't measure success by projects finished. We measure it by clients who call us back. Call back, and we gave them more than steel and concrete. We gave them trust.",
+  'Others treat tenant improvements like fast food. We treat them like a home-cooked meal: unhurried, good ingredients, made for someone specific.',
 ]
 
 export default function O3Ethos() {
@@ -92,7 +96,8 @@ export default function O3Ethos() {
           </div>
 
           <p ref={sigRef} className={s.signature}>
-            - Nabih Youssef
+            <span className={s.sigName}>Nabih Youssef</span>
+            <span className={s.sigRole}>Founder, Nabih Youssef Associates</span>
           </p>
         </div>
 

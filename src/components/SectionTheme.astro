@@ -46,6 +46,15 @@ const SECTION_OVERRIDES: Record<string, Record<string, string>> = {
     '--font-display': "'EB Garamond', Georgia, serif",
     '--font-body': "'Fira Sans', system-ui, sans-serif",
   },
+  // Ethos runs on the baskerville-source pair (set via font="baskerville-source"
+  // on the wrapper). These two tokens are the pieces that pair can't express:
+  //   --font-signature  — the attribution line ("- Nabih Youssef"). A clean sans
+  //     (Source Sans 3) reads as a professional sign-off, not a wedding script.
+  //   --color-signature — its color; a restrained dark slate for engineering tone.
+  'ethos': {
+    '--font-signature': "'Source Sans 3', system-ui, sans-serif",
+    '--color-signature': 'oklch(0.32 0.025 255)',
+  },
 };
 
 const { scheme, font, section, vars = {} } = Astro.props;
