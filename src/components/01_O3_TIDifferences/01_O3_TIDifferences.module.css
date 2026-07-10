@@ -535,7 +535,7 @@
 .discCardGreen .discCat { color: var(--green); }
 
 .discNegTxt {
-  font-family: var(--font-display);
+  font-family: var(--font-disc-text, var(--font-display));
   font-size: calc(clamp(1.125rem, 1.4vw, 1.4rem) * var(--font-scale, 1));
   font-weight: 400;
   font-style: normal;
@@ -597,7 +597,7 @@
 /* TIER 4 — a written solution (not the current one). Brighter + heavier than
    every risk, so all solutions read as the dominant layer. */
 .discPosTxt {
-  font-family: var(--font-display);
+  font-family: var(--font-disc-text, var(--font-display));
   font-size: calc(clamp(1rem, 1.35vw, 1.18rem) * var(--font-scale, 1) * var(--pos-neg-ratio, 1));
   font-weight: 500;
   line-height: 1.65;

@@ -31,10 +31,14 @@
  */
 
 // Per-section token overrides. Add sections here as they need their own tokens.
-const SECTION_OVERRIDES = {
+const SECTION_OVERRIDES: Record<string, Record<string, string>> = {
   'ti-differences': {
     '--font-display': "'Cormorant Garamond', Georgia, serif",
     '--font-body': "'Montserrat', system-ui, sans-serif",
+    // Risk/solution running copy (.discNegTxt / .discPosTxt). Kept separate from
+    // --font-display so the disc text can read as legible body sans while the
+    // section titles stay Cormorant serif.
+    '--font-disc-text': "'Montserrat', system-ui, sans-serif",
   },
   // "Academic Precision" pairing for the Hero (EB Garamond + Fira Sans).
   // Fonts loaded in index.astro's <head>.
