@@ -140,7 +140,7 @@
   top: 0;
   height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: var(--tower-col-pct, 50%) 1fr;
   overflow: hidden;
   /* background comes from .root — already white by the time this is in view */
   background: transparent;
@@ -784,7 +784,7 @@
      points are both on screen. Scoped via :has so the legacy stack above still
      applies to the other (unused) variants. */
   .discScene:has(.towerColCd3) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: var(--tower-col-pct, 50%) 1fr;
     grid-template-rows: 1fr;
     height: 100vh;
     min-height: 100vh;
