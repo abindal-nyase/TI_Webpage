@@ -178,7 +178,7 @@ const scale = 0.55 + 0.65 * centerProximity
         // Cards tilt clockwise following the arc's rising diagonal (lower-left
         // to upper-right). Baseline 195° keeps even the leftmost card slightly
         // tilted; tilt grows from ~4° at theta=210° to ~18° at theta=255°.
-        const rotation = (thetaDeg - 15) * 0.12
+        const rotation = 0
 
         const dx = (px - W / 2).toFixed(1)
         const dy = (py - H / 2).toFixed(1)
