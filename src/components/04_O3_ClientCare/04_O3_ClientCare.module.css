@@ -1,178 +1,131 @@
-/* 04_O3_ClientCare.module.css
-   Colors/fonts via option3 CSS variables (index.css + theme switcher).
-   Never hardcode colors or font families.
-
-   Two layout modes share one markup:
-   - default (no JS / reduced motion): static stacked list, fully legible.
-   - .isAnimated (added by GSAP when motion allowed): pinned stage, points
-     absolutely centred and translated horizontally by GSAP. */
-
 .section {
   position: relative;
-  overflow-x: clip;            /* clip horizontal travel without breaking pin */
-  background: var(--color-primary);
-  color: var(--white);
 }
 
-/* Positioning context for the absolutely-placed Contact Us CTA in BOTH modes
-   (static fallback + animated). In animated mode .isAnimated also sets
-   position:relative; this covers the static-fallback / no-JS case. */
-.stage { position: relative; }
-
-/* ── Background layers ── */
-.bgLayers { position: absolute; inset: 0; z-index: 0; }
-.bandBg {
-  position: absolute;
-  inset: -8% -14%;             /* bleed so the slow drift never reveals an edge */
-  background-size: cover;
-  background-position: center;
-  will-change: transform, opacity;
-}
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--color-primary);
-  opacity: 0.72;               /* photo reads through; text stays legible */
-}
-/* Animated mode centres every point's text. A flat tint can't beat the
-   brightest patches of high-key photos (applause, bright boardrooms), so the
-   body copy failed AA there. Add a centred scrim: near-opaque primary behind
-   the text band, fading to a light tint at the edges so the photo still reads. */
-.isAnimated .overlay {
-  opacity: 1;
-  background:
-    radial-gradient(ellipse 85% 68% at 50% 50%,
-      color-mix(in oklch, var(--color-primary) 92%, transparent),
-      color-mix(in oklch, var(--color-primary) 60%, transparent) 64%,
-      color-mix(in oklch, var(--color-primary) 48%, transparent));
-}
-
-/* ── Header ── */
-.header {
+.stage {
   position: relative;
-  z-index: 2;
-  max-width: var(--max-w);
-  margin-inline: 0 auto;     /* left-align the header block (was centered) */
-  text-align: left;
-  padding: clamp(2rem, 7vw, 4rem) var(--section-px) clamp(1rem, 3vw, 2rem);
-}
-.eyebrow {
-  font-family: var(--font-body);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: var(--fs-label);
-  font-weight: 600;
-  color: var(--color-accent);
-  margin: 0 0 0.5rem;
-}
-.title {
-  font-family: var(--font-display);
-  color: var(--white);
-  font-size: var(--fs-display);
-  line-height: 1.05;
-  margin: 0 0 0.75rem;
-}
-.intro {
-  font-family: var(--font-body);
-  color: oklch(1 0 0 / 0.78);
-  font-size: var(--fs-subhead);
-  line-height: 1.6;
-  max-width: var(--max-w-text);
-  margin: 0;
-}
-
-/* ── Points: STATIC fallback (default) ── */
-.points {
-  position: relative;
-  z-index: 1;
-  max-width: var(--max-w);
-  margin-inline: auto;
-  padding: clamp(1rem, 3vw, 2rem) var(--section-px) clamp(3rem, 8vw, 6rem);
-}
-.point { margin-bottom: clamp(2rem, 6vw, 4rem); }
-.point:last-child { margin-bottom: 0; }
-.pointLabel {
-  display: inline-block;
-  font-family: var(--font-body);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: var(--fs-label);
-  font-weight: 600;
-  color: var(--color-accent);
-  margin-bottom: 0.75rem;
-}
-.pointTitle {
-  font-family: var(--font-display);
-  font-size: var(--fs-headline);
-  line-height: 1.12;
-  margin: 0 0 0.75rem;
-  color: var(--white);
-}
-.pointContent {
-  font-family: var(--font-body);
-  font-size: var(--fs-subhead);
-  line-height: 1.6;
-  max-width: 46ch;
-  margin: 0;
-  color: oklch(1 0 0 / 0.86);
-}
-
-/* ── ANIMATED mode (GSAP-pinned conveyor) ── */
-.isAnimated {
-  position: relative;
-  height: 100vh;               /* == innerHeight, matches GSAP pin length */
-  overflow: hidden;            /* contain off-screen horizontal travel */
-}
-.isAnimated .points {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  pointer-events: none;
-}
-/* Every point fills the stage and centres its block; GSAP translates the
-   title / content / label horizontally within it (different speeds). */
-.isAnimated .point {
-  position: absolute;
-  inset: 0;
-  margin: 0;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding-inline: var(--section-px);
-}
-.isAnimated .pointLabel { margin-bottom: 1rem; will-change: transform; }
-/* ONE uniform type size for every point, sized so the LONGEST paragraph
-   (~110 words) fits the fixed 100vh pinned stage (which clips overflow). The
-   stage height == viewport height, so size scales with viewport HEIGHT (vh) —
-   not just width — to stay on-screen on short viewports. Width grows to ~62ch
-   so long paragraphs wrap to fewer lines. Same clamp on all items keeps every
-   point identical (no per-item or per-breakpoint font shuffling). */
-.isAnimated .pointTitle {
-  font-size: clamp(1.1rem, calc(1.2vw + 1.6vh), 2.2rem);
-  line-height: 1.14;
-  max-width: 22ch;
-  will-change: transform;
-}
-.isAnimated .pointContent {
-  font-size: clamp(1.125rem, calc(0.5vw + 1.7vh), 1.45rem);
-  line-height: 1.5;
-  max-width: 62ch;
-  margin-top: 0.6rem;
-  will-change: transform;
+  overflow: visible;
+  background: #ffffff;
+  color: #000000;
 }
 
-/* ── Contact Us CTA — subtle, persistent through the section ──────────
-   Sits inside the pinned stage so it holds its bottom-right spot for the whole
-   pinned run, then scrolls away with the section. Above the points (z 1) and
-   header (z 2) and re-enables pointer events (points set them off). */
+/* ── Wheel wrapper ── */
+.wheelWrap {
+  position: absolute;
+  inset: 0;
+  /* transform-origin defaults to 50% 50% — GSAP scale/translate from centre */
+}
+
+/* ── SVG ── */
+.wheel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.spoke {
+  stroke: currentColor;
+  stroke-width: 0.75;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.dot { fill: currentColor; }
+
+.spokeLabel {
+  font-family: var(--font-body);
+  font-size: max(10px, 1.35vmin);
+  fill: currentColor;
+  font-weight: 300;
+  letter-spacing: 0.07em;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Center text (inside wheelWrap, scales with the wheel) ── */
+.centerText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  text-align: center;
+  pointer-events: none;
+  width: min(24ch, 34vw);
+}
+
+@media (max-width: 600px) {
+  .centerText { width: min(20ch, 70vw); }
+}
+
+.centerHeading {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.7vw + 0.5vh, 2rem);
+  line-height: 1.25;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ── Card carousel ── */
+.cardsWrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* translate(-50%,-50%) is baked into the JS transform string */
+  width: clamp(300px, 24vw, 420px);
+  padding: 2rem 2.3rem;
+  background: #ffffff;
+  border: 1px solid rgba(11, 31, 59, 0.18);
+  border-radius: 8px;
+  opacity: 0;
+  will-change: transform, opacity;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.cardNumber {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(11, 31, 59, 0.55);
+  margin-bottom: 0.85rem;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.45vw + 0.4vh, 1.75rem);
+  font-weight: 500;
+  color: #0B1F3B;
+  margin-bottom: 0.9rem;
+  line-height: 1.3;
+}
+
+.cardBody {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.9vw + 0.25vh, 1.2rem);
+  color: rgba(11, 31, 59, 0.76);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Contact CTA ── */
 .contactCta {
   position: absolute;
-  right: var(--section-px);
+  right: clamp(1.5rem, 5vw, 4rem);
   bottom: clamp(1.25rem, 3.5vh, 2.75rem);
   z-index: 4;
   display: inline-flex;
@@ -183,11 +136,11 @@
   font-size: clamp(15px, 1.4vw, 17px);
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--white);
+  color: #000000;
   text-decoration: none;
   white-space: nowrap;
-  background: color-mix(in oklch, var(--color-primary) 52%, transparent);
-  border: 1px solid oklch(1 0 0 / 0.30);
+  background: rgb(0 0 0 / 0.06);
+  border: 1px solid rgb(0 0 0 / 0.18);
   border-radius: 999px;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
@@ -198,6 +151,13 @@
     color 0.25s var(--ease-out),
     transform 0.25s var(--ease-out);
 }
+
+.isDark .contactCta {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
 .contactCta:hover,
 .contactCta:focus-visible {
   background: var(--color-accent);
@@ -205,69 +165,23 @@
   color: var(--color-primary);
   transform: translateY(-2px);
 }
+
 .contactCta:focus-visible {
-  outline: 2px solid var(--white);
+  outline: 2px solid currentColor;
   outline-offset: 3px;
 }
+
 .contactCtaArrow {
   font-size: 1.05em;
   line-height: 1;
   transition: transform 0.25s var(--ease-out);
 }
+
 .contactCta:hover .contactCtaArrow,
 .contactCta:focus-visible .contactCtaArrow {
   transform: translateX(3px);
 }
 
-/* Landscape phones (short viewport): shrink so it doesn't crowd the conveyor. */
-@media (orientation: landscape) and (max-height: 600px) {
-  .contactCta {
-    padding: 0.4rem 0.85rem;
-    bottom: 0.75rem;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .bandBg, .pointTitle, .pointContent, .pointLabel { will-change: auto; }
   .contactCta { transition: none; }
-}
-
-/* Large desktops (2560+): the base caps hold the conveyor type tiny while the
-   100vh stage has loads of vertical room. The size already tracks viewport
-   HEIGHT (vh), so raising the caps just lets tall viewports breathe — short
-   ones stay clamped by the vh term and never overflow the pinned stage. */
-@media (min-width: 1800px) {
-  .isAnimated .pointTitle {
-    font-size: clamp(2rem, calc(1.2vw + 1.6vh), 3rem);
-  }
-  .isAnimated .pointContent {
-    font-size: clamp(1.1rem, calc(0.3vw + 1.6vh), 1.7rem);
-  }
-}
-
-/* Landscape phones (e.g. 844×390): the short viewport vertically centres each
-   sliding point right under the fixed header, so the big point title collided
-   with "A Culture of Trust". Scale the type down AND push the centred points
-   below the header so nothing overlaps. */
-@media (orientation: landscape) and (max-height: 600px) {
-  .header {
-    padding-top: clamp(0.75rem, 3vw, 1.5rem);
-    padding-bottom: 0.4rem;
-  }
-  .title {
-    font-size: clamp(1.2rem, 3.2vw, 1.7rem);
-  }
-  .intro {
-    font-size: clamp(0.8rem, 1.6vw, 0.95rem);
-    line-height: 1.45;
-  }
-  .isAnimated .point {
-    /* justify-content stays center; the top padding shifts the centring box
-       down so the centred title clears the header band above. The uniform
-       vh-based type above already shrinks to fit this short viewport. */
-    padding-top: 2.5rem;
-  }
-  .isAnimated .pointLabel {
-    margin-bottom: 0.2rem;
-  }
 }

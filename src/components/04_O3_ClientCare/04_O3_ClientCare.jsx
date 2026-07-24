@@ -1,307 +1,350 @@
-/*
- * O3ClientCare — pinned horizontal scrollytelling.
- * The section pins; vertical scroll drives horizontal-only motion. Each point
- * crosses the screen left -> right one at a time (title faster than content),
- * over background images that crossfade and drift left -> right behind them.
- * Reduced motion / no-JS falls back to a static stacked list.
- * All styles MUST use CSS variables. Never hardcode colors or font families.
- */
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './04_O3_ClientCare.module.css'
-import careBg from '../../assets/client-care/care.webp'
-import reliabilityBg from '../../assets/client-care/reliability.webp'
-import experienceBg from '../../assets/client-care/experience.webp'
-import partnershipBg from '../../assets/client-care/partnership.webp'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const DESCRIPTION =
-  'How NYA treats tenant improvement work, and the clients behind it.'
+const N       = 12
+const R       = 400
+const LR      = 442
+const INNER_R = 172
 
-const BUCKETS = [
-  {
-    label: "Care",
-    bg: careBg,
-    items: [
-      {
-        id: "client-advocate",
-        title: "A true client advocate",
-        content:
-          "We take client care seriously. We listen closely, understand what matters most and work to protect those priorities. Our goal is not just to complete the structural scope, but to support clients, and make sure their needs are looked after. ",
-      },
-      {
-        id: "building-insight",
-        title: "Genuine care for the client and the building",
-        content:
-          "Generic structural advice can miss what makes an existing building unique. NYA takes the time to understand the inner workings of your building: its structural system, existing conditions, load paths, constraints, and hidden complexities. That allows our guidance to be grounded in how the building actually works, not in one-size-fits-all assumptions.",
-      },
-      {
-        id: "tailored-details",
-        title: "Details shaped with care, not copied from habit",
-        content:
-          "Existing buildings rarely behave like clean templates. Years of prior modifications, hidden as-built discrepancies, and on-site adaptations mean the real condition is always more particular than the record drawings suggest. We tailor our structural details to each project's actual conditions, reducing the risk of construction-phase surprises.",
-      },
-    ],
-  },
-  {
-    label: "Reliability",
-    bg: reliabilityBg,
-    items: [
-      {
-        id: "trusted-quality",
-        title: "Quality that is trusted",
-        content:
-          "Our reputation was shaped by long-standing relationships with owners, architects, and property managers who experienced our founder's warmth, character, and care firsthand. Most of our work comes through recommendations today because clients know how we work, how we communicate, and how seriously we take their buildings.",
-      },
-      {
-        id: "reliable-pricing",
-        title: "Pricing that is reliable",
-        content:
-          "When it comes to quotes, our goal is a predictable total project cost. We provide transparent proposals that help clients avoid unexpected fees, surprise change orders, and budget uncertainty. Our experience allows us to see challenges coming early, creating confidence in project and cost.",
-      },
-    ],
-  },
-  {
-    label: "Experience",
-    bg: experienceBg,
-    items: [
-      {
-        id: "senior-engineers",
-        title: "You work with senior engineers with decades of experience",
-        content:
-          "In tenant improvement work, layers of process, slow communication and too many handoffs can quietly cost a project time. We replace that drag with seasoned structural judgment and direct, unfiltered access to the engineers closest to the work. The result is a team that keeps the project moving through a process that removes the waiting.",
-      },
-      {
-        id: "technical-judgment",
-        title: "Technical judgment that earns confidence",
-        content:
-          "Some of the industry's most complex tenant improvement projects come to us for a second look. Clients trust us to challenge assumptions, verify performance, and ensure every detail stands up to scrutiny.",
-      },
-      {
-        id: "ti-familiarity",
-        title: "TIs are easy with NYA's experience",
-        content:
-          "Our team has already mapped the terrain: the building, the permitting path, the plan check culture, the ownership expectations, and the local players involved. That is the advantage we bring to TI work. Our familiarity helps teams move forward with confidence.",
-      },
-    ],
-  },
-  {
-    label: "Partnership",
-    bg: partnershipBg,
-    items: [
-      {
-        id: "make-it-work",
-        title: "A “make it work” mindset",
-        content:
-          "Architects bring the creative ambition to TI work: dramatic stairs, open lobbies, and floating floors. Our role is to protect that vision, translating it into structural solutions that are code-conscious, and constructible. Every architecture firm works differently, so we calibrate our guidance, communication, and level of support to fit the way each team works.",
-      },
-      {
-        id: "early-guidance",
-        title: "Early guidance clients can feel confident in",
-        content:
-          "Before a TI project is fully formalized, owners often need enough structural input to understand what is possible and what may create risk. We help teams have those early conversations with quick guidance, feasibility input, and practical advice.",
-      },
-      {
-        id: "responsive-communication",
-        title: "Communication that reduces pressure, not adds to it",
-        content:
-          "Delays in TI work rarely stem from sudden crises. They seep in through quieter gaps: the question left unanswered, or the decision that drifts because no one knew who owned it. To keep projects moving, we provide same-day responses, immediate phone consultations for field issues, and proactive communication throughout the design and construction process.",
-      },
-    ],
-  },
-];
+const NAVY  = '#0B1F3B'
+const WHITE = '#ffffff'
+const BLACK = '#000000'
 
-// Flattened points, each tagged with its bucket index (which background it rides).
-const POINTS = BUCKETS.flatMap((b, bi) =>
-  b.items.map((it) => ({ ...it, label: b.label, bgIndex: bi })),
-)
+const WAVES   = 2
+const N_PTS   = 20
+const MAX_AMP = 14
+
+// Arc carousel constants
+const CARD_STEP    = 15   // degrees between adjacent cards on the arc
+const FEATURED_DEG = 225  // arc angle (deg) for the featured / front card
+const ARC_TOTAL    = N * CARD_STEP  // 165 ° total rotation to cycle all cards
+
+const CARDS = [
+  { title: 'NYA acting as a true client advocate',
+    body: 'We take client care seriously. We listen closely, understand what matters most, and work to protect those priorities.' },
+  { title: 'A genuine care for the client and the building itself',
+    body: 'NYA takes the time to understand the inner workings of your building.' },
+  { title: 'Technical judgment that earns confidence',
+    body: 'The industry\'s most complex tenant improvement projects come to us for a second look.' },
+  { title: 'A "make it work" mindset',
+    body: 'Every architecture firm works differently, so we calibrate our guidance, communication, and level of support to fit the way each team works.' },
+  { title: 'Early guidance clients can feel confident in',
+    body: 'We help teams have early conversations with quick guidance, feasibility input, and practical advice.' },
+  { title: 'Senior engineers with decades of experience',
+    body: 'In tenant improvement work, layers of process slow communication. We replace that with seasoned, fast structural judgment.' },
+  { title: 'Details shaped with care, not copied from habit',
+    body: 'We tailor structural details to each project\'s actual conditions, reducing the risk of construction-phase surprises.' },
+  { title: 'Communication that reduces pressure',
+    body: 'We provide same-day responses, immediate phone consultations for field issues, and proactive communication throughout design and construction.' },
+  { title: 'Pricing that is reliable',
+    body: 'Our goal is a predictable total project cost — no consistent stream of change orders.' },
+  { title: 'TIs are easy with NYA\'s experience',
+    body: 'Our team has already mapped the terrain: the building, the permitting path, the plan check culture.' },
+  { title: 'Our quality of work is trusted',
+    body: 'Most of our work comes through recommendations because clients know and love how we work.' },
+  { title: 'A lasting partnership',
+    body: 'Many clients work with NYA on 5, 10, or 20+ projects — because a relationship built on trust keeps delivering results.' },
+]
 
 export default function O3ClientCare() {
-  const sectionRef = useRef(null)
-  const stageRef = useRef(null)
+  const sectionRef    = useRef(null)
+  const stageRef      = useRef(null)
+  const wheelWrapRef  = useRef(null)
+  const centerTextRef = useRef(null)
+  const ctaRef        = useRef(null)
+  const spokeRefs     = useRef([])
+  const dotRefs       = useRef([])
+  const lblRefs       = useRef([])
+  const cardRefs      = useRef([])
 
   useEffect(() => {
-    let ctx
+    const section    = sectionRef.current
+    const stage      = stageRef.current
+    const wheelWrap  = wheelWrapRef.current
+    const centerText = centerTextRef.current
+    const cta        = ctaRef.current
+    if (!section || !stage || !wheelWrap) return
 
-    function buildAnims() {
-      if (ctx) ctx.revert()
-      ctx = gsap.context(() => {
-        const mm = gsap.matchMedia()
+    // Stamp hex baseline so gsap.to() can read a parseable FROM color
+    gsap.set(stage, { backgroundColor: WHITE, color: BLACK })
 
-        // Object syntax: GSAP re-runs (revert + rebuild) whenever ANY of these
-        // queries flips — so crossing 768px (e.g. tablet rotate) or toggling
-        // reduced-motion rebuilds the conveyor with the right params instead of
-        // keeping stale, once-read values. Reduced motion keeps the static
-        // stacked CSS fallback (no pin, fully legible).
-        mm.add(
-          {
-            isWide: '(min-width: 769px)',
-            isNarrow: '(max-width: 768px)',
-          },
-          (context) => {
-            const { isNarrow } = context.conditions
-            const stage = stageRef.current
+    const angle   = { value: 0 }
+    const arcObj  = { value: 0 }   // 0 → ARC_TOTAL*(π/180) radians over phase 3
+    const waveAmp = { value: 0, target: 0 }
+    let prevAngle = 0
+    let darkMode  = false
+    let W = window.innerWidth
+    let H = window.innerHeight
+    let tl, st
 
-            // Travel (vw). Must be large enough that, when one point is centred,
-            // its neighbours are fully off-screen — otherwise adjacent content
-            // blocks (up to ~28ch wide) overlap in the centre band. Title travels
-            // farthest (fastest), content less, label with the title.
-            const TITLE = isNarrow ? 135 : 120 // vw travel — title (fastest)
-            const CONTENT = isNarrow ? 92 : 78 // vw travel — content (slower)
-            const IMG = 7 // xPercent — slowest (depth)
+    // ── SVG spoke draw ──────────────────────────────────────────────────────
+    function draw() {
+      const a = angle.value
+      const w = waveAmp.value
+      const phase = a * 2
 
-            // Per-point timeline budget (seconds): a point slides in (ENTER),
-            // HOLDS centred and readable, then slides out (EXIT). A point's exit
-            // overlaps the NEXT point's enter (exit starts at base+SEG, the next
-            // enter also starts at base+SEG) so the stage is never empty between
-            // points — one is always entering, centred, or leaving. HOLD ≫ ENTER
-            // gives a long readable dwell.
-            const ENTER = 0.5   // slide-in duration
-            const EXIT = 0.32   // slide-out duration — quicker than ENTER so the
-                                // outgoing point clears the centre before the
-                                // incoming one arrives (minimal double-visible
-                                // overlap), yet the stage is never empty.
-            const HOLD = 1.5    // centred dwell — the bulk of each point's time
-            const SEG = ENTER + HOLD
-            // SPEED: scroll viewport-heights mapped to one timeline second.
-            // Lowered 0.7 → 0.5 to cut dead scroll — the conveyor reaches the
-            // footer in ~8 viewports instead of ~11, still a readable dwell.
-            const SPEED = 0.5
+      for (let i = 0; i < N; i++) {
+        const spoke_a = -Math.PI / 2 + (i / N) * 2 * Math.PI + a
+        const ex = Math.cos(spoke_a) * R
+        const ey = Math.sin(spoke_a) * R
+        const perpX = -Math.sin(spoke_a)
+        const perpY =  Math.cos(spoke_a)
 
-            const titles = gsap.utils.toArray(stage.querySelectorAll('[data-cc-title]'))
-            const contents = gsap.utils.toArray(stage.querySelectorAll('[data-cc-content]'))
-            const labels = gsap.utils.toArray(stage.querySelectorAll('[data-cc-label]'))
-            const bgs = gsap.utils.toArray(stage.querySelectorAll('[data-cc-bg]'))
-            const N = titles.length
-            const L = N * SEG // total timeline length (last point holds to the end)
-
-            stage.classList.add(s.isAnimated)
-
-            const tl = gsap.timeline({
-              scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top top',
-                end: () => '+=' + window.innerHeight * (L * SPEED),
-                pin: stage,
-                scrub: 1,
-                invalidateOnRefresh: true,
-                // Last pinned section in scroll order — lowest priority so ST
-                // refreshes Hero(3) → FirmCulture(2) → here(1) top-to-bottom,
-                // keeping pin distances consistent across resize. (ST mistake #5)
-                refreshPriority: 1,
-              },
-            })
-
-            // Force the timeline to span the full L even though the last point
-            // has no exit tween — keeps it pinned/centred through its final hold.
-            tl.to({}, { duration: L }, 0)
-
-            // Backgrounds: continuous slow left -> right drift across the whole run.
-            tl.fromTo(bgs, { xPercent: -IMG }, { xPercent: IMG, ease: 'none', duration: L }, 0)
-
-            // Backgrounds crossfade — each bucket is visible across the span of
-            // its own points. Buckets have variable item counts, so derive each
-            // bucket's start point-index from cumulative counts (no hardcoded 2).
-            const counts = BUCKETS.map((bk) => bk.items.length)
-            const offsets = []
-            counts.reduce((acc, c, i) => { offsets[i] = acc; return acc + c }, 0)
-            bgs.forEach((bg, b) => {
-              gsap.set(bg, { autoAlpha: b === 0 ? 1 : 0 })
-              const inT = offsets[b] * SEG
-              const outT = (offsets[b] + counts[b]) * SEG
-              if (b > 0) tl.to(bg, { autoAlpha: 1, duration: ENTER, ease: 'none' }, inT - ENTER)
-              if (b < bgs.length - 1) tl.to(bg, { autoAlpha: 0, duration: ENTER, ease: 'none' }, outT - ENTER)
-            })
-
-            // Each point: enter from left → HOLD centred → exit right. The slide
-            // is paired with a fade (autoAlpha) so the swap is a cross-dissolve:
-            // the outgoing point fades out as it leaves while the next fades in —
-            // never an empty stage (no gap) AND never hard text-on-text overlap.
-            // Title/label travel farther (faster) than content for depth. Parked
-            // hidden at -T before entering. Last point omits the exit and holds.
-            const slide = (el, T, base, isLast) => {
-              if (!el) return
-              tl.fromTo(
-                el,
-                { x: `-${T}vw`, autoAlpha: 0 },
-                { x: '0vw', autoAlpha: 1, ease: 'power2.out', duration: ENTER },
-                base,
-              )
-              if (!isLast) tl.to(el, { x: `${T}vw`, autoAlpha: 0, ease: 'power2.in', duration: EXIT }, base + SEG)
+        const spoke = spokeRefs.current[i]
+        if (spoke) {
+          if (w < 0.4) {
+            spoke.setAttribute('d', `M0 0L${ex.toFixed(1)} ${ey.toFixed(1)}`)
+          } else {
+            let d = 'M0 0'
+            for (let j = 1; j <= N_PTS; j++) {
+              const t   = j / N_PTS
+              const off = w * Math.sin(t * Math.PI * 2 * WAVES + phase)
+              d += `L${(ex * t + perpX * off).toFixed(1)} ${(ey * t + perpY * off).toFixed(1)}`
             }
-            titles.forEach((t, i) => {
-              const base = i * SEG
-              const isLast = i === N - 1
-              slide(t, TITLE, base, isLast)
-              slide(contents[i], CONTENT, base, isLast)
-              slide(labels[i], TITLE, base, isLast)
-            })
+            spoke.setAttribute('d', d)
+          }
+        }
 
-            return () => stage.classList.remove(s.isAnimated)
-        })
-      }, sectionRef)
+        const dot = dotRefs.current[i]
+        if (dot) {
+          dot.setAttribute('cx', ex.toFixed(1))
+          dot.setAttribute('cy', ey.toFixed(1))
+        }
+
+        const lx  = Math.cos(spoke_a) * LR
+        const ly  = Math.sin(spoke_a) * LR
+        const deg = -(spoke_a * 180 / Math.PI)
+        const lbl = lblRefs.current[i]
+        if (lbl) {
+          lbl.setAttribute('transform',
+            `translate(${lx.toFixed(1)} ${ly.toFixed(1)}) rotate(${deg.toFixed(2)})`)
+        }
+      }
+    }
+
+    // ── Card arc positioning ────────────────────────────────────────────────
+    // Arc center is off-screen lower-right; cards fan toward upper-left
+    function updateCards() {
+      // Elliptical path centered slightly beyond the top-left.
+// This creates the opposite curve without pushing cards off-screen.
+const cx = -W * 0.10
+const cy = -H * 0.10
+
+const radiusX = W * 1.10
+const radiusY = H * 1.10
+      const offsetDeg = arcObj.value * (180 / Math.PI)
+      // Gentle fade-in during the first 8° of phase-3 rotation
+      const fadeIn   = Math.min(1, arcObj.value / (8 * Math.PI / 180))
+
+      for (let i = 0; i < N; i++) {
+        const card = cardRefs.current[i]
+        if (!card) continue
+
+        // Cards enter from the top-right and move toward the bottom-left.
+const pathProgress = offsetDeg - i * CARD_STEP
+const thetaDeg = 15 + pathProgress * 1.5
+const theta = thetaDeg * (Math.PI / 180)
+
+const px = cx + radiusX * Math.cos(theta)
+const py = cy + radiusY * Math.sin(theta)
+
+        // Proximity to featured position
+        // The card reaches its maximum size near the center of the viewport.
+const distanceFromCenter = Math.hypot(
+  px - W / 2,
+  py - H / 2
+)
+
+// Adjust this value to control how far from the center scaling begins.
+const scaleRange = Math.min(W, H) * 0.75
+
+const centerProximity = Math.max(
+  0,
+  1 - distanceFromCenter / scaleRange
+)
+
+// Keep the existing featured-position calculation for visibility.
+const delta = Math.abs(i * CARD_STEP - offsetDeg)
+const visibilityProximity = Math.max(0,2 - delta / 40)
+
+const opacity = visibilityProximity * fadeIn
+
+// Smallest away from center; largest exactly at the center.
+const scale = 0.55 + 0.65 * centerProximity
+        // Cards tilt clockwise following the arc's rising diagonal (lower-left
+        // to upper-right). Baseline 195° keeps even the leftmost card slightly
+        // tilted; tilt grows from ~4° at theta=210° to ~18° at theta=255°.
+        const rotation = (thetaDeg - 15) * 0.12
+
+        const dx = (px - W / 2).toFixed(1)
+        const dy = (py - H / 2).toFixed(1)
+
+        card.style.opacity   = opacity.toFixed(3)
+        card.style.transform =
+          `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))` +
+          ` rotate(${rotation.toFixed(2)}deg)` +
+          ` scale(${scale.toFixed(3)})`
+      }
+    }
+
+    // ── Ticker: wave + draw + cards ─────────────────────────────────────────
+    const ticker = () => {
+      const da = angle.value - prevAngle
+      prevAngle = angle.value
+      waveAmp.target = Math.min(Math.abs(da) * 400, MAX_AMP)
+      waveAmp.value += (waveAmp.target - waveAmp.value) * 0.05
+      draw()
+      if (arcObj.value > 0) updateCards()
+    }
+    gsap.ticker.add(ticker)
+
+    // ── Build GSAP timeline + ScrollTrigger ─────────────────────────────────
+    function buildAnims() {
+      W = window.innerWidth
+      H = window.innerHeight
+
+      // Phase 2 destination for wheelWrap: upper-left at half scale.
+      // transform-origin is the element centre (W/2, H/2), so translate moves
+      // the rendered centre from (W/2,H/2) to (W*0.23, H*0.23).
+      const destX = -W * 0.27
+      const destY = -H * 0.10
+
+      tl = gsap.timeline()
+
+      // Phase 1 (tl 0 → 0.35): wheel rotates 0 → π
+      tl.to(angle, { value: Math.PI, ease: 'none', duration: 0.35 }, 0)
+
+      // Phase 2 (tl 0.35 → 0.50): wheel to corner, text/CTA out
+      tl.to(wheelWrap, {
+        x: destX, y: destY, scale: 0.70,
+        ease: 'power2.inOut', duration: 0.15,
+      }, 0.35)
+      // Only hide the CTA — center text stays readable inside the mini wheel
+       // Keep CTA visible throughout the entire section.
+
+      // Phase 3 (tl 0.50 → 1.0): cards arc carousel
+      tl.to(arcObj, {
+        value: ARC_TOTAL * (Math.PI / 180),
+        ease: 'none',
+        duration: 0.50,
+      }, 0.50)
+
+      st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end:   () => `+=${H * 5}`,
+        pin:   stage,
+        scrub: 0.8,
+        animation: tl,
+        invalidateOnRefresh: true,
+        refreshPriority: 1,
+        onRefresh() {
+          W = window.innerWidth
+          H = window.innerHeight
+        },
+        onUpdate(self) {
+          // Background white → navy at 20 % (≈ first viewport of scroll)
+          const shouldBeDark = self.progress >= 0.20
+          if (shouldBeDark !== darkMode) {
+            darkMode = shouldBeDark
+            gsap.to(stage, {
+              backgroundColor: shouldBeDark ? NAVY  : WHITE,
+              color:           shouldBeDark ? WHITE : BLACK,
+              duration: 0.7,
+              ease: 'power2.inOut',
+              overwrite: 'auto',
+            })
+            stage.classList.toggle(s.isDark, shouldBeDark)
+          }
+        },
+      })
     }
 
     document.fonts.ready.then(buildAnims)
-    window.addEventListener('themechange', buildAnims)
+
     return () => {
-      window.removeEventListener('themechange', buildAnims)
-      ctx?.revert()
+      gsap.ticker.remove(ticker)
+      st?.kill()
+      tl?.kill()
+      gsap.set(stage,     { clearProps: 'backgroundColor,color' })
+      gsap.set(wheelWrap, { clearProps: 'x,y,scale' })
+      if (centerText) gsap.set(centerText, { clearProps: 'opacity' })
+      if (cta)        gsap.set(cta,        { clearProps: 'opacity' })
+      stage.classList.remove(s.isDark)
+      cardRefs.current.forEach(c => {
+        if (c) { c.style.opacity = '0'; c.style.transform = '' }
+      })
     }
   }, [])
 
   return (
     <section id="nya-culture-2" ref={sectionRef} className={s.section}>
       <div ref={stageRef} className={s.stage}>
-        <div className={s.bgLayers} aria-hidden="true">
-          {BUCKETS.map((bucket) => {
-            // Astro returns an ImageMetadata object for src/assets imports in
-            // islands; fall back to the raw value if it is already a string URL.
-            const bgUrl = bucket.bg?.src ?? bucket.bg;
-            return (
-              <div
-                key={bucket.label}
-                className={s.bandBg}
-                data-cc-bg
-                style={{ backgroundImage: `url(${bgUrl})` }}
-              />
-            );
-          })}
-          <div className={s.overlay} />
+
+        {/* Wheel group — SVG + heading, move together as one unit */}
+        <div ref={wheelWrapRef} className={s.wheelWrap}>
+          <svg
+            className={s.wheel}
+            viewBox="-500 -500 1000 1000"
+            preserveAspectRatio="xMidYMid meet"
+            aria-hidden="true"
+          >
+            <defs>
+              <radialGradient id="cc-center-hole" cx="50%" cy="50%" r="50%">
+                <stop offset="87%" stopColor="black" />
+                <stop offset="100%" stopColor="white" />
+              </radialGradient>
+              <mask id="cc-spoke-mask">
+                <rect x="-500" y="-500" width="1000" height="1000" fill="white" />
+                <circle cx="0" cy="0" r={INNER_R} fill="url(#cc-center-hole)" />
+              </mask>
+            </defs>
+
+            <g mask="url(#cc-spoke-mask)">
+              {Array.from({ length: N }, (_, i) => (
+                <path key={i} ref={el => { spokeRefs.current[i] = el }} className={s.spoke} />
+              ))}
+            </g>
+            {Array.from({ length: N }, (_, i) => (
+              <circle key={i} ref={el => { dotRefs.current[i] = el }} r="2.8" className={s.dot} />
+            ))}
+            {Array.from({ length: N }, (_, i) => (
+              <text key={i} ref={el => { lblRefs.current[i] = el }}
+                textAnchor="middle" dominantBaseline="middle"
+                className={s.spokeLabel}>
+                {String(i + 1).padStart(2, '0')}
+              </text>
+            ))}
+          </svg>
+
+          <div ref={centerTextRef} className={s.centerText}>
+            <p className={s.centerHeading}>
+              The Experience of Working With NYA on Your Projects
+            </p>
+          </div>
         </div>
 
-        <div className={s.header}>
-          <h2 className={s.title}>The Experience of Working With NYA on your projects</h2>
-          {/* <p className={s.intro}>{DESCRIPTION}</p> */}
-        </div>
-
-        <div className={s.points}>
-          {POINTS.map((p) => (
-            <div key={p.id} className={s.point}>
-              <h3 className={s.pointTitle} data-cc-title>
-                {p.title}
-              </h3>
-              <p className={s.pointContent} data-cc-content>
-                {p.content}
-              </p>
+        {/* Card carousel */}
+        <div className={s.cardsWrap}>
+          {CARDS.map((card, i) => (
+            <div key={i} ref={el => { cardRefs.current[i] = el }} className={s.card}>
+              <span className={s.cardNumber}>{String(i + 1).padStart(2, '0')}</span>
+              <p className={s.cardTitle}>{card.title}</p>
+              <p className={s.cardBody}>{card.body}</p>
             </div>
           ))}
         </div>
 
-        {/* Persistent contact affordance. Lives INSIDE the pinned stage, so it
-            stays put for the whole pinned ClientCare run (the only conversion
-            path before the footer ~26k px down — audit v2 remaining #2) and
-            scrolls away cleanly once the section unpins. Subtle by design. */}
-        <a
-          className={s.contactCta}
-          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry"
-        >
+        <a ref={ctaRef} className={s.contactCta}
+          href="mailto:info@nyase.com?subject=Tenant%20Improvement%20Inquiry">
           <span className={s.contactCtaText}>Contact Us</span>
           <span className={s.contactCtaArrow} aria-hidden="true">&rarr;</span>
         </a>
       </div>
     </section>
-  );
+  )
 }
